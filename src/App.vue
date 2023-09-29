@@ -1,6 +1,6 @@
 <template>
   <div class="w-100 bg-stone-100">asd </div>
-  <el-button>asd</el-button>
+  <el-button type="primary">asd</el-button>
   <router-view />
 </template>
 
