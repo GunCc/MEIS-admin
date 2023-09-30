@@ -1,17 +1,23 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
+import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
+import type { App } from "vue"
+import { LoginRoute } from "./routes"
 
 const routes: Array<RouteRecordRaw> = [
-  {
-    path: '/',
-    name: 'home',
-    component: HomeView
-  },
+    {
+        path: "/",
+        name: "home",
+        redirect: "/login-check",
+    },
 ]
 
 const router = createRouter({
-  history: createWebHashHistory(),
-  routes
+    history: createWebHashHistory(),
+    routes: [...routes, ...LoginRoute],
 })
 
-export default router
+function setupRouter(app: App) {
+    console.log(router)
+    app.use(router)
+}
+
+export { setupRouter }

@@ -1,36 +1,21 @@
+/* eslint-env node */
+require("@rushstack/eslint-patch/modern-module-resolution");
+
 module.exports = {
-    "env": {
-        "browser": true,
-        "es2021": true
-    },
-    "extends": [
+    root: true,
+    extends: [
+        "plugin:vue/vue3-essential",
         "eslint:recommended",
-        "plugin:@typescript-eslint/recommended",
-        "plugin:vue/vue3-essential"
+        "@vue/eslint-config-typescript",
+        "@vue/eslint-config-prettier",
     ],
-    "overrides": [
-        {
-            "env": {
-                "node": true
-            },
-            "files": [
-                ".eslintrc.{js,cjs}"
-            ],
-            "parserOptions": {
-                "sourceType": "script"
-            }
-        }
-    ],
-    "parser":'vue-eslint-parser',
-    "parserOptions": {
-        "ecmaVersion": "latest",
-        "parser": "@typescript-eslint/parser",
-        "sourceType": "module"
+    parserOptions: {
+        parser: '@typescript-eslint/parser',
+        ecmaVersion: 2020,
+        sourceType: 'module',
+        jsxPragma: 'React',
+        ecmaFeatures: {
+            jsx: true,
+        },
     },
-    "plugins": [
-        "@typescript-eslint",
-        "vue"
-    ],
-    "rules": {
-    }
-}
+};
