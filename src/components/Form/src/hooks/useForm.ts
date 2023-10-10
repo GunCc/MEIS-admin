@@ -42,6 +42,10 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
         getFormValues: (): Recordable => {
             return getForm()?.getFormValues() as Recordable
         },
+        validate: async (valid?: any): Promise<Recordable> => {
+            const form = await getForm()
+            return form?.validate(valid)
+        },
     }
     return [register, actions]
 }

@@ -29,10 +29,6 @@ export default defineComponent({
         function getContext() {
             const { field, componentProps } = unref(getSchema)
 
-            // const Comp = componentMap.get(component || "Input") as ReturnType<
-            //     typeof defineComponent
-            // >
-
             const onEvent = {
                 onChange: (...args: Nullable<Recordable>[]) => {
                     const [e] = args
@@ -42,8 +38,9 @@ export default defineComponent({
                     props.setFormModel(field, value)
                 },
             }
-         
+
             const formItemAttr = {
+                prop: field,
                 ...unref(getSchema),
             }
 
@@ -51,6 +48,8 @@ export default defineComponent({
                 ...onEvent,
                 ...componentProps,
             }
+
+            console.log("formItemAttr", formItemAttr)
 
             return (
                 <el-form-item {...formItemAttr}>

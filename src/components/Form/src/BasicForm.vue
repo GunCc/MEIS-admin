@@ -1,5 +1,5 @@
 <template>
-    <el-form ref="formRef" v-bind="getFormProps">
+    <el-form ref="formElRef" v-bind="getFormProps">
         <el-row class="w-full">
             <template v-for="schema in getSchema" :key="schema.field">
                 <FormItem
@@ -26,6 +26,7 @@ import { useFormValues } from "./hooks/useFormValues"
 import { mergeData } from "@/utils/helper"
 import FormItem from "./component/FormItem.vue"
 import { useFormEvents } from "./hooks/useFormEvents"
+import { FormInstance } from "element-plus"
 export default defineComponent({
     name: "BasicForm",
     emits: ["register"],
@@ -34,7 +35,7 @@ export default defineComponent({
     },
     setup(props, { attrs, emit }) {
         // form 实例
-        const formElRef = ref<Nullable<FormActionType>>(null)
+        const formElRef = ref<Nullable<FormActionType | FormInstance>>(null)
         // 内部参数
         const innerFormProps = ref<Partial<BasicFormProps>>({})
         const getProps = computed(() => {
@@ -66,11 +67,12 @@ export default defineComponent({
                 formProps
             )
         }
-        const { setFormSchemas,getFormValues } = useFormEvents({
+        const { setFormSchemas, getFormValues, validate } = useFormEvents({
             getProps,
             setProps,
             initForm,
             formModel,
+            formElRef: formElRef as Ref<FormActionType>,
         })
 
         // 修改表单model
@@ -81,7 +83,8 @@ export default defineComponent({
         const formAction: FormActionType = {
             setProps,
             setFormSchemas,
-            getFormValues
+            getFormValues,
+            validate,
         }
 
         onMounted(() => {
@@ -100,4 +103,3 @@ export default defineComponent({
 })
 </script>
 <style lang="less" scoped></style>
-./hooks/useFormValues

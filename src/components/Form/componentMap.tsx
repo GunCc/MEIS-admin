@@ -4,11 +4,6 @@ export type componentType = "Input"
 
 export const componentMap = new Map<componentType, Component>()
 
-componentMap.set("Input", () => render("el-input"))
+// componentMap.set("Input", Input)
 
 
-function render(component) {
-    return h(
-        component
-    )
-}
