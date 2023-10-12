@@ -49,7 +49,6 @@ export default defineComponent({
                 ...componentProps,
             }
 
-            console.log("formItemAttr", formItemAttr)
 
             return (
                 <el-form-item {...formItemAttr}>

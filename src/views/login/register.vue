@@ -43,6 +43,7 @@ import { BasicForm, useForm } from "@c/Form"
 import LoginHeader from "./LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { FormRules } from "element-plus"
+import { getCaptcha } from "@/api/v1/base"
 
 const [regitserForm, { setFormSchemas, getFormValues, validate }] = useForm({
     labelWidth: 100,
@@ -99,5 +100,6 @@ async function handleSubmit() {
     console.log("getFormValues", getFormValues())
     console.log("校验", await validate())
 }
+getCaptcha()
 </script>
 <style lang="scss" scoped></style>
