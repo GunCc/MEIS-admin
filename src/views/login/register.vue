@@ -38,14 +38,23 @@
     </div>
 </template>
 <script setup lang="ts">
+import { h, computed } from "vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import LoginHeader from "./LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { FormRules } from "element-plus"
-import { getCaptcha } from "@/api/v1/base"
+import { getCaptcha, sendEmailCode } from "@/api/v1/base"
 
-const [regitserForm, { setFormSchemas, getFormValues, validate }] = useForm({
+const getCountdownContext = ref<string>("获取验证码")
+
+let time = 3
+let timer
+
+const [
+    regitserForm,
+    { setFormSchemas, getFormValues, validate, validateField },
+] = useForm({
     labelWidth: 100,
     labelPosition: "left",
     labelSuffix: "：",
@@ -92,9 +101,41 @@ const [regitserForm, { setFormSchemas, getFormValues, validate }] = useForm({
             componentProps: {
                 placeholder: "请输入你的验证码",
             },
+            renderComponentContent: () => {
+                return {
+                    append: () =>
+                        h(
+                            "div",
+                            {
+                                onClick: handleCaptchaFetch,
+                            },
+                            unref(getCountdownContext)
+                        ),
+                }
+            },
         },
     ] as FormItemSchemas[],
 })
+
+async function handleCaptchaFetch() {
+    try {
+        await validateField("email")
+        await sendEmailCode({
+            to_mail: "2859893460@qq.com",
+        })
+        if (timer) return
+        timer = setInterval(() => {
+            getCountdownContext.value = `剩余${--time}秒`
+            if (time == 0) {
+                window.clearInterval(timer)
+                timer = null
+                getCountdownContext.value = "重新获取"
+            }
+        }, 1000)
+    } catch (error) {
+        console.error(error)
+    }
+}
 
 async function handleSubmit() {
     console.log("getFormValues", getFormValues())

@@ -5,7 +5,8 @@ import {
     FormItemSchemas,
     ReturnUseFormType,
 } from "../types/form"
-import { Nullable } from "vitest"
+import { Arrayable, Nullable } from "vitest"
+import { FormItemProp } from "element-plus"
 
 export function useForm(props?: BasicFormProps): ReturnUseFormType {
     const formEl = ref<Nullable<FormActionType>>()
@@ -42,9 +43,16 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
         getFormValues: (): Recordable => {
             return getForm()?.getFormValues() as Recordable
         },
-        validate: async (valid?: any): Promise<Recordable> => {
+        validate: async (): Promise<Recordable> => {
             const form = await getForm()
-            return form?.validate(valid)
+            return form?.validate()
+        },
+
+        validateField: async (
+            item?: Arrayable<FormItemProp>
+        ): Promise<Recordable> => {
+            const form = await getForm()
+            return form?.validateField(item)
         },
     }
     return [register, actions]

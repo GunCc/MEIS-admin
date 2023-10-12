@@ -8,6 +8,7 @@ import { AxiosOtherConfig } from "./type"
 import { Result } from "./../../types/axios.d"
 import { ResultEnum } from "@/enums/resultEnum"
 import { useMessage } from "./../../hooks/web/useMessage"
+import { RequestEnum } from "@/enums/requestEnum"
 
 // axios 拦截器数据 ---- 处理数据
 const transform: AxiosTranstion = {
@@ -16,6 +17,31 @@ const transform: AxiosTranstion = {
         // 判断是否有地址
         if (baseURL && isString(baseURL)) {
             config.url = `${baseURL}${config.url}`
+        }
+
+        const params = config.params || {}
+        const data = config.data || false
+        if (config.method?.toUpperCase() === RequestEnum.GET) {
+        } else {
+            if (!isString(params)) {
+                if (
+                    Reflect.has(config, "data") &&
+                    config.data &&
+                    (Object.keys(config.data).length > 0 ||
+                        config.data instanceof FormData)
+                ) {
+                    config.data = data
+                    config.params = params
+                } else {
+                    // 非GET请求如果没有提供data，则将params视为data
+                    config.data = params
+                    config.params = undefined
+                }
+            } else {
+                // 兼容restful风格
+                config.url = config.url + params
+                config.params = undefined
+            }
         }
         return config
     },
@@ -49,15 +75,12 @@ const transform: AxiosTranstion = {
         // 根据不同的code进行修改
         let errorMsg = ""
         switch (code) {
-            case ResultEnum.CLITENTERROR:
-                errorMsg = "客户端出错"
-                break
             default:
                 if (message) {
                     errorMsg = message
                 }
         }
-
+        createMessage.error(errorMsg)
         throw new Error(errorMsg || "api请求报错")
     },
 }

@@ -1,4 +1,5 @@
-import { FormInstance } from "element-plus"
+import { FormInstance, FormItemProp } from "element-plus"
+import { Arrayable } from "vitest"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
 import { FormActionType } from "./../types/form"
 
@@ -36,7 +37,13 @@ export function useFormEvents({
         return await formElRef.value.validate()
     }
 
+    // 表单校验特定字段
+    async function validateField(item?: Arrayable<FormItemProp>) {
+        return await formElRef.value.validateField(item)
+    }
+
     return {
+        validateField,
         setFormSchemas,
         getFormValues,
         validate,

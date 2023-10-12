@@ -67,13 +67,14 @@ export default defineComponent({
                 formProps
             )
         }
-        const { setFormSchemas, getFormValues, validate } = useFormEvents({
-            getProps,
-            setProps,
-            initForm,
-            formModel,
-            formElRef: formElRef as Ref<FormActionType>,
-        })
+        const { setFormSchemas, getFormValues, validate, validateField } =
+            useFormEvents({
+                getProps,
+                setProps,
+                initForm,
+                formModel,
+                formElRef: formElRef as Ref<FormActionType>,
+            })
 
         // 修改表单model
         function setFormModelField(key: string, value: any) {
@@ -85,6 +86,7 @@ export default defineComponent({
             setFormSchemas,
             getFormValues,
             validate,
+            validateField,
         }
 
         onMounted(() => {
