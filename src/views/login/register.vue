@@ -38,95 +38,97 @@
     </div>
 </template>
 <script setup lang="ts">
-import { h, computed } from "vue"
+import { h } from "vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import LoginHeader from "./LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
-import { FormRules } from "element-plus"
-import { getCaptcha, sendEmailCode } from "@/api/v1/base"
+import { sendEmailCode, register } from "@/api/v1/base"
+import { Register } from "@/api/model/request"
+import { useGo } from "@/hooks/web/usePage"
+import { PageEnum } from "@/enums/pageEnum"
 
 const getCountdownContext = ref<string>("获取验证码")
+const go = useGo()
 
 let time = 3
 let timer
 
-const [
-    regitserForm,
-    { setFormSchemas, getFormValues, validate, validateField },
-] = useForm({
-    labelWidth: 100,
-    labelPosition: "left",
-    labelSuffix: "：",
-    schemas: [
-        {
-            label: "昵称",
-            field: "nickname",
-            rules: [{ required: true, message: "昵称不能为空" }],
-            componentProps: {
-                placeholder: "请输入你的昵称",
+const [regitserForm, { getFormField, getFormValues, validate, validateField }] =
+    useForm({
+        labelWidth: 100,
+        labelPosition: "left",
+        labelSuffix: "：",
+        schemas: [
+            {
+                label: "昵称",
+                field: "nickname",
+                rules: [{ required: true, message: "昵称不能为空" }],
+                componentProps: {
+                    placeholder: "请输入你的昵称",
+                },
             },
-        },
-        {
-            label: "密码",
-            field: "password",
-            rules: [{ required: true, message: "密码不能为空" }],
-            componentProps: {
-                type: "password",
-                placeholder: "请输入你的密码",
-                showPassword: true,
+            {
+                label: "密码",
+                field: "password",
+                rules: [{ required: true, message: "密码不能为空" }],
+                componentProps: {
+                    type: "password",
+                    placeholder: "请输入你的密码",
+                    showPassword: true,
+                },
             },
-        },
-        {
-            label: "确认密码",
-            field: "passwords",
-            rules: [{ required: true, message: "请再次确定密码" }],
-            componentProps: {
-                placeholder: "请再次输入你的密码",
-                showPassword: true,
+            {
+                label: "确认密码",
+                field: "passwords",
+                rules: [{ required: true, message: "请再次确定密码" }],
+                componentProps: {
+                    placeholder: "请再次输入你的密码",
+                    showPassword: true,
+                },
             },
-        },
-        {
-            label: "邮箱",
-            field: "email",
-            rules: [{ required: true, message: "请输入邮箱" }],
-            componentProps: {
-                placeholder: "请输入你的邮箱",
+            {
+                label: "邮箱",
+                field: "email",
+                rules: [{ required: true, message: "请输入邮箱" }],
+                componentProps: {
+                    placeholder: "请输入你的邮箱",
+                },
             },
-        },
-        {
-            label: "验证码",
-            field: "captcha",
-            rules: [{ required: true, message: "请输入验证码" }],
-            componentProps: {
-                placeholder: "请输入你的验证码",
+            {
+                label: "验证码",
+                field: "code",
+                rules: [{ required: true, message: "请输入验证码" }],
+                componentProps: {
+                    placeholder: "请输入你的验证码",
+                },
+                renderComponentContent: () => {
+                    return {
+                        append: () =>
+                            h(
+                                "div",
+                                {
+                                    onClick: handleCaptchaFetch,
+                                },
+                                unref(getCountdownContext)
+                            ),
+                    }
+                },
             },
-            renderComponentContent: () => {
-                return {
-                    append: () =>
-                        h(
-                            "div",
-                            {
-                                onClick: handleCaptchaFetch,
-                            },
-                            unref(getCountdownContext)
-                        ),
-                }
-            },
-        },
-    ] as FormItemSchemas[],
-})
+        ] as FormItemSchemas[],
+    })
 
 async function handleCaptchaFetch() {
     try {
         await validateField("email")
         await sendEmailCode({
-            to_mail: "2859893460@qq.com",
+            to_mail: getFormField("email"),
         })
         if (timer) return
         timer = setInterval(() => {
             getCountdownContext.value = `剩余${--time}秒`
             if (time == 0) {
+                time = 3
                 window.clearInterval(timer)
                 timer = null
                 getCountdownContext.value = "重新获取"
@@ -138,9 +140,18 @@ async function handleCaptchaFetch() {
 }
 
 async function handleSubmit() {
-    console.log("getFormValues", getFormValues())
-    console.log("校验", await validate())
+    try {
+        await validate()
+        console.log("getFormValues", getFormValues())
+        let formdata = getFormValues() as Register
+        formdata.role_id = 1
+        await register(formdata)
+        go({
+            path: PageEnum.BASE_LOGIN,
+        })
+    } catch (error) {
+        console.error(error)
+    }
 }
-getCaptcha()
 </script>
 <style lang="scss" scoped></style>

@@ -47,6 +47,9 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
             const form = await getForm()
             return form?.validate()
         },
+        getFormField: (fields: string | string[]): any => {
+            return getForm()?.getFormField(fields)
+        },
 
         validateField: async (
             item?: Arrayable<FormItemProp>

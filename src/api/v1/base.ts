@@ -1,4 +1,4 @@
-import { GetEmailCode } from "../model/request"
+import { GetEmailCode, Register } from "../model/request"
 import { MEIS_http } from "./../../utils/http/index"
 
 export function getCaptcha() {
@@ -7,9 +7,16 @@ export function getCaptcha() {
     })
 }
 
-export function sendEmailCode(params:GetEmailCode) {
+export function sendEmailCode(params: GetEmailCode) {
     return MEIS_http.post({
         url: getUrl("/sendEmail"),
+        params,
+    })
+}
+
+export function register(params: Register) {
+    return MEIS_http.post({
+        url: getUrl("/register"),
         params,
     })
 }

@@ -2,6 +2,7 @@ import { FormInstance, FormItemProp } from "element-plus"
 import { Arrayable } from "vitest"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
 import { FormActionType } from "./../types/form"
+import { isArray, isString } from "lodash"
 
 interface UseFormEventsContext {
     getProps: ComputedRef<BasicFormProps>
@@ -32,6 +33,23 @@ export function useFormEvents({
         return unref(formModel)
     }
 
+    // 获取表单中某个字段的值
+    function getFormField(fields: string[] | string): any {
+        console.log(formModel)
+        if (isString(fields)) {
+            return unref(formModel)[fields]
+        } else {
+            let res: any
+            for (let key in unref(formModel)) {
+                console.log(key, unref(formModel)[key])
+                if (fields.includes(key)) {
+                    res[key] = unref(formModel)[key]
+                }
+            }
+            return res
+        }
+    }
+
     // 表单校验
     async function validate() {
         return await formElRef.value.validate()
@@ -43,6 +61,7 @@ export function useFormEvents({
     }
 
     return {
+        getFormField,
         validateField,
         setFormSchemas,
         getFormValues,
