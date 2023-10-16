@@ -24,23 +24,15 @@ const LoginRoute: RouteRecordRaw[] = [
             title: "登录",
         },
     },
+    {
+        path: "/login-admin",
+        name: "LoginAdmin",
+        component: () => import("@/views/login/login-admin.vue"),
+        meta: {
+            title: "登录",
+        },
+    },
  
-    {
-        path: "/register",
-        name: "Register",
-        component: () => import("@/views/login/register.vue"),
-        meta: {
-            title: "选择角色",
-        },
-    },
-    {
-        path: "/forgetPassword",
-        name: "ForgetPassword",
-        component: () => import("@/views/login/forgetPassword.vue"),
-        meta: {
-            title: "选择角色",
-        },
-    },
 ]
 
 export { asyncRoute, LoginRoute }

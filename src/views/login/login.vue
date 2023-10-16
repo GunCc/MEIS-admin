@@ -39,7 +39,7 @@
                         >
                             <svg
                                 aria-hidden="true"
-                                class="w-6 h-6 mx-2 dark:fill-slate-200 fill-white"
+                                class="w-6 h-6 mx-2 dark:fill-slate-80 fill-white"
                                 style="cursor: pointer"
                             >
                                 <use xlink:href="#icon-jinrujiantou"></use>
@@ -70,20 +70,23 @@
     </div>
 </template>
 <script setup lang="ts">
+import { ref, onMounted } from "vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
-import LoginHeader from "./LoginHeader.vue"
+import LoginHeader from "./components/LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { useGo } from "@/hooks/web/usePage"
+import { getCaptcha } from "@/api/v1/base"
+import { CaptchaValue } from "@/api/model/base/response"
+import { Nullable } from "vitest"
 
 const go = useGo()
 
-type Eidition = EducationLoginRole | EnterpriseLoginRole
-
 type EducationLoginRole = "Teacher" | "Student"
-type EnterpriseLoginRole = "Admin" | "Develop"
 
 const roleMap = new Map<EducationLoginRole, FormItemSchemas[]>()
+
+const captcha = ref<Nullable<CaptchaValue>>(null)
 
 roleMap.set("Teacher", [
     {
@@ -97,6 +100,26 @@ roleMap.set("Teacher", [
     {
         label: "账号密码",
         field: "password",
+    },
+    {
+        label: "验证码",
+        field: "code",
+        rules: [{ required: true, message: "请输入验证码" }],
+        componentProps: {
+            placeholder: "请输入你的验证码",
+        },
+        renderComponentContent: () => {
+            return {
+                append: () =>
+                    h("img", {
+                        width: 80,
+                        height: 30,
+                        style:"margin:-20px",
+                        src: unref(captcha)?.image_path,
+                        onClick: getCaptchaImage,
+                    }),
+            }
+        },
     },
 ])
 
@@ -113,9 +136,26 @@ roleMap.set("Student", [
         label: "账号密码",
         field: "password",
     },
+    {
+        label: "验证码",
+        field: "code",
+        rules: [{ required: true, message: "请输入验证码" }],
+        componentProps: {
+            placeholder: "请输入你的验证码",
+        },
+        renderComponentContent: () => {
+            return {
+                append: () =>
+                    h("img", {
+                        width: 80,
+                        height: 30,
+                        src: unref(captcha)?.image_path,
+                        onClick: getCaptchaImage,
+                    }),
+            }
+        },
+    },
 ])
-
-const role = ref<Eidition>()
 
 const [regitserForm, { setFormSchemas, getFormValues }] = useForm({
     schemas: roleMap.get("Teacher") as FormItemSchemas[],
@@ -125,6 +165,19 @@ function handleChangeRole(role: EducationLoginRole) {
 }
 function handleSubmit() {
     console.log("getFormValues", getFormValues())
+}
+onMounted(() => {
+    getCaptchaImage()
+})
+
+async function getCaptchaImage() {
+    try {
+        const res = await getCaptcha()
+        captcha.value = res
+        console.log(res)
+    } catch (error) {
+        console.error(error)
+    }
 }
 
 function handleGo(path) {

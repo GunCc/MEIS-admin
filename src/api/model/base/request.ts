@@ -9,3 +9,10 @@ export interface Register {
     role_id: number
     code: string
 }
+
+export interface Login {
+    nickname: string
+    password: string
+    captcha_id: string
+    captcha: string
+}

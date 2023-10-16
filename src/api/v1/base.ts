@@ -1,8 +1,9 @@
-import { GetEmailCode, Register } from "../model/request"
+import { GetEmailCode, Login, Register } from "../model/base/request"
+import { CaptchaValue } from "../model/base/response"
 import { MEIS_http } from "./../../utils/http/index"
 
 export function getCaptcha() {
-    return MEIS_http.post({
+    return MEIS_http.post<CaptchaValue>({
         url: getUrl("/captcha"),
     })
 }
@@ -18,6 +19,13 @@ export function register(params: Register) {
     return MEIS_http.post({
         url: getUrl("/register"),
         params,
+    })
+}
+
+export function login(params: Login) {
+    return MEIS_http.post({
+        url: getUrl("/login"),
+        params
     })
 }
 

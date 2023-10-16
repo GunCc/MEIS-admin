@@ -41,10 +41,10 @@
 import { h } from "vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
-import LoginHeader from "./LoginHeader.vue"
+import LoginHeader from "./components/LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { sendEmailCode, register } from "@/api/v1/base"
-import { Register } from "@/api/model/request"
+import { Register } from "@/api/model/base/request"
 import { useGo } from "@/hooks/web/usePage"
 import { PageEnum } from "@/enums/pageEnum"
 
@@ -155,3 +155,4 @@ async function handleSubmit() {
 }
 </script>
 <style lang="scss" scoped></style>
+@/api/model/base/request
