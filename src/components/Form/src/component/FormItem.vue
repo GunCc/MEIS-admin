@@ -52,7 +52,6 @@ export default defineComponent({
                     const [e] = args
                     const target = e ? e.target : null
                     const value = target ? target.value : e
-                    console.log(field, value)
                     props.setFormModel(field, value)
                 },
             }

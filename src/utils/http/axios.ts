@@ -1,6 +1,7 @@
 import { Result } from "@/types/axios"
 import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { cloneDeep, isFunction } from "lodash"
+import { AxiosCanceler } from "./cancel"
 import { AxiosOtherConfig, CreateAxiosConfig } from "./type"
 
 export class CustomAxios {
@@ -26,9 +27,12 @@ export class CustomAxios {
             afterResponseError,
         } = transform
 
+        const axiosCanceler = new AxiosCanceler()
+
         // 请求拦截
         // @ts-ignore
         this.instance.interceptors.request.use((config: AxiosRequestConfig) => {
+            axiosCanceler.addPending(config)
             if (
                 beforeRequestInterceptors &&
                 isFunction(beforeRequestInterceptors)
@@ -48,6 +52,8 @@ export class CustomAxios {
 
         // 响应拦截器
         this.instance.interceptors.response.use((res: AxiosResponse<any>) => {
+            res && axiosCanceler.removePending(res.config)
+
             if (
                 afterResponseInterceptors &&
                 isFunction(afterResponseInterceptors)

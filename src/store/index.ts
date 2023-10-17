@@ -1,13 +1,10 @@
-import { defineStore } from 'pinia'
+import type { App } from "vue"
+import { createPinia } from "pinia"
 
-export const useCounterStore = defineStore('counter', {
-  state: () => ({ count: 0 }),
-  getters: {
-    double: state => state.count * 2,
-  },
-  actions: {
-    increment() {
-      this.count++
-    },
-  },
-})
+const store = createPinia()
+
+export function setupStore(app: App<Element>) {
+    app.use(store)
+}
+
+export { store }

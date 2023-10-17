@@ -142,7 +142,6 @@ async function handleCaptchaFetch() {
 async function handleSubmit() {
     try {
         await validate()
-        console.log("getFormValues", getFormValues())
         let formdata = getFormValues() as Register
         formdata.role_id = 1
         await register(formdata)

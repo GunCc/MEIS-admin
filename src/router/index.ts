@@ -10,13 +10,12 @@ const routes: Array<RouteRecordRaw> = [
     },
 ]
 
-const router = createRouter({
+export const router = createRouter({
     history: createWebHashHistory(),
     routes: [...routes, ...LoginRoute, ...asyncRoute],
 })
 
 function setupRouter(app: App) {
-    console.log(router)
     app.use(router)
 }
 

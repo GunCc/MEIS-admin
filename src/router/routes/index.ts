@@ -2,7 +2,6 @@ import { RouteRecordRaw } from "vue-router"
 
 const modules = import.meta.glob("./modules/**/*.ts", { eager: true })
 
-console.log("modules", modules)
 const routeModuleList: RouteRecordRaw[] = []
 Object.keys(modules).forEach(key => {
     // @ts-ignore
@@ -13,7 +12,6 @@ Object.keys(modules).forEach(key => {
 
 // 异步路由
 const asyncRoute = [...routeModuleList]
-console.log("routeModuleList", routeModuleList)
 
 const LoginRoute: RouteRecordRaw[] = [
     {

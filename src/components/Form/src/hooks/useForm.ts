@@ -21,7 +21,6 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
     }
 
     function register(instance?: FormActionType) {
-        console.log(instance)
         formEl.value = instance
         watch(
             () => props,

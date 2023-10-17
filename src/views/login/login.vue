@@ -174,7 +174,6 @@ async function getCaptchaImage() {
     try {
         const res = await getCaptcha()
         captcha.value = res
-        console.log(res)
     } catch (error) {
         console.error(error)
     }

@@ -37,6 +37,7 @@ import { getCaptcha, login } from "@/api/v1/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
 import { Login } from "@/api/model/base/request"
+import { userStore,userStoreOutset } from "@/store/modules/user"
 
 const captcha = ref<Nullable<CaptchaValue>>(null)
 
@@ -86,10 +87,14 @@ const [regitserForm, { getFormValues }] = useForm({
 
 async function handleSubmit() {
     try {
+        const useUserStore = userStore()
         const params = getFormValues() as Login
         params.captcha_id = unref(captcha)?.captcha_id || ""
-        await login(params)
+        console.log(useUserStore)
+        await useUserStore.handleLogin(params)
     } catch (error) {
+        // 失败后要重新获取image
+        await getCaptchaImage();
         console.error(error)
     }
 }
@@ -101,7 +106,6 @@ async function getCaptchaImage() {
     try {
         const res = await getCaptcha()
         captcha.value = res
-        console.log(res)
     } catch (error) {
         console.error(error)
     }

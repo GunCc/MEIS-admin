@@ -29,13 +29,11 @@ export function useFormEvents({
 
     // 获取表单数据
     function getFormValues(): Recordable {
-        console.log(formModel)
         return unref(formModel)
     }
 
     // 获取表单中某个字段的值
     function getFormField(fields: string[] | string): any {
-        console.log(formModel)
         if (isString(fields)) {
             return unref(formModel)[fields]
         } else {
