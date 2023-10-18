@@ -1,0 +1,7 @@
+// 边框设置
+$border-margin: "top" "bottom" "right" "left";
+@each $i in $border-margin {
+    .border-#{$i} {
+        border-#{$i}-width: 1px;
+    }
+}

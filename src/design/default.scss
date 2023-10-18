@@ -139,6 +139,11 @@ body {
 
 input,
 input:focus {
-    box-shadow: none!important;
+    box-shadow: none !important;
     outline: none;
+}
+
+.icon {
+    vertical-align: -0.15em;
+    overflow: hidden;
 }

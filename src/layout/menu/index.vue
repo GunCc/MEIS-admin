@@ -1,0 +1,55 @@
+<template>
+    <div>
+        <BasicMenu
+            class="layout-menu bg-white border-right border-gray-100 border-solid"
+            v-bind="getProps"
+        />
+    </div>
+</template>
+<script lang="ts">
+import { BasicMenu } from "@c/Menu"
+export default defineComponent({
+    name: "LayoutMenu",
+    components: {
+        BasicMenu,
+    },
+    setup() {
+        const getProps = computed(() => {
+            return {
+                router: true,
+                items: [
+                    {
+                        title: "面板",
+                        key: "/dashboard/analysis",
+                        path: "/dashboard/analysis",
+                    },
+                    {
+                        title: "系统管理",
+                        key: "/system",
+                        path: "/system",
+                        children: [
+                            {
+                                title: "用户管理",
+                                key: "/system/user",
+                                path: "/system/user",
+                            },
+                        ],
+                    },
+                ],
+            }
+        })
+        return {
+            getProps,
+        }
+    },
+})
+</script>
+<style lang="scss">
+.layout-menu {
+    width: 220px;
+    height: calc(100vh - 3rem);
+    .el-menu {
+        border: none !important;
+    }
+}
+</style>

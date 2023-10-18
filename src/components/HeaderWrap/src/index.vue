@@ -1,5 +1,5 @@
 <template>
-    <div class="h-12 bg-slate-800 w-full">
+    <div class="h-12 w-full border-bottom border-gray-100 border-solid bg-white">
         <slot />
     </div>
 
