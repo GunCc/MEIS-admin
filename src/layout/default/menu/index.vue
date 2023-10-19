@@ -33,6 +33,11 @@ export default defineComponent({
                                 key: "/system/user",
                                 path: "/system/user",
                             },
+                            {
+                                title: "角色管理",
+                                key: "/system/role",
+                                path: "/system/role",
+                            },
                         ],
                     },
                 ],

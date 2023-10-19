@@ -76,7 +76,7 @@ import { BasicForm, useForm } from "@c/Form"
 import LoginHeader from "./components/LoginHeader.vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { useGo } from "@/hooks/web/usePage"
-import { getCaptcha } from "@/api/v1/base"
+import { getCaptcha } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
 

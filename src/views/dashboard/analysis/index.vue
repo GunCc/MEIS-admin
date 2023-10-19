@@ -22,7 +22,7 @@
                     </div>
                 </el-col>
                 <el-col :span="12">
-                    <div class="rounded bg-white dark:bg-gray-900 mt-5">
+                    <div class="rounded bg-white dark:bg-gray-900 mt-5 shadow ">
                         <el-calendar ref="calendar">
                             <template #header="{ date }">
                                 <span>Custom header content</span>
@@ -63,7 +63,7 @@
                     </div>
                 </el-col>
                 <el-col :span="12">
-                    <div class="rounded bg-white dark:bg-gray-900 mt-5">
+                    <div class="rounded bg-white dark:bg-gray-900 mt-5 shadow ">
                         <el-calendar ref="calendar">
                             <template #header="{ date }">
                                 <span>Custom header content</span>
