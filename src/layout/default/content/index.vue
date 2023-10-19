@@ -1,12 +1,16 @@
 <template>
     <div>
-        <router-view></router-view>
+        <LayoutPage></LayoutPage>
     </div>
 </template>
 <script>
+import LayoutPage from "@/layout/page/index.vue"
 export default defineComponent({
     name: "LayoutContent",
-    components: {},
+    components: {
+        LayoutPage,
+    },
+    setup() {},
 })
 </script>
 <style lang="scss"></style>

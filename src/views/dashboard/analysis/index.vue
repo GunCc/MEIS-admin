@@ -1,9 +1,11 @@
 <template>
     <div>
-        登陆成功
+        <PageWrapper>
+            <div class="bg-gray-300"></div>
+        </PageWrapper>
     </div>
 </template>
-<script setup lang='ts'>
+<script setup lang="ts">
+import { PageWrapper } from "@c/PageWrapper/index"
 </script>
-<style lang='less' scoped>
-</style>
+<style lang="less" scoped></style>
