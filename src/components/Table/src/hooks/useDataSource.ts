@@ -1,21 +1,83 @@
 import { BasicTableProps } from "./../types/index"
-import { isFunction } from "lodash"
+import { get, isBoolean, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 interface useDataSourceContext {
     getProps: ComputedRef<BasicTableProps>
+    emit: EmitType
 }
 
-export function useDataSource({ getProps }: useDataSourceContext) {
+export function useDataSource({ getProps, emit }: useDataSourceContext) {
+    const dataSourceRef = ref<Recordable[]>([])
+    const rawDataSourceRef = ref<Recordable>({})
+
+    const getDataSource = computed(() => {
+        const dataSource = unref(dataSourceRef)
+        if (!dataSource || dataSource.length === 0) {
+            return unref(dataSourceRef)
+        }
+        return unref(dataSourceRef)
+    })
+
     async function handleFetch() {
-        const { api, beforeFetch } = unref(getProps)
+        const {
+            api,
+            beforeFetch,
+            paginationSetting,
+            fetchSetting,
+            afterFetch,
+        } = unref(getProps)
         if (!api && !isFunction(api)) {
             return api
         }
-        let params = {}
         try {
-            beforeFetch && isFunction(beforeFetch) && beforeFetch(params)
+            let params = {}
+            const { pageField, sizeField, listField, totalField } =
+                Object.assign(
+                    {
+                        pageField: "page",
+                        sizeField: "pagesize",
+                        listField: "list",
+                        totalField: "total",
+                    },
+                    fetchSetting
+                )
+            const { currentPage = 1, pageSize = 15 } =
+                isBoolean(paginationSetting) || !paginationSetting
+                    ? {}
+                    : paginationSetting
+
+            if (isBoolean(paginationSetting) && !paginationSetting) {
+                params = {}
+            } else {
+                params[pageField] = currentPage
+                params[sizeField] = pageSize
+            }
+
+            if (beforeFetch && isFunction(beforeFetch))
+                params = beforeFetch(params)
             const res = await api(params)
-            console.log(res)
+            rawDataSourceRef.value = res
+
+            const isArrayResult = Array.isArray(res)
+
+            let resultItems: Recordable[] = isArrayResult
+                ? res
+                : get(res, listField)
+            const resultTotal: number = isArrayResult
+                ? res.length
+                : get(res, totalField)
+
+            if (afterFetch && isFunction(afterFetch)) {
+                resultItems = (await afterFetch(resultItems)) || resultItems
+            }
+
+            dataSourceRef.value = resultItems
+
+            emit("fetch-success", {
+                items: unref(resultItems),
+                total: resultTotal,
+            })
+            return resultItems
         } catch (error) {
             console.log(error)
         }
@@ -28,6 +90,7 @@ export function useDataSource({ getProps }: useDataSourceContext) {
     })
 
     return {
+        getDataSource,
         handleFetch,
     }
 }

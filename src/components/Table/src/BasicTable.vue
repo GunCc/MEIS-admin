@@ -5,9 +5,20 @@
         </div>
 
         <el-table v-bind="getTableProps">
-            <el-table-column prop="date" label="Date" width="180" />
-            <el-table-column prop="name" label="Name" width="180" />
-            <el-table-column prop="address" label="Address" />
+            <el-table-column
+                v-for="item in getColumn"
+                :key="item.prop"
+                :prop="item.prop"
+                :label="item.label"
+                :width="item.width"
+            >
+                <template
+                    #default="scope"
+                    v-if="Object.keys($slots).includes(item.prop)"
+                >
+                    <slot :name="item.prop" v-bind="scope || {}"></slot>
+                </template>
+            </el-table-column>
         </el-table>
         <Pagination class="mt-5 text-right" v-bind="getPaginationProps" />
     </div>
@@ -17,16 +28,19 @@ import { BasicTableProps } from "./types/index"
 import { TableActions } from "./types/actions"
 import { useDataSource } from "./hooks/useDataSource"
 import { usePagination } from "./hooks/usePagination"
+import { useTableColumn } from "./hooks/useTableColumn"
+
 import { Pagination } from "@c/Pagination/index"
 
 export default defineComponent({
     name: "BasicTable",
-    emits: ["register"],
+    emits: ["register", "fetch-success"],
     components: {
         Pagination,
     },
     setup(props, { emit }) {
         const innerTableProps = ref<Partial<BasicTableProps>>()
+        // const paginationRef = ref<Partial<BasicTableProps>>()
         // const loadingRef = ref<boolean>(false);
         const getProps = computed(() => {
             return {
@@ -37,7 +51,7 @@ export default defineComponent({
 
         const getTableProps = computed(() => {
             return {
-                data: [],
+                data: unref(getDataSource),
             }
         })
         // 修改props
@@ -47,7 +61,13 @@ export default defineComponent({
         }
 
         // 获取数据资源
-        const {} = useDataSource({
+        const { getDataSource } = useDataSource({
+            emit,
+            getProps,
+        })
+
+        // 获取column
+        const { getColumn } = useTableColumn({
             getProps,
         })
 
@@ -66,6 +86,7 @@ export default defineComponent({
             getProps,
             getTableProps,
             getPaginationProps,
+            getColumn,
         }
     },
 })
