@@ -1,7 +1,7 @@
 <template>
     <div>
         <BasicMenu
-            class="layout-menu bg-white border-right border-gray-100 border-solid"
+            class="layout-menu border-right border-gray-100 dark:border-gray-500 border-solid"
             v-bind="getProps"
         />
     </div>

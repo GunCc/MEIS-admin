@@ -1,5 +1,5 @@
 <template>
-    <HeaderWrap class="flex items-center justify-end dark:bg-dark-900">
+    <HeaderWrap class="flex items-center justify-end dark:bg-gray-900">
         <div class="px-4 flex items-center divide-x">
             <el-switch
                 v-model="theme"
@@ -11,7 +11,7 @@
 
             <svg-image
                 name="zhongyingwenyingwen"
-                style-class="w-5 h-5 fill-gray-500 mr-8 ml-4"
+                style-class="w-5 h-5 fill-gray-500 dark:fill-gray-100 mr-8 ml-4"
             />
             <!-- <div
                 class="flex w-18 h-8 bg-green-700 items-center justify-center text-white rounded rounded-3xl text-sm mx-4"

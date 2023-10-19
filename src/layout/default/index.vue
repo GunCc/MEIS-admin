@@ -2,7 +2,7 @@
     <LayoutHeader />
     <div class="flex">
         <LayoutSider />
-        <div>
+        <div class="flex-1">
             <LayoutContent />
         </div>
     </div>
