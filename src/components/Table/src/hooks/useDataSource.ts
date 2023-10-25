@@ -41,7 +41,7 @@ export function useDataSource({ getProps, emit }: useDataSourceContext) {
                     },
                     fetchSetting
                 )
-            const { currentPage = 1, pageSize = 15 } =
+            const { currentPage = 1, pageSize = 5 } =
                 isBoolean(paginationSetting) || !paginationSetting
                     ? {}
                     : paginationSetting

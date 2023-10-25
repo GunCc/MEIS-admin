@@ -1,12 +1,14 @@
 <template>
-    <div class="bg-white p-5 shadow">
+    <div class="bg-white p-5 shadow dark:bg-gray-900" ref="tableElRef">
         <!-- 搜索表格 -->
         <BasicForm
+            ref="formElRef"
             @register="registerTableForm"
             v-if="getProps.formSettings"
             v-bind="getFormSetting"
         ></BasicForm>
-        <div class="text-lg font-weight-bold mb-5">
+
+        <div class="text-lg font-weight-bold pb-5 table-title">
             {{ getProps.title || "表格" }}
         </div>
 
@@ -26,7 +28,10 @@
                 </template>
             </el-table-column>
         </el-table>
-        <Pagination class="mt-5 text-right" v-bind="getPaginationProps" />
+
+        <div class="table-footer pt-5">
+            <Pagination class="text-right" v-bind="getPaginationProps" />
+        </div>
     </div>
 </template>
 <script lang="ts">
@@ -38,6 +43,8 @@ import { useTableColumn } from "./hooks/useTableColumn"
 import { useTableForm } from "./hooks/useTableForm"
 import { Pagination } from "@c/Pagination/index"
 import { BasicForm, useForm } from "@c/Form/index"
+import { useTableScroll } from "./hooks/useTableScroll"
+import { propTypes } from "@/utils/propTypes"
 
 export default defineComponent({
     name: "BasicTable",
@@ -46,7 +53,15 @@ export default defineComponent({
         Pagination,
         BasicForm,
     },
+    props: {
+        showSearchForm: propTypes.bool.def(true),
+        showPagination: propTypes.bool.def(true),
+    },
     setup(props, { emit }) {
+        // 获取 table 对象
+        const tableElRef = ref(null)
+        const formElRef = ref(null)
+
         const innerTableProps = ref<Partial<BasicTableProps>>()
 
         // const paginationRef = ref<Partial<BasicTableProps>>()
@@ -63,6 +78,7 @@ export default defineComponent({
 
         const getTableProps = computed(() => {
             return {
+                height: unref(getTableHeight),
                 data: unref(getDataSource),
             }
         })
@@ -84,10 +100,19 @@ export default defineComponent({
         })
 
         // 获取分页数据
-        const { getPaginationProps } = usePagination()
+        const { getPaginationProps, getPaginationIsShow } = usePagination({
+            getProps,
+        })
 
         // 表格使用form表单
         const { getFormSetting } = useTableForm({ getProps })
+
+        // 表格滚动和高度
+        const { getTableHeight } = useTableScroll({
+            getProps,
+            tableElRef,
+            formElRef,
+        })
 
         const actions: TableActions = {
             setProps,
@@ -98,6 +123,8 @@ export default defineComponent({
             emit("register", actions)
         })
         return {
+            tableElRef,
+            formElRef,
             setProps,
             getProps,
             getTableProps,
@@ -105,6 +132,7 @@ export default defineComponent({
             getColumn,
             registerTableForm,
             getFormSetting,
+            getPaginationIsShow,
         }
     },
 })

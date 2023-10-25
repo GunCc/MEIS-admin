@@ -6,5 +6,11 @@ declare interface Fn<T = any, R = T> {
     (...arg: T[]): R
 }
 
+declare type TimeoutHandle = ReturnType<typeof setTimeout>
 
-declare type TimeoutHandle = ReturnType<typeof setTimeout>;
+declare interface ComponentElRef<T extends HTMLElement = HTMLDivElement> {
+    $el: T
+}
+
+declare type ComponentRef<T extends HTMLElement = HTMLDivElement> =
+    ComponentElRef<T> | null

@@ -58,3 +58,35 @@ export function getViewportOffset(element: Element): ViewportOffsetResult {
         bottomIncludeBody: clientHeight - top,
     }
 }
+
+// 获取元素 上下的padding和margin
+export function calcSubtractSpace(
+    element: Element | null | undefined,
+    direction: "all" | "top" | "bottom" = "all"
+) {
+    function numberPx(px: string) {
+        return Number(px.replace(/[^\d]/g, ""))
+    }
+    let subtractHeight = 0
+    const ZERO_PX = "0px"
+    if (element) {
+        const cssStyle = window.getComputedStyle(element)
+        const marginTop = numberPx(cssStyle?.marginTop ?? ZERO_PX)
+        const marginBottom = numberPx(cssStyle?.marginBottom ?? ZERO_PX)
+        const paddingTop = numberPx(cssStyle?.paddingTop ?? ZERO_PX)
+        const paddingBottom = numberPx(cssStyle?.paddingBottom ?? ZERO_PX)
+        if (direction === "all") {
+            subtractHeight += marginTop
+            subtractHeight += paddingTop
+            subtractHeight += marginBottom
+            subtractHeight += paddingBottom
+        } else if (direction === "top") {
+            subtractHeight += marginTop
+            subtractHeight += paddingTop
+        } else if (direction === "bottom") {
+            subtractHeight += marginBottom
+            subtractHeight += paddingBottom
+        }
+    }
+    return subtractHeight
+}

@@ -6,9 +6,11 @@ export interface BasicTableProps {
     title: string
     // 表格列头管理
     column?: ColumnProps[]
+
     // 表格搜索管理
     formSettings?: BasicFormProps
-
+    // 是否显示form表单
+    showSearchForm?: boolean
     // 请求路径
     api?: (...arg: any) => Promise<any>
     // 是否立即请求
@@ -19,6 +21,8 @@ export interface BasicTableProps {
     afterFetch?: Fn
     // 分页配置
     paginationSetting?: PaginationSetting
+    // 是否使用分页功能
+    showPagination?: boolean
     // 请求设置
     fetchSetting?: Partial<FetchSetting>
 }

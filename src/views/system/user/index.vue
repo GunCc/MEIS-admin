@@ -26,7 +26,7 @@ const [register, { getVialdColumn }] = useTable({
             {
                 label: "关键字",
                 field: "keywords",
-                col: { span: "6" },
+                col: { span: 6 },
                 componentProps: {
                     placeholder: "请输入关键字",
                 },

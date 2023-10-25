@@ -1,5 +1,5 @@
 <template>
-    <div ref="wrapperRef">
+    <div ref="wrapperRef" >
         <div
             class="overflow-hidden"
             :style="getContentStyle"
