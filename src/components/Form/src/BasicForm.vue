@@ -14,20 +14,20 @@
                         <slot :name="item" v-bind="data || {}"></slot>
                     </template>
                 </FormItem>
-
-                <FormActionItem v-bind="getActionProps">
-                    <template
-                        v-for="item in [
-                            'action-before',
-                            'action-center',
-                            'action-after',
-                        ]"
-                        #[item]="data"
-                    >
-                        <slot :name="item" v-bind="data || {}" />
-                    </template>
-                </FormActionItem>
             </template>
+
+            <FormActionItem v-bind="getActionProps">
+                <template
+                    v-for="item in [
+                        'action-before',
+                        'action-center',
+                        'action-after',
+                    ]"
+                    #[item]="data"
+                >
+                    <slot :name="item" v-bind="data || {}" />
+                </template>
+            </FormActionItem>
         </el-row>
     </el-form>
 </template>
@@ -50,6 +50,7 @@ export default defineComponent({
         FormItem,
         FormActionItem,
     },
+    props: {},
     setup(props, { attrs, emit }) {
         // form 实例
         const formElRef = ref<Nullable<FormActionType | FormInstance>>(null)

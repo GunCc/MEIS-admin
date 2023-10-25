@@ -14,7 +14,7 @@ type RegisterFn = () => void
 export type ReturnUseFormType = [RegisterFn, FormActionType]
 
 export interface BasicFormProps extends Partial<FormProps> {
-    schemas: FormItemSchemas[]
+    schemas?: FormItemSchemas[]
     // 是否显示操作按钮
     showAction?: boolean
     // 操作按钮的位置配置
@@ -48,6 +48,8 @@ export interface FormItemSchemas extends Partial<FormItemProps> {
     // 字段名
     field: string
 
+    // 布局
+    col?: Partial<ColEx>
     // 默认值
     defaultValue?: any
     // 组件

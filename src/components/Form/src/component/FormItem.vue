@@ -1,6 +1,6 @@
 <script lang="tsx">
 import { PropType, computed, defineComponent, unref } from "vue"
-import { FormItemSchemas, RenderCallbackParams } from "../types/form"
+import { FormItemSchemas } from "../types/form"
 import { Nullable } from "vitest"
 import { isFunction } from "lodash"
 
@@ -20,7 +20,7 @@ export default defineComponent({
             default: null,
         },
     },
-    setup(props, {  }) {
+    setup(props, {}) {
         const getSchema = computed(() => {
             return {
                 class: "w-full",
@@ -44,8 +44,12 @@ export default defineComponent({
         })
 
         function getContext() {
-            const { field, componentProps, renderComponentContent } =
-                unref(getSchema)
+            const {
+                field,
+                componentProps,
+                renderComponentContent,
+                col = { span: 24 },
+            } = unref(getSchema)
 
             const onEvent = {
                 onChange: (...args: Nullable<Recordable>[]) => {
@@ -73,11 +77,16 @@ export default defineComponent({
                   }
 
             return (
-                <el-form-item {...formItemAttr}>
-                    <el-input {...CompAttr} v-model={props.formModal[field]}>
-                        {compSlot}
-                    </el-input>
-                </el-form-item>
+                <el-col {...col}>
+                    <el-form-item {...formItemAttr}>
+                        <el-input
+                            {...CompAttr}
+                            v-model={props.formModal[field]}
+                        >
+                            {compSlot}
+                        </el-input>
+                    </el-form-item> 
+                </el-col>
             )
         }
 

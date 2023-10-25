@@ -21,6 +21,18 @@ const [register, { getVialdColumn }] = useTable({
     title: "用户管理",
     api: getList,
     immediate: true,
+    formSettings: {
+        schemas: [
+            {
+                label: "关键字",
+                field: "keywords",
+                col: { span: "6" },
+                componentProps: {
+                    placeholder: "请输入关键字",
+                },
+            },
+        ],
+    },
     column: [
         {
             prop: "uuid",

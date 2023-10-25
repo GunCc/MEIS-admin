@@ -1,11 +1,14 @@
+import { BasicFormProps } from "@/components/Form/src/types/form"
 import { PaginationProps, TableColumnCtx } from "element-plus"
-import { TableColumn } from "element-plus/es/components/table/src/table-column/defaults"
 
 export interface BasicTableProps {
     // 表格名称
     title: string
     // 表格列头管理
     column?: ColumnProps[]
+    // 表格搜索管理
+    formSettings?: BasicFormProps
+
     // 请求路径
     api?: (...arg: any) => Promise<any>
     // 是否立即请求
