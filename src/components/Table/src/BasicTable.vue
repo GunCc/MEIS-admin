@@ -67,7 +67,7 @@ export default defineComponent({
         })
 
         // 获取column
-        const { getColumn } = useTableColumn({
+        const { getColumn, getVialdColumn } = useTableColumn({
             getProps,
         })
 
@@ -76,6 +76,7 @@ export default defineComponent({
 
         const actions: TableActions = {
             setProps,
+            getVialdColumn
         }
 
         onMounted(() => {

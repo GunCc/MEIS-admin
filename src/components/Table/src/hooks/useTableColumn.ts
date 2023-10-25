@@ -8,8 +8,15 @@ export function useTableColumn({ getProps }: useTableColumnContext) {
         const { column } = unref(getProps)
         return column
     })
+    function getVialdColumn(): Recordable[] {
+        const columns = unref(getColumn)
+        if (!columns || columns.length == 0) return []
+
+        return columns.filter(item => item.canViald)
+    }
 
     return {
         getColumn,
+        getVialdColumn,
     }
 }

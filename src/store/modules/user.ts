@@ -1,4 +1,4 @@
-import { login } from "@/api/v1/base"
+import { login } from "@/api/v1/system/base"
 import { defineStore } from "pinia"
 import { store } from ".."
 import { Login } from "./../../api/model/base/request"

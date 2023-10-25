@@ -2,7 +2,11 @@
     <PageWrapper content-class="p-5">
         <basic-table @register="register">
             <template #action="{ row }">
-                <TableColumnAction :row="row" />
+                <TableColumnAction
+                    :row="row"
+                    :edit-schemas="editSchemas"
+                    @action-edit="handleActionEdit"
+                />
             </template>
         </basic-table>
     </PageWrapper>
@@ -13,7 +17,7 @@ import { PageWrapper } from "@c/PageWrapper/index"
 import { useTable } from "@c/Table/index"
 import { getList } from "@/api/v1/system/user"
 import { TableColumnAction } from "@c/TableAction"
-const [register] = useTable({
+const [register, { getVialdColumn }] = useTable({
     title: "用户管理",
     api: getList,
     immediate: true,
@@ -29,6 +33,7 @@ const [register] = useTable({
         {
             prop: "nickname",
             label: "昵称",
+            canViald: true,
         },
         {
             prop: "created_at",
@@ -44,5 +49,14 @@ const [register] = useTable({
         },
     ],
 })
+let editSchemas = ref<Recordable[]>([])
+
+function handleActionEdit(row) {
+    editSchemas.value = getVialdColumn().map(item => {
+        let key = item.prop
+        item.defaultValue = row[key]
+        return item
+    })
+}
 </script>
 <style lang="scss"></style>

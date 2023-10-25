@@ -1,10 +1,9 @@
 import { BasicTableProps } from "../types"
-import { TableActions } from "../types/actions"
+import { TableActions, UseRegisterContext } from "../types/actions"
 import { Nullable } from "vitest"
 import { WatchStopHandle } from "vue"
 
-export function useTable(props?: BasicTableProps) {
-
+export function useTable(props?: BasicTableProps): UseRegisterContext {
     const tableRef = ref<Nullable<TableActions>>(null)
     let stopWatch: WatchStopHandle
 
@@ -31,6 +30,9 @@ export function useTable(props?: BasicTableProps) {
     const actions: TableActions = {
         setProps(props: Partial<BasicTableProps>) {
             getTableEl()?.setProps(props)
+        },
+        getVialdColumn(): Recordable[] {
+            return getTableEl()?.getVialdColumn() || []
         },
     }
 

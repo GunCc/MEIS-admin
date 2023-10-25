@@ -14,6 +14,7 @@ declare global {
   const $toRef: typeof import('vue/macros')['$toRef']
   const EffectScope: typeof import('vue')['EffectScope']
   const ElMessage: typeof import('element-plus/es')['ElMessage']
+  const ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
   const axios: typeof import('axios')['default']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
@@ -92,6 +93,7 @@ declare module 'vue' {
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly ElMessage: UnwrapRef<typeof import('element-plus/es')['ElMessage']>
+    readonly ElMessageBox: UnwrapRef<typeof import('element-plus/es')['ElMessageBox']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -164,6 +166,7 @@ declare module '@vue/runtime-core' {
     readonly $toRef: UnwrapRef<typeof import('vue/macros')['$toRef']>
     readonly EffectScope: UnwrapRef<typeof import('vue')['EffectScope']>
     readonly ElMessage: UnwrapRef<typeof import('element-plus/es')['ElMessage']>
+    readonly ElMessageBox: UnwrapRef<typeof import('element-plus/es')['ElMessageBox']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>

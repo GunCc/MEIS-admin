@@ -7,6 +7,7 @@ import {
 import { componentType } from "../../componentMap"
 import { Arrayable, Nullable } from "vitest"
 import { Slot } from "vue"
+import { ColEx } from "./index"
 
 type RegisterFn = () => void
 
@@ -14,6 +15,10 @@ export type ReturnUseFormType = [RegisterFn, FormActionType]
 
 export interface BasicFormProps extends Partial<FormProps> {
     schemas: FormItemSchemas[]
+    // 是否显示操作按钮
+    showAction?: boolean
+    // 操作按钮的位置配置
+    actionColOptions?: Partial<ColEx>
 }
 
 // 插槽返回的数据

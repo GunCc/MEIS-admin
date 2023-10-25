@@ -14,6 +14,19 @@
                         <slot :name="item" v-bind="data || {}"></slot>
                     </template>
                 </FormItem>
+
+                <FormActionItem v-bind="getActionProps">
+                    <template
+                        v-for="item in [
+                            'action-before',
+                            'action-center',
+                            'action-after',
+                        ]"
+                        #[item]="data"
+                    >
+                        <slot :name="item" v-bind="data || {}" />
+                    </template>
+                </FormActionItem>
             </template>
         </el-row>
     </el-form>
@@ -26,12 +39,16 @@ import { useFormValues } from "./hooks/useFormValues"
 import { mergeData } from "@/utils/helper"
 import FormItem from "./component/FormItem.vue"
 import { useFormEvents } from "./hooks/useFormEvents"
+import { useActionEvents } from "./hooks/useActionEvents"
+
 import { FormInstance } from "element-plus"
+import FormActionItem from "./component/FormAction.vue"
 export default defineComponent({
     name: "BasicForm",
     emits: ["register"],
     components: {
         FormItem,
+        FormActionItem,
     },
     setup(props, { attrs, emit }) {
         // form 实例
@@ -86,6 +103,11 @@ export default defineComponent({
             formModel[key] = value
         }
 
+        // 获取 action 配置
+        const { getActionProps } = useActionEvents({
+            getProps,
+        })
+
         const formAction: FormActionType = {
             setProps,
             setFormSchemas,
@@ -106,6 +128,7 @@ export default defineComponent({
             getSchema,
             formModel,
             setFormModelField,
+            getActionProps,
         }
     },
 })

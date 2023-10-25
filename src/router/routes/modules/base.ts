@@ -37,6 +37,25 @@ const baseRoutes: Array<RouteRecordRaw> = [
             },
         ],
     },
+    {
+        path: "/materialLibrary",
+        name: "MaterialLibrary",
+        component: Layout,
+        redirect: "/materialLibrary/manager",
+        meta: {
+            title: "面板",
+        },
+        children: [
+            {
+                path: "manager",
+                name: "Manager",
+                component: () => import("@/views/materialLibrary/manager/index.vue"),
+                meta: {
+                    title: "Manager",
+                },
+            },
+        ],
+    },
 ]
 
 export default baseRoutes

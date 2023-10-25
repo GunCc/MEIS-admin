@@ -33,4 +33,7 @@ interface FetchSetting {
     totalField: string
 }
 
-interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {}
+interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {
+    // 是否可以获取字段 用于编辑和添加
+    canViald?: boolean
+}

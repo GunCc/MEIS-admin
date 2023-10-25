@@ -7,14 +7,17 @@ export {}
 
 declare module 'vue' {
   export interface GlobalComponents {
+    BasicEdit: typeof import('./src/components/TableAction/src/BasicEdit.vue')['default']
     BasicForm: typeof import('./src/components/Form/src/BasicForm.vue')['default']
     BasicMenu: typeof import('./src/components/Menu/src/BasicMenu.vue')['default']
+    BasicModal: typeof import('./src/components/Modal/src/BasicModal.vue')['default']
     BasicTable: typeof import('./src/components/Table/src/BasicTable.vue')['default']
     ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElButtonGroup: typeof import('element-plus/es')['ElButtonGroup']
     ElCalendar: typeof import('element-plus/es')['ElCalendar']
     ElCol: typeof import('element-plus/es')['ElCol']
+    ElDialog: typeof import('element-plus/es')['ElDialog']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -28,10 +31,12 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    FormAction: typeof import('./src/components/Form/src/component/FormAction.vue')['default']
     FormItem: typeof import('./src/components/Form/src/component/FormItem.vue')['default']
     MenuEvents: typeof import('./src/components/Menu/hooks/menuEvents.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Src: typeof import('./src/components/Dropdown/src/index.vue')['default']
+    UseMessage: typeof import('./src/components/Modal/src/hooks/useMessage.vue')['default']
   }
 }

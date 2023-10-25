@@ -40,6 +40,12 @@ export default defineComponent({
                             },
                         ],
                     },
+
+                    {
+                        title: "素材库",
+                        key: "/materialLibrary/manager",
+                        path: "/materialLibrary/manager",
+                    },
                 ],
             }
         })
