@@ -44,3 +44,8 @@ interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {
     // 是否可以获取字段 用于编辑和添加
     canViald?: boolean
 }
+
+export interface FetchParams {
+    searchInfo?: Recordable
+    page?: number
+}

@@ -4,6 +4,7 @@
         <BasicForm
             ref="formElRef"
             @register="registerTableForm"
+            @submit="handleSearchInfoChange"
             v-if="getProps.formSettings"
             v-bind="getFormSetting"
         ></BasicForm>
@@ -73,7 +74,7 @@ export default defineComponent({
         // const loadingRef = ref<boolean>(false);
 
         // 使用form表单进行搜索
-        const [registerTableForm] = useForm()
+        const [registerTableForm, formActions] = useForm()
         const getProps = computed(() => {
             return {
                 ...props,
@@ -104,14 +105,18 @@ export default defineComponent({
         })
 
         // 获取数据资源
-        const { getDataSource, handlePageChange } = useDataSource({
+        const { getDataSource, handlePageChange, handleFetch } = useDataSource({
             emit,
             getProps,
             setPagination,
             getPaginationProps,
+            getFormValues: formActions.getFormValues,
         })
         // 表格使用form表单
-        const { getFormSetting } = useTableForm({ getProps })
+        const { getFormSetting, handleSearchInfoChange } = useTableForm({
+            getProps,
+            handleFetch,
+        })
 
         // 表格滚动和高度
         const { getTableHeight } = useTableScroll({
@@ -139,6 +144,7 @@ export default defineComponent({
             registerTableForm,
             getFormSetting,
             handlePageChange,
+            handleSearchInfoChange,
         }
     },
 })

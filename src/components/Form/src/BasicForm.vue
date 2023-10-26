@@ -46,6 +46,7 @@ import { useActionEvents } from "./hooks/useActionEvents"
 import { createFormContext } from "./hooks/useFormContext"
 import { FormInstance } from "element-plus"
 import FormActionItem from "./component/FormAction.vue"
+import { basicProps } from "./props"
 export default defineComponent({
     name: "BasicForm",
     emits: ["register", "reset", "submit"],
@@ -53,7 +54,7 @@ export default defineComponent({
         FormItem,
         FormActionItem,
     },
-    props: {},
+    props: basicProps,
     setup(props, { attrs, emit }) {
         // form 实例
         const formElRef = ref<Nullable<FormActionType | FormInstance>>(null)

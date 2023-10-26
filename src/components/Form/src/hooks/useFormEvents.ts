@@ -99,6 +99,7 @@ export function useFormEvents(
         nextTick(() => clearValidate())
 
         emit("reset", toRaw(formModel))
+        console.log("重置", submitOnReset)
 
         submitOnReset && handleSubmit()
     }

@@ -8,6 +8,8 @@ export const basicProps = {
         default: () => [],
     },
     showAction: propTypes.bool.def(true),
+    submitOnReset: propTypes.bool.def(true),
+
     actionColOptions: {
         type: Object as PropType<Partial<ColEx>>,
     },

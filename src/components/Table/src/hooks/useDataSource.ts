@@ -1,5 +1,9 @@
-import { BasicTableProps, PaginationSetting } from "./../types/index"
-import { get, isBoolean, isFunction } from "lodash"
+import {
+    BasicTableProps,
+    FetchParams,
+    PaginationSetting,
+} from "./../types/index"
+import { get, isBoolean, isFunction, merge } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 import { PAGE_SIZE } from "../const"
 interface useDataSourceContext {
@@ -7,6 +11,7 @@ interface useDataSourceContext {
     emit: EmitType
     setPagination: (info: Partial<PaginationSetting>) => void
     getPaginationProps: ComputedRef<PaginationSetting>
+    getFormValues: () => Recordable
 }
 
 export function useDataSource({
@@ -14,6 +19,7 @@ export function useDataSource({
     emit,
     setPagination,
     getPaginationProps,
+    getFormValues,
 }: useDataSourceContext) {
     const dataSourceRef = ref<Recordable[]>([])
     const rawDataSourceRef = ref<Recordable>({})
@@ -34,14 +40,14 @@ export function useDataSource({
         await handleFetch()
     }
 
-    async function handleFetch() {
+    async function handleFetch(opt?: FetchParams) {
         const {
             api,
             beforeFetch,
-            paginationSetting = {},
             fetchSetting,
             afterFetch,
             showPagination,
+            showSearchForm,
         } = unref(getProps)
         if (!api && !isFunction(api)) {
             return api
@@ -64,13 +70,19 @@ export function useDataSource({
             if (isBoolean(showPagination) && !showPagination) {
                 params = {}
             } else {
-                params[pageField] = currentPage
+                params[pageField] = (opt && opt.page) || currentPage
                 params[sizeField] = pageSize
             }
 
+            let fetchParams: Recordable = merge(
+                params,
+                showSearchForm ? getFormValues() : {},
+                opt?.searchInfo ?? {}
+            )
+
             if (beforeFetch && isFunction(beforeFetch))
-                params = beforeFetch(params)
-            const res = await api(params)
+                fetchParams = beforeFetch(fetchParams)
+            const res = await api(fetchParams)
             rawDataSourceRef.value = res
 
             const isArrayResult = Array.isArray(res)
