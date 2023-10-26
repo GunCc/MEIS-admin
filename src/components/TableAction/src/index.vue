@@ -47,7 +47,7 @@ export default defineComponent({
             type: Array as PropType<FormItemSchemas[]>,
         },
     },
-    emits: ["action-edit"],
+    emits: ["action-edit", "action-remove"],
     components: {
         BasicModal,
         BasicEditForm,
@@ -99,6 +99,9 @@ export default defineComponent({
             useWarnMessage({
                 title: "删除",
                 context: `您确定删除这个${row?.nickname}这个用户嘛？`,
+                successFn: () => {
+                    emit("action-remove", row)
+                },
             })
         }
         function defaultHandleEdit() {

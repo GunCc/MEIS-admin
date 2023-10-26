@@ -6,6 +6,7 @@
                     :row="row"
                     :edit-schemas="editSchemas"
                     @action-edit="handleActionEdit"
+                    @action-remove="handleActionDelete"
                 />
             </template>
         </basic-table>
@@ -69,6 +70,10 @@ function handleActionEdit(row) {
         item.defaultValue = row[key]
         return item
     })
+}
+
+function handleActionDelete(row){
+    console.log("删除成功",row)
 }
 </script>
 <style lang="scss"></style>
