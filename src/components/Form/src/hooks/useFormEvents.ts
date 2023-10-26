@@ -2,7 +2,7 @@ import { FormInstance, FormItemProp } from "element-plus"
 import { Arrayable } from "vitest"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
 import { FormActionType } from "./../types/form"
-import { isArray, isString } from "lodash"
+import { cloneDeep, isArray, isString } from "lodash"
 
 interface UseFormEventsContext {
     getProps: ComputedRef<BasicFormProps>
@@ -10,15 +10,20 @@ interface UseFormEventsContext {
     initForm: () => void
     formModel: Recordable
     formElRef: Ref<FormActionType>
+    defaultValueRef: Ref<Recordable>
 }
 
-export function useFormEvents({
-    getProps,
-    setProps,
-    initForm,
-    formModel,
-    formElRef,
-}: UseFormEventsContext) {
+export function useFormEvents(
+    emit: EmitType,
+    {
+        getProps,
+        setProps,
+        initForm,
+        formModel,
+        formElRef,
+        defaultValueRef,
+    }: UseFormEventsContext
+) {
     async function setFormSchemas(schemas: FormItemSchemas[]) {
         await setProps({
             ...getProps,
@@ -50,12 +55,52 @@ export function useFormEvents({
 
     // 表单校验
     async function validate() {
-        return await formElRef.value.validate()
+        return await unref(formElRef)?.validate()
     }
 
     // 表单校验特定字段
     async function validateField(item?: Arrayable<FormItemProp>) {
-        return await formElRef.value.validateField(item)
+        await unref(formElRef)?.validateField(item)
+    }
+
+    // 表单校验特定字段
+    async function clearValidate(item?: Arrayable<FormItemProp>) {
+        await unref(formElRef)?.clearValidate(item)
+    }
+
+    // 表单点击提交事件
+    async function handleSubmit(e?: Event): Promise<void> {
+        e && e.preventDefault()
+        const formEl = unref(formElRef)
+        if (!formEl) return
+        try {
+            await validate()
+            const res = getFormValues()
+            emit("submit", res)
+        } catch (error: any) {
+            if (error?.outOfDate === false && error?.errorFields) {
+                return
+            }
+            throw new Error(error)
+        }
+    }
+
+    // 表单重置
+    async function resetFields(): Promise<void> {
+        const { submitOnReset } = unref(getProps)
+        const formEl = unref(formElRef)
+        if (!formEl) return
+
+        Object.keys(formModel).forEach(key => {
+            const defaultValue = cloneDeep(defaultValueRef.value[key])
+            formModel[key] = defaultValue || ""
+        })
+
+        nextTick(() => clearValidate())
+
+        emit("reset", toRaw(formModel))
+
+        submitOnReset && handleSubmit()
     }
 
     return {
@@ -64,5 +109,8 @@ export function useFormEvents({
         setFormSchemas,
         getFormValues,
         validate,
+        handleSubmit,
+        resetFields,
+        clearValidate,
     }
 }

@@ -43,12 +43,12 @@ import { mergeData } from "@/utils/helper"
 import FormItem from "./component/FormItem.vue"
 import { useFormEvents } from "./hooks/useFormEvents"
 import { useActionEvents } from "./hooks/useActionEvents"
-
+import { createFormContext } from "./hooks/useFormContext"
 import { FormInstance } from "element-plus"
 import FormActionItem from "./component/FormAction.vue"
 export default defineComponent({
     name: "BasicForm",
-    emits: ["register"],
+    emits: ["register", "reset", "submit"],
     components: {
         FormItem,
         FormActionItem,
@@ -59,6 +59,9 @@ export default defineComponent({
         const formElRef = ref<Nullable<FormActionType | FormInstance>>(null)
         // 内部参数
         const innerFormProps = ref<Partial<BasicFormProps>>({})
+        // 默认时候的表单
+        const defaultValueRef = ref<Recordable>({})
+
         const getProps = computed(() => {
             return {
                 ...attrs,
@@ -78,6 +81,7 @@ export default defineComponent({
             getProps,
             formModel,
             getSchema,
+            defaultValueRef,
         })
         // 修改props
         async function setProps(
@@ -94,12 +98,16 @@ export default defineComponent({
             validate,
             validateField,
             getFormField,
-        } = useFormEvents({
+            resetFields,
+            handleSubmit,
+            clearValidate,
+        } = useFormEvents(emit, {
             getProps,
             setProps,
             initForm,
             formModel,
             formElRef: formElRef as Ref<FormActionType>,
+            defaultValueRef,
         })
 
         // 修改表单model
@@ -119,7 +127,14 @@ export default defineComponent({
             validate,
             validateField,
             getFormField,
+            clearValidate,
         }
+
+        // 创建 action 函数
+        createFormContext({
+            resetAction: resetFields,
+            submitAction: handleSubmit,
+        })
 
         onMounted(() => {
             emit("register", formAction)

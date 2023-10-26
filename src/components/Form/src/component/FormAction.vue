@@ -3,9 +3,15 @@
         <el-form-item class="w-full">
             <div :class="buttonClass">
                 <slot name="action-before" />
-                <el-button v-bind="getBasicProps">重置</el-button>
+                <el-button v-bind="getBasicProps" @click="resetAction">
+                    重置
+                </el-button>
                 <slot name="action-center" />
-                <el-button v-bind="getBasicProps" type="primary">
+                <el-button
+                    v-bind="getBasicProps"
+                    type="primary"
+                    @click="submitAction"
+                >
                     确认
                 </el-button>
                 <slot name="action-after" />
@@ -16,6 +22,7 @@
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
 import { PropType } from "vue"
+import { useFormContext } from "../hooks/useFormContext"
 import { ColEx } from "../types"
 
 export default defineComponent({
@@ -47,6 +54,7 @@ export default defineComponent({
         return {
             getActionCol,
             getBasicProps,
+            ...useFormContext(),
         }
     },
 })

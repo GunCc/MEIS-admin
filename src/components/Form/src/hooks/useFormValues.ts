@@ -1,16 +1,19 @@
 import { computed } from "vue"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
+import { cloneDeep } from "lodash"
 
 interface UseFormValuesContext {
     getProps: ComputedRef<BasicFormProps>
     formModel: Recordable
     getSchema: ComputedRef<FormItemSchemas[]>
+    defaultValueRef: Ref<Recordable>
 }
 
 export function useFormValues({
     getProps,
     formModel,
     getSchema,
+    defaultValueRef,
 }: UseFormValuesContext) {
     // 表单参数
     const getFormProps = computed(() => {
@@ -27,6 +30,7 @@ export function useFormValues({
             obj[item.field] = item.defaultValue || ""
         })
         Object.assign(formModel, obj)
+        defaultValueRef.value = cloneDeep(obj)
     }
     return { getFormProps, initForm }
 }

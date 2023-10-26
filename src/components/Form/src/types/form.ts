@@ -19,6 +19,8 @@ export interface BasicFormProps extends Partial<FormProps> {
     showAction?: boolean
     // 操作按钮的位置配置
     actionColOptions?: Partial<ColEx>
+    // 是否在点击重置按钮的时候也请求表单
+    submitOnReset?: boolean
 }
 
 // 插槽返回的数据
@@ -41,6 +43,8 @@ export interface FormActionType extends Partial<FormInstance> {
     validate: () => Promise<any>
     // 表单验证特定字段
     validateField: (item?: Arrayable<FormItemProp>) => Promise<any>
+    // 清除表单校验项
+    clearValidate: (item?: Arrayable<FormItemProp>) => Promise<any>
 }
 
 // 表单布局
