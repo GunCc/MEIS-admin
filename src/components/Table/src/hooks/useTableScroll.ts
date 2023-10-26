@@ -54,7 +54,6 @@ export function useTableScroll({
             headerHeight -
             footerHeight -
             formHeight -
-            20 -
             tableSubtractSpace
         setHeight(height)
     }

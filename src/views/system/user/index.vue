@@ -1,5 +1,5 @@
 <template>
-    <PageWrapper content-class="p-5">
+    <PageWrapper>
         <basic-table @register="register">
             <template #action="{ row }">
                 <TableColumnAction
@@ -72,8 +72,8 @@ function handleActionEdit(row) {
     })
 }
 
-function handleActionDelete(row){
-    console.log("删除成功",row)
+function handleActionDelete(row) {
+    console.log("删除成功", row)
 }
 </script>
 <style lang="scss"></style>

@@ -1,5 +1,6 @@
 <template>
     <el-pagination
+        class="meis-pagination"
         v-bind="getProps"
         v-model:current-page="currentPage"
         @current-change="handleCurrentChange"

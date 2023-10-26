@@ -1,5 +1,5 @@
 <template>
-    <div class="bg-white p-5 shadow dark:bg-gray-900" ref="tableElRef">
+    <div class="bg-white p-5 shadow dark:bg-gray-900 m-5 mb-0" ref="tableElRef">
         <!-- 搜索表格 -->
         <BasicForm
             ref="formElRef"

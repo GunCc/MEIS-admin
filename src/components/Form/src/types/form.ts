@@ -60,6 +60,8 @@ export interface FormItemSchemas extends Partial<FormItemProps> {
     component?: componentType
     // 组件参数
     componentProps?: Recordable
+    // formItem 参数
+    formItemProps?: Recordable
     // 组件定制渲染
     renderComponentContent?:
         | ((renderCallbackParams: RenderCallbackParams) => any)

@@ -2,7 +2,7 @@
 import { PropType, computed, defineComponent, unref } from "vue"
 import { FormItemSchemas } from "../types/form"
 import { Nullable } from "vitest"
-import { isFunction } from "lodash"
+import { isFunction, merge } from "lodash"
 
 export default defineComponent({
     name: "FormItem",
@@ -48,6 +48,7 @@ export default defineComponent({
                 field,
                 componentProps,
                 renderComponentContent,
+                formItemProps,
                 col = { span: 24 },
             } = unref(getSchema)
 
@@ -59,9 +60,11 @@ export default defineComponent({
                     props.setFormModel(field, value)
                 },
             }
+            console.log(formItemProps)
 
             const formItemAttr = {
                 prop: field,
+                ...merge(formItemProps),
                 ...unref(getSchema),
             }
 
@@ -85,7 +88,7 @@ export default defineComponent({
                         >
                             {compSlot}
                         </el-input>
-                    </el-form-item> 
+                    </el-form-item>
                 </el-col>
             )
         }
