@@ -9,7 +9,11 @@
         >
             {{ item.title }}
         </el-button>
-        <BasicModal v-bind="getBasicModal" @before-close="handleBeforeClose">
+        <BasicModal
+            v-bind="getBasicModal"
+            v-model:visible="visible"
+            @before-close="handleBeforeClose"
+        >
             <template #header> {{ getModalHeader }} </template>
             <template #default>
                 <BasicEditForm :schemas="editSchemas"> </BasicEditForm>
@@ -59,7 +63,6 @@ export default defineComponent({
             return {
                 width: "640px",
                 appendToBody: true,
-                visible: unref(visible),
             }
         })
         const getActionColumnBind = computed(() => {
@@ -111,9 +114,10 @@ export default defineComponent({
             emit("action-edit", row)
         }
         function handleBeforeClose() {
-            visible.value = false
+            // visible.value = false
         }
         return {
+            visible,
             getModalHeader,
             getBasicModal,
             defaultHandleRemove,

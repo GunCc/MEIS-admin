@@ -3,17 +3,29 @@
         <div class="bg-white p-5 mb-5 shadow" ref="wrapperElRef">
             <BasicForm @register="register" ref="formElRef">
                 <template #action-center>
-                    <el-button type="success">添加</el-button>
+                    <el-button type="success" @click="handleAdd">
+                        添加
+                    </el-button>
                 </template>
             </BasicForm>
+            <div class="material-header flex items-center justify-between pb-4 ">
+                <div class="flex items-center">
+                    <span class="text-sm text-gray-700">分类：</span>
+                    <CustomTabs
+                        v-bind="getCustomOptions"
+                        v-model="getCurrent"
+                    />
+                </div>
+
+                <div>
+                    <el-button type="info" > 分类编辑 </el-button>
+                </div>
+            </div>
             <el-scrollbar :height="unref(getWrapHeight)">
                 <div>
                     <el-row>
                         <el-col
-                            :sm="8"
-                            :md="6"
-                            :lg="4"
-                            :xl="3"
+                            v-bind="getImageColOptions"
                             v-for="item in 30"
                             :key="item"
                         >
@@ -37,6 +49,10 @@
                 </div>
             </el-scrollbar>
             <Pagination class="pt-5"></Pagination>
+            <BasicModal v-model:visible="visible" width="500px">
+                <template #header> 添加图片</template>
+                <template #default> </template>
+            </BasicModal>
         </div>
     </PageWrapper>
 </template>
@@ -47,11 +63,27 @@ import { BasicImage } from "@c/Image/index"
 import { SvgIcon } from "@c/SvgIcon/index"
 
 import { BasicForm, useForm } from "@c/Form/index"
-import { useMaterialForm, useMaterial } from "./index"
+import {
+    useMaterialForm,
+    useMaterial,
+    useCustomTabs,
+    useMaterialList,
+} from "./index"
+import { BasicModal } from "@c/Modal/index"
+import { CustomTabs } from "@c/Tabs/index"
+
+const formElRef = ref(null)
+const wrapperElRef = ref(null)
+const visible = ref<boolean>(false)
+
 const { getFormProps } = useMaterialForm()
 const [register] = useForm(unref(getFormProps))
-const wrapperElRef = ref(null)
-const formElRef = ref(null)
 const { getWrapHeight } = useMaterial(wrapperElRef, formElRef)
+const { getImageColOptions } = useMaterialList()
+const { getCurrent, getCustomOptions } = useCustomTabs()
+
+function handleAdd() {
+    visible.value = true
+}
 </script>
 <style lang="scss"></style>

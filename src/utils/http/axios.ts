@@ -86,6 +86,9 @@ export class CustomAxios {
         return this.request({ ...config, method: "POST" }, options)
     }
 
+    // 上传文件
+    // uploadFile<T = any>() {}
+
     // 请求
     request<T = any>(
         config: AxiosRequestConfig,

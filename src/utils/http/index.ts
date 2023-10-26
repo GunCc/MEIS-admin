@@ -86,6 +86,7 @@ const transform: AxiosTranstion = {
 }
 
 function createAxios(opt?: Partial<CreateAxiosConfig>) {
+    const { VITE_HTTP_URL } = import.meta.env
     return new CustomAxios(
         deepMerge(
             {
@@ -98,7 +99,7 @@ function createAxios(opt?: Partial<CreateAxiosConfig>) {
                     "Content-Type": "application/json;charset=UTF-8",
                 },
                 otherConfig: {
-                    baseURL: "http://127.0.0.1:8888",
+                    baseURL: VITE_HTTP_URL,
                     messageModal: "modal",
                 },
                 transform: clone(transform),
