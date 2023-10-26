@@ -6,8 +6,10 @@ interface useActionEventsContext {
 
 export function useActionEvents({ getProps }: useActionEventsContext) {
     const getActionProps = computed(() => {
-        const { actionColOptions = { span: 24 } } = unref(getProps)
+        const { actionColOptions = { span: 24 }, showAction = true } =
+            unref(getProps)
         return {
+            isShow: showAction,
             buttonClass: "ml-auto",
             size: "default",
             actionColOptions,

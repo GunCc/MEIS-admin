@@ -158,6 +158,7 @@ roleMap.set("Student", [
 ])
 
 const [regitserForm, { setFormSchemas, getFormValues }] = useForm({
+    showAction: false,
     schemas: roleMap.get("Teacher") as FormItemSchemas[],
 })
 function handleChangeRole(role: EducationLoginRole) {

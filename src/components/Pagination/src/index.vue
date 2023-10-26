@@ -20,7 +20,8 @@ export default defineComponent({
         layout: propTypes.string,
         current: propTypes.number.def(1),
     },
-    setup(props) {
+    emits: ["page-change"],
+    setup(props, { emit }) {
         const currentPage = ref<number>(1)
         const getProps = computed(() => {
             return {
@@ -35,7 +36,7 @@ export default defineComponent({
             }
         )
         function handleCurrentChange(page: number) {
-            console.log(`${page} items per page`)
+            emit("page-change", page)
         }
         function handleSizeChange(page: number) {
             currentPage.value = page

@@ -27,7 +27,7 @@ export interface BasicTableProps {
     fetchSetting?: Partial<FetchSetting>
 }
 
-interface PaginationSetting extends PaginationProps {}
+export interface PaginationSetting extends PaginationProps {}
 
 interface FetchSetting {
     // 请求接口当前页数

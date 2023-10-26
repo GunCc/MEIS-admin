@@ -30,7 +30,12 @@
         </el-table>
 
         <div class="table-footer pt-5">
-            <Pagination class="text-right" v-bind="getPaginationProps" />
+            <Pagination
+                @page-change="handlePageChange"
+                class="text-right"
+                v-bind="getPaginationProps"
+                v-if="getProps.showPagination"
+            />
         </div>
     </div>
 </template>
@@ -88,22 +93,23 @@ export default defineComponent({
             innerTableProps.value = { ...unref(innerTableProps), ...props }
         }
 
-        // 获取数据资源
-        const { getDataSource } = useDataSource({
-            emit,
-            getProps,
-        })
-
         // 获取column
         const { getColumn, getVialdColumn } = useTableColumn({
             getProps,
         })
 
         // 获取分页数据
-        const { getPaginationProps, getPaginationIsShow } = usePagination({
+        const { getPaginationProps, setPagination } = usePagination({
             getProps,
         })
 
+        // 获取数据资源
+        const { getDataSource, handlePageChange } = useDataSource({
+            emit,
+            getProps,
+            setPagination,
+            getPaginationProps,
+        })
         // 表格使用form表单
         const { getFormSetting } = useTableForm({ getProps })
 
@@ -132,7 +138,7 @@ export default defineComponent({
             getColumn,
             registerTableForm,
             getFormSetting,
-            getPaginationIsShow,
+            handlePageChange,
         }
     },
 })

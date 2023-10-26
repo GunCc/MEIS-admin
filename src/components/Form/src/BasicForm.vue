@@ -16,7 +16,10 @@
                 </FormItem>
             </template>
 
-            <FormActionItem v-bind="getActionProps">
+            <FormActionItem
+                v-bind="getActionProps"
+                v-if="getActionProps.isShow"
+            >
                 <template
                     v-for="item in [
                         'action-before',

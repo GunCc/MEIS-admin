@@ -37,13 +37,13 @@ import { getCaptcha, login } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
 import { Login } from "@/api/model/base/request"
-import { userStore,userStoreOutset } from "@/store/modules/user"
+import { userStore, userStoreOutset } from "@/store/modules/user"
 
 const captcha = ref<Nullable<CaptchaValue>>(null)
 
 const [regitserForm, { getFormValues }] = useForm({
     labelWidth: 100,
-
+    showAction: false,
     schemas: [
         {
             label: "管理员账号",
@@ -94,7 +94,7 @@ async function handleSubmit() {
         await useUserStore.handleLogin(params)
     } catch (error) {
         // 失败后要重新获取image
-        await getCaptchaImage();
+        await getCaptchaImage()
         console.error(error)
     }
 }

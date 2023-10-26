@@ -1,6 +1,6 @@
 <template>
     <el-col v-bind="getActionCol">
-        <el-form-item>
+        <el-form-item class="w-full">
             <div :class="buttonClass">
                 <slot name="action-before" />
                 <el-button v-bind="getBasicProps">重置</el-button>
