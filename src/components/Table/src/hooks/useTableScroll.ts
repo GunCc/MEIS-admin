@@ -3,6 +3,7 @@ import { Nullable } from "vitest"
 import { onMountedOrActivated } from "@/hooks/core/onMountedOrActivated"
 import { useWindowSize } from "@/hooks/event/useWindowSizeFn"
 import { calcSubtractSpace, getViewportOffset } from "@/utils/domUtils"
+import { nextTick } from "vue"
 
 interface useTableScrollContext {
     getProps: ComputedRef<BasicTableProps>
@@ -25,6 +26,15 @@ export function useTableScroll({
     let headerEl: HTMLElement | null
     let footerEl: HTMLElement | null
     async function calcTableHeight() {
+        const { autoHeight } = unref(getProps)
+
+        if (!autoHeight) {
+            stop()
+            return
+        }
+
+        await nextTick()
+
         const table = unref(tableElRef)
         if (!table) return
 
@@ -36,7 +46,6 @@ export function useTableScroll({
             footerEl = table.querySelector(".table-footer") as HTMLElement
         }
 
-        await nextTick()
         const { showSearchForm, showPagination } = unref(getProps)
         let formHeight = 0
         if (showSearchForm) {
@@ -47,7 +56,6 @@ export function useTableScroll({
         if (!showPagination) footerHeight = 0
         const { bottomIncludeBody } = getViewportOffset(table)
         const tableSubtractSpace = calcSubtractSpace(table)
-        
 
         let height =
             bottomIncludeBody -
@@ -67,14 +75,14 @@ export function useTableScroll({
 
     // 计算表格可用高度
     const getTableHeight = computed(() => {
-        console.log("unref(tableHeightRef)", unref(tableHeightRef))
         return `${unref(tableHeightRef)}px`
     })
 
-    useWindowSize(calcTableHeight, 280)
+    const [stop] = useWindowSize(calcTableHeight, 280)
     onMountedOrActivated(() => {
         calcTableHeight()
     })
+
     return {
         redoHeight,
         getTableHeight,

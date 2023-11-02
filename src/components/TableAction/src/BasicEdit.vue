@@ -1,5 +1,5 @@
 <template>
-    <BasicForm @register="registerForm"></BasicForm>
+    <BasicForm @register="registerForm" @submit="handleSubmit"></BasicForm>
 </template>
 <script lang="ts">
 import { FormItemSchemas } from "@/components/Form/src/types/form"
@@ -15,14 +15,26 @@ export default defineComponent({
             type: Array as PropType<FormItemSchemas[]>,
         },
     },
-    setup(props) {
+    emits: ["form-submit"],
+    setup(props, { emit }) {
         const getSchemas = computed(() => {
             return props.schemas || ([] as FormItemSchemas[])
         })
-        const [registerForm] = useForm({
+        const [registerForm, { setFormSchemas }] = useForm({
             schemas: unref(getSchemas),
         })
+        watch(
+            () => props.schemas,
+            () => setFormSchemas(props.schemas || []),
+            {
+                deep: true,
+            }
+        )
+        function handleSubmit(data: Recordable) {
+            emit("form-submit", data)
+        }
         return {
+            handleSubmit,
             registerForm,
         }
     },

@@ -3,3 +3,7 @@ export interface BaseListRequest {
     pageSize: number
     keyword: string
 }
+
+export interface GetById {
+    id: string | number
+}

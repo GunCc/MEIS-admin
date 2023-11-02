@@ -8,4 +8,6 @@ export interface TableActions {
     setProps: (props: Partial<BasicTableProps>) => void
     // 获取可以被编辑的col
     getVialdColumn: () => Recordable[]
+    // 重新加载
+    reload: () => Promise<any>
 }

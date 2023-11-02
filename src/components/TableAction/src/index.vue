@@ -5,6 +5,7 @@
             :key="item.handle"
             :type="item.type"
             :size="item.size"
+            :disabled="item.disabled"
             @click="item.handle"
         >
             {{ item.title }}
@@ -14,9 +15,15 @@
             v-model:visible="visible"
             @before-close="handleBeforeClose"
         >
-            <template #header> {{ getModalHeader }} </template>
+            <template #header>
+                {{ getBasicModal.title }}
+            </template>
             <template #default>
-                <BasicEditForm :schemas="editSchemas"> </BasicEditForm>
+                <BasicEditForm
+                    :schemas="schemasSetting"
+                    @form-submit="handleFormSubmit"
+                >
+                </BasicEditForm>
             </template>
             <!-- <template #footer>
                 <slot name="footer"></slot>
@@ -32,6 +39,7 @@ import { BasicModal, useWarnMessage } from "@c/Modal/index"
 import { isArray } from "lodash"
 import BasicEditForm from "./BasicEdit.vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
+import { TableActionInstance } from "./types"
 interface ActionButtonSetting extends Partial<ButtonProps> {
     title: string
     handle: (...args) => void
@@ -47,22 +55,32 @@ export default defineComponent({
             type: Array as PropType<ActionButtonSetting[]>,
             default: () => [],
         },
-        editSchemas: {
+        schemasSetting: {
             type: Array as PropType<FormItemSchemas[]>,
         },
+        editButtonSetting: {
+            type: Object as PropType<ActionButtonSetting>,
+            default: () => {},
+        },
+        removeButtonSetting: {
+            type: Object as PropType<ActionButtonSetting>,
+            default: () => {},
+        },
     },
-    emits: ["action-edit", "action-remove"],
+    emits: ["action-edit", "action-remove", "register", "form-submit"],
     components: {
         BasicModal,
         BasicEditForm,
     },
     setup(props, { emit }) {
-        const visible = ref<boolean>(false)
-        const headerTitle = ref<string>("")
+        const visible = ref<Boolean>(false)
+        const basicModalProps = ref<Recordable>({})
         const getBasicModal = computed(() => {
             return {
+                title: "标题",
                 width: "640px",
                 appendToBody: true,
+                ...unref(basicModalProps),
             }
         })
         const getActionColumnBind = computed(() => {
@@ -72,36 +90,40 @@ export default defineComponent({
             }
         })
 
-        // 获取弹窗头部
-        const getModalHeader = computed(() => {
-            return unref(headerTitle)
-        })
         const getButtonList = computed((): ActionButtonSetting[] => {
-            const { buttonList } = props
+            const { buttonList, editButtonSetting, removeButtonSetting } = props
             if (!isArray(buttonList) || buttonList.length == 0) {
                 return [
-                    {
-                        title: "编辑",
-                        type: "primary",
-                        size: "small",
-                        handle: defaultHandleEdit,
-                    },
-                    {
-                        title: "删除",
-                        type: "danger",
-                        size: "small",
-                        handle: defaultHandleRemove,
-                    },
+                    Object.assign(
+                        {
+                            title: "编辑",
+                            type: "primary",
+                            size: "small",
+                            handle: defaultHandleEdit,
+                        },
+                        editButtonSetting
+                    ),
+                    Object.assign(
+                        {
+                            title: "删除",
+                            type: "danger",
+                            size: "small",
+                            handle: defaultHandleRemove,
+                        },
+                        removeButtonSetting
+                    ),
                 ]
             }
             return buttonList
         })
         function defaultHandleRemove() {
             const { row } = props
-            headerTitle.value = "删除操作"
+            setEditModalProps({
+                title: "删除操作",
+            })
             useWarnMessage({
                 title: "删除",
-                context: `您确定删除这个${row?.nickname}这个用户嘛？`,
+                context: `您确定删除嘛？`,
                 successFn: () => {
                     emit("action-remove", row)
                 },
@@ -109,21 +131,47 @@ export default defineComponent({
         }
         function defaultHandleEdit() {
             const { row } = props
-            visible.value = true
-            headerTitle.value = "编辑操作"
+            // handleSetVisible()
+            setEditModalProps({
+                title: "编辑操作",
+            })
             emit("action-edit", row)
         }
         function handleBeforeClose() {
             // visible.value = false
         }
+
+        function handleSetVisible(flag: boolean = true) {
+            visible.value = flag
+        }
+
+        function setEditModalProps(props: Recordable) {
+            basicModalProps.value = {
+                ...unref(basicModalProps),
+                ...props,
+            }
+        }
+
+        function handleFormSubmit(data: Recordable) {
+            emit("form-submit", data)
+        }
+
+        const action: TableActionInstance = {
+            setEditModalProps,
+            handleSetVisible,
+        }
+
+        onMounted(() => {
+            emit("register", action)
+        })
         return {
             visible,
-            getModalHeader,
             getBasicModal,
             defaultHandleRemove,
             getActionColumnBind,
             getButtonList,
             handleBeforeClose,
+            handleFormSubmit,
         }
     },
 })

@@ -34,6 +34,9 @@ export function useTable(props?: BasicTableProps): UseRegisterContext {
         getVialdColumn(): Recordable[] {
             return getTableEl()?.getVialdColumn() || []
         },
+        async reload(): Promise<any> {
+            return getTableEl()?.reload()
+        },
     }
 
     return [register, actions]

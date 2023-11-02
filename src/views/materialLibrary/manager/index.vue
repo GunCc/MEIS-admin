@@ -3,12 +3,12 @@
         <div class="bg-white p-5 mb-5 shadow" ref="wrapperElRef">
             <BasicForm @register="register" ref="formElRef">
                 <template #action-center>
-                    <el-button type="success" @click="handleAdd">
+                    <el-button type="success" @click="handleAddImage">
                         添加
                     </el-button>
                 </template>
             </BasicForm>
-            <div class="material-header flex items-center justify-between pb-4 ">
+            <div class="material-header flex items-center justify-between pb-4">
                 <div class="flex items-center">
                     <span class="text-sm text-gray-700">分类：</span>
                     <CustomTabs
@@ -18,7 +18,9 @@
                 </div>
 
                 <div>
-                    <el-button type="info" > 分类编辑 </el-button>
+                    <el-button type="info" @click="handleTypeEdit">
+                        分类编辑
+                    </el-button>
                 </div>
             </div>
             <el-scrollbar :height="unref(getWrapHeight)">
@@ -50,8 +52,10 @@
             </el-scrollbar>
             <Pagination class="pt-5"></Pagination>
             <BasicModal v-model:visible="visible" width="500px">
-                <template #header> 添加图片</template>
-                <template #default> </template>
+                <template #header> {{ getModalProps.title }}</template>
+                <template #default>
+                    <component :is="getModalProps.component"></component>
+                </template>
             </BasicModal>
         </div>
     </PageWrapper>
@@ -75,14 +79,37 @@ import { CustomTabs } from "@c/Tabs/index"
 const formElRef = ref(null)
 const wrapperElRef = ref(null)
 const visible = ref<boolean>(false)
+const modelProps = ref<Recordable>({
+    title: "添加图片",
+})
+
+const getModalProps = computed({
+    get: () => unref(modelProps),
+    set: val => {
+        modelProps.value = { ...unref(modelProps), ...val }
+    },
+})
 
 const { getFormProps } = useMaterialForm()
-const [register] = useForm(unref(getFormProps))
 const { getWrapHeight } = useMaterial(wrapperElRef, formElRef)
-const { getImageColOptions } = useMaterialList()
-const { getCurrent, getCustomOptions } = useCustomTabs()
+const { getImageColOptions, handleAddImage } = useMaterialList(
+    handleOpen,
+    getModalProps
+)
+const { getCurrent, getCustomOptions, handleTypeEdit } = useCustomTabs(
+    handleOpen,
+    getModalProps
+)
+defineExpose({
+    getCurrent,
+    getCustomOptions,
+    handleTypeEdit,
+    getImageColOptions,
+    handleAddImage,
+})
+const [register] = useForm(unref(getFormProps))
 
-function handleAdd() {
+function handleOpen() {
     visible.value = true
 }
 </script>

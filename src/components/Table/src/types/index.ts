@@ -3,10 +3,15 @@ import { PaginationProps, TableColumnCtx } from "element-plus"
 
 export interface BasicTableProps {
     // 表格名称
-    title: string
+    title?: string
+    // 表格样式
+    tableClass?: Recordable | string
     // 表格列头管理
     column?: ColumnProps[]
-
+    // 是否响应式表格高度
+    autoHeight?: boolean
+    // 是否显示阴影
+    showShadow?: boolean
     // 表格搜索管理
     formSettings?: BasicFormProps
     // 是否显示form表单

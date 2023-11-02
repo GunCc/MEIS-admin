@@ -1,15 +1,22 @@
 <template>
-    <div class="bg-white p-5 shadow dark:bg-gray-900 m-5 mb-0" ref="tableElRef">
+    <div
+        class="bg-white dark:bg-gray-900"
+        :class="`${getProps.showShadow && 'shadow'} ${getProps.tableClass}`"
+        ref="tableElRef"
+    >
         <!-- 搜索表格 -->
         <BasicForm
             ref="formElRef"
             @register="registerTableForm"
             @submit="handleSearchInfoChange"
-            v-if="getProps.formSettings"
             v-bind="getFormSetting"
+            v-if="getProps.showSearchForm"
         ></BasicForm>
 
-        <div class="text-lg font-weight-bold pb-5 table-title">
+        <div
+            class="text-lg font-weight-bold pb-5 table-title"
+            v-if="getProps.title"
+        >
             {{ getProps.title || "表格" }}
         </div>
 
@@ -60,8 +67,11 @@ export default defineComponent({
         BasicForm,
     },
     props: {
+        autoHeight: propTypes.bool.def(true),
         showSearchForm: propTypes.bool.def(true),
         showPagination: propTypes.bool.def(true),
+        showShadow: propTypes.bool.def(true),
+        tableClass: propTypes.string.def("p-5 m-5 mb-0"),
     },
     setup(props, { emit }) {
         // 获取 table 对象
@@ -83,14 +93,14 @@ export default defineComponent({
         })
 
         const getTableProps = computed(() => {
+            const { autoHeight } = unref(getProps)
             return {
-                height: unref(getTableHeight),
+                height: autoHeight ? unref(getTableHeight) : null,
                 data: unref(getDataSource),
             }
         })
         // 修改props
         function setProps(props: Partial<BasicTableProps>) {
-            console.log("调用", props)
             innerTableProps.value = { ...unref(innerTableProps), ...props }
         }
 
@@ -105,13 +115,14 @@ export default defineComponent({
         })
 
         // 获取数据资源
-        const { getDataSource, handlePageChange, handleFetch } = useDataSource({
-            emit,
-            getProps,
-            setPagination,
-            getPaginationProps,
-            getFormValues: formActions.getFormValues,
-        })
+        const { getDataSource, handlePageChange, handleFetch, reload } =
+            useDataSource({
+                emit,
+                getProps,
+                setPagination,
+                getPaginationProps,
+                getFormValues: formActions.getFormValues,
+            })
         // 表格使用form表单
         const { getFormSetting, handleSearchInfoChange } = useTableForm({
             getProps,
@@ -128,9 +139,11 @@ export default defineComponent({
         const actions: TableActions = {
             setProps,
             getVialdColumn,
+            reload,
         }
 
         onMounted(() => {
+            console.log("actions", actions)
             emit("register", actions)
         })
         return {

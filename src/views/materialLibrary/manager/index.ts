@@ -6,6 +6,7 @@ import {
 import { calcSubtractSpace, getViewportOffset } from "@/utils/domUtils"
 import { useWindowSize } from "@/hooks/event/useWindowSizeFn"
 import { onMountedOrActivated } from "@/hooks/core/onMountedOrActivated"
+import ManagerModalType from "./ModalType.vue"
 
 export function useMaterialForm() {
     const getSchemas = computed((): FormItemSchemas[] => {
@@ -92,7 +93,7 @@ export function useMaterial(wrapperElRef: Ref, formElRef: Ref<ComponentRef>) {
     }
 }
 
-export function useMaterialList() {
+export function useMaterialList(handleOpen: () => void, getModalProps: Ref) {
     const getImageColOptions = computed(() => {
         return {
             sm: 8,
@@ -101,12 +102,23 @@ export function useMaterialList() {
             xl: 3,
         }
     })
+
+    // 添加图片
+    function handleAddImage() {
+        handleOpen()
+        getModalProps.value = {
+            title: "添加图片",
+            component: shallowRef(ManagerModalType),
+        }
+    }
+
     return {
+        handleAddImage,
         getImageColOptions,
     }
 }
 
-export function useCustomTabs() {
+export function useCustomTabs(handleOpen: () => void, getModalProps: Ref) {
     const tabs_current = ref<string | number>("-1")
 
     const getCurrent = computed({
@@ -131,7 +143,17 @@ export function useCustomTabs() {
         }
     })
 
+    function handleTypeEdit() {
+        // 打开窗口
+        handleOpen()
+        getModalProps.value = {
+            title: "图片分类管理",
+            component: shallowRef(ManagerModalType),
+        }
+    }
+
     return {
+        handleTypeEdit,
         getCurrent,
         getCustomOptions,
     }

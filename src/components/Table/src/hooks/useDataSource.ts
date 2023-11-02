@@ -114,6 +114,10 @@ export function useDataSource({
         }
     }
 
+    async function reload(opt?: FetchParams) {
+        return await handleFetch(opt)
+    }
+
     onMounted(() => {
         useTimeoutFn(() => {
             unref(getProps).immediate && handleFetch()
@@ -121,6 +125,7 @@ export function useDataSource({
     })
 
     return {
+        reload,
         handlePageChange,
         getDataSource,
         handleFetch,

@@ -46,4 +46,5 @@ export interface AxiosTranstion {
 export interface AxiosOtherConfig {
     baseURL?: string
     messageModal?: SuccessMessageMode
+    
 }

@@ -38,7 +38,6 @@ export default defineComponent({
         },
     },
     setup(props) {
-        console.log("action", props)
         const getBasicProps = computed(() => {
             const { size } = props
             return {

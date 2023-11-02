@@ -4,7 +4,7 @@
             <template #action="{ row }">
                 <TableColumnAction
                     :row="row"
-                    :edit-schemas="editSchemas"
+                    :schemas-setting="schemasSetting"
                     @action-edit="handleActionEdit"
                     @action-remove="handleActionDelete"
                 />
@@ -13,9 +13,8 @@
     </PageWrapper>
 </template>
 <script lang="ts" setup>
-import { BasicTable } from "@c/Table/index"
+import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import { useTable } from "@c/Table/index"
 import { getList } from "@/api/v1/system/user"
 import { TableColumnAction } from "@c/TableAction"
 const [register, { getVialdColumn }] = useTable({
@@ -62,10 +61,10 @@ const [register, { getVialdColumn }] = useTable({
         },
     ],
 })
-let editSchemas = ref<Recordable[]>([])
+let schemasSetting = ref<Recordable[]>([])
 
 function handleActionEdit(row) {
-    editSchemas.value = getVialdColumn().map(item => {
+    schemasSetting.value = getVialdColumn().map(item => {
         let key = item.prop
         item.defaultValue = row[key]
         return item
