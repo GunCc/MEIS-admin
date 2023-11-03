@@ -72,7 +72,7 @@ import {
     useMaterial,
     useCustomTabs,
     useMaterialList,
-} from "./index"
+} from "./hooks/index"
 import { BasicModal } from "@c/Modal/index"
 import { CustomTabs } from "@c/Tabs/index"
 

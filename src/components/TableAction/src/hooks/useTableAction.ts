@@ -15,12 +15,7 @@ export function useTableAction(): useTableActionContext {
         return instance
     }
     const actions: TableActionInstance = {
-        setEditModalProps(props: Recordable) {
-            getInstance()?.setEditModalProps(props)
-        },
-        handleSetVisible(flag?: boolean) {
-            getInstance()?.handleSetVisible(flag)
-        },
+     
     }
     return [register, actions]
 }

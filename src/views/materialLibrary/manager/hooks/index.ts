@@ -6,7 +6,7 @@ import {
 import { calcSubtractSpace, getViewportOffset } from "@/utils/domUtils"
 import { useWindowSize } from "@/hooks/event/useWindowSizeFn"
 import { onMountedOrActivated } from "@/hooks/core/onMountedOrActivated"
-import ManagerModalType from "./ModalType.vue"
+import ManagerModalType from "../ModalType.vue"
 
 export function useMaterialForm() {
     const getSchemas = computed((): FormItemSchemas[] => {

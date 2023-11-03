@@ -25,8 +25,8 @@ export function useFormEvents(
     }: UseFormEventsContext
 ) {
     async function setFormSchemas(schemas: FormItemSchemas[]) {
+        console.log("schemas",schemas)
         await setProps({
-            ...unref(getProps),
             schemas,
         })
         initForm && initForm()

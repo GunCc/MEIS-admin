@@ -1,43 +1,57 @@
 <template>
     <div>
-        <el-button type="success" size="small" @click="handleAdd"
-            >添加</el-button
-        >
+        <el-button type="success" size="small" @click="handleAdd">
+            添加
+        </el-button>
         <BasicTable @register="register" :autoHeight="false">
             <template #action="{ row }">
                 <TableColumnAction
                     :row="row"
-                    :edit-button-setting="getButtonSetting(row)"
                     :remove-button-setting="getButtonSetting(row)"
-                    :schemas-setting="schemasSetting"
-                    @register="registerTableAction"
-                    @action-edit="handleActionEdit"
                     @action-remove="handleActionDelete"
-                    @form-submit="handleFormSubmit"
-                />
+                >
+                    <template #before-action="{ value }">
+                        <el-button
+                            size="small"
+                            type="primary"
+                            @click="handleActionEdit(value)"
+                        >
+                            编辑
+                        </el-button>
+                    </template>
+                </TableColumnAction>
             </template>
         </BasicTable>
+
+        <BasicModal v-bind="unref(getBasicModal)" v-model:visible="visible">
+            <template #header>
+                {{ getBasicModal.title }}
+            </template>
+            <template #default>
+                <basic-form
+                    @register="registerForm"
+                    :schemas="getSchemasSetting"
+                    @form-submit="handleFormSubmit"
+                >
+                </basic-form>
+            </template>
+        </BasicModal>
     </div>
 </template>
 <script lang="ts">
 import { BasicTable, useTable } from "@c/Table/index"
-import {
-    getFileType,
-    removeFileType,
-    updateFileType,
-    addFileType,
-} from "@/api/v1/system/upload"
-import { TableColumnAction, useTableAction } from "@c/TableAction"
-import { ResourceType } from "@/api/model/upload/request"
+import { getFileType } from "@/api/v1/system/upload"
+import { TableColumnAction } from "@c/TableAction"
+import { BasicForm, useForm } from "@c/Form"
+import { useModalType } from "./hooks/useModalType"
 
 export default defineComponent({
     name: "ManagerModalType",
-    components: { BasicTable, TableColumnAction },
+    components: { BasicTable, TableColumnAction, BasicForm },
     setup() {
-        const modalType = ref<"edit" | "add">("edit")
-        const rowRef = ref<Recordable>({})
-        const [registerTableAction, { handleSetVisible, setEditModalProps }] =
-            useTableAction()
+        const visible = ref<boolean>(false)
+
+        const [registerForm, { setFormSchemas }] = useForm()
 
         const [register, { getVialdColumn, reload }] = useTable({
             api: getFileType,
@@ -70,78 +84,40 @@ export default defineComponent({
             },
         })
 
+        const {
+            getBasicModal,
+            getSchemasSetting,
+            handleActionDelete,
+            handleActionEdit,
+            handleAdd,
+            handleFormSubmit,
+        } = useModalType(
+            reload,
+            setVisible,
+            getVialdColumn,
+            setFormSchemas
+        )
+
         const getButtonSetting = computed(() => row => {
             return {
                 disabled: row.id == "-1" ?? true,
             }
         })
-        let schemasSetting = ref<Recordable[]>([])
 
-        function handleActionEdit(row) {
-            modalType.value = "edit"
-            rowRef.value = row
-            handleSetVisible()
-            schemasSetting.value = getVialdColumn().map(item => {
-                let key = item.prop
-                return {
-                    label: item.label,
-                    field: item.prop,
-                    defaultValue: row[key],
-                }
-            })
-        }
-
-        async function handleActionDelete(row) {
-            try {
-                await removeFileType({
-                    id: row.id,
-                })
-                await reload()
-            } catch (error) {
-                console.error(error)
-            }
-        }
-
-        function handleAdd() {
-            modalType.value = "add"
-            handleSetVisible()
-            setEditModalProps({
-                title: "添加分类",
-            })
-            schemasSetting.value = getVialdColumn().map(item => {
-                return {
-                    label: item.label,
-                    field: item.prop,
-                    defaultValue: "",
-                }
-            })
-        }
-
-        async function handleFormSubmit(data: Recordable) {
-            try {
-                const getApi =
-                    unref(modalType) == "edit" ? updateFileType : addFileType
-                let params = {
-                    ...data,
-                    [unref(modalType) == "edit" ? "id" : ""]:
-                        unref(modalType) == "edit" ? unref(rowRef).id : "",
-                } as ResourceType
-                await getApi(params)
-                handleSetVisible(false)
-                await reload()
-            } catch (error) {
-                console.error(error)
-            }
+        function setVisible(flag: boolean = true) {
+            visible.value = flag
         }
 
         return {
+            visible,
             register,
+            registerForm,
             getButtonSetting,
-            schemasSetting,
-            handleActionEdit,
+            getSchemasSetting,
+            getBasicModal,
             handleActionDelete,
+            handleActionEdit,
             handleAdd,
-            registerTableAction,
             handleFormSubmit,
         }
     },
