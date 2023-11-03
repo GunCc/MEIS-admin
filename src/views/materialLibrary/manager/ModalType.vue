@@ -31,7 +31,7 @@
                 <basic-form
                     @register="registerForm"
                     :schemas="getSchemasSetting"
-                    @form-submit="handleFormSubmit"
+                    @submit="handleFormSubmit"
                 >
                 </basic-form>
             </template>
