@@ -38,13 +38,18 @@ declare module 'vue' {
     ElSwitch: typeof import('element-plus/es')['ElSwitch']
     ElTable: typeof import('element-plus/es')['ElTable']
     ElTableColumn: typeof import('element-plus/es')['ElTableColumn']
+    ElUpload: typeof import('element-plus/es')['ElUpload']
     FormAction: typeof import('./src/components/Form/src/component/FormAction.vue')['default']
     FormItem: typeof import('./src/components/Form/src/component/FormItem.vue')['default']
     FormSelect: typeof import('./src/components/Form/src/component/FormSelect.vue')['default']
+    FormUpload: typeof import('./src/components/Form/src/component/FormUpload.vue')['default']
     MenuEvents: typeof import('./src/components/Menu/hooks/menuEvents.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Src: typeof import('./src/components/Dropdown/src/index.vue')['default']
     UseMessage: typeof import('./src/components/Modal/src/hooks/useMessage.vue')['default']
+  }
+  export interface ComponentCustomProperties {
+    vLoading: typeof import('element-plus/es')['ElLoadingDirective']
   }
 }

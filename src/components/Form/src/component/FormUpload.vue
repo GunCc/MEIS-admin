@@ -1,7 +1,7 @@
 <template>
     <el-row class="w-100" :gutter="12">
-        <el-col v-bind="colOptions" v-for="item in imageList" :key="item.id">
-            <BasicImage wrap-class="rounded overflow-hidden" :src="item.url" />
+        <el-col v-bind="colOptions" v-for="item in imageList" :key="item">
+            <BasicImage wrap-class="rounded overflow-hidden" :src="item" />
         </el-col>
         <el-col v-bind="colOptions">
             <div class="w-full relative" style="padding-top: 100%">
@@ -23,17 +23,15 @@ import { Plus } from "@element-plus/icons-vue"
 import { UploadInstance } from "element-plus"
 import { Awaitable } from "element-plus/es/utils"
 import { PropType } from "vue"
-import { MEIS_http } from "@/utils/http"
-import { BasicImage } from "@c/Image/index"
-import { ColEx } from "@/components/Form/src/types"
-
 const { VITE_HTTP_URL } = import.meta.env
+import { MEIS_http } from "@/utils/http"
+import { ColEx } from "../types"
+
+import { BasicImage } from "@c/Image/index"
+
 export default defineComponent({
-    name: "BasicUploadFile",
+    name: "FormUpload",
     props: {
-        modelValue: {
-            type: [Array] as PropType<Recordable[]>,
-        },
         headers: {
             type: Object as PropType<Recordable>,
         },
@@ -64,19 +62,13 @@ export default defineComponent({
             default: () => ({ span: 6 }),
         },
     },
-    emits: ["update:modelValue"],
     components: { Plus, BasicImage },
-    setup(props, { emit }) {
+    setup(props) {
         const uploadRef = ref<UploadInstance>()
-        const imageList = ref<Recordable[]>([])
-
-        const onEvent = {
-            onSuccess: handleSuccess,
-        }
-
+        const imageList = ref<string[]>([])
         const getUploadOptions = computed(() => {
             return {
-                ...onEvent,
+                onSuccess: handleSuccess,
                 ...props,
                 action: VITE_HTTP_URL + "/resource/upload",
             }
@@ -84,24 +76,15 @@ export default defineComponent({
 
         async function handleSuccess(response: any) {
             try {
-                let res = await MEIS_http.uploadFile(response)
-                res.url = `${VITE_HTTP_URL}/${res.url}`
-
-                imageList.value = [...unref(imageList), res]
-                emit("update:modelValue", [...toRaw(unref(imageList))])
+                const res = await MEIS_http.uploadFile(response)
+                imageList.value = [
+                    ...unref(imageList),
+                    `${VITE_HTTP_URL}/${res.url}`,
+                ]
             } catch (error) {
                 console.error(error)
             }
         }
-
-        watch(
-            () => props.modelValue,
-            () => (imageList.value = props.modelValue || []),
-            {
-                deep: true,
-                immediate: true,
-            }
-        )
 
         return {
             imageList,

@@ -1,17 +1,17 @@
 <template>
-    {{ getOptions }}
-    <el-select v-bind="getSelectOptions">
+    <el-select v-bind="getSelectOptions" v-model="state">
         <el-option
             v-for="item in getOptions"
             :key="item[valueField]"
             :label="item.label"
-            :value="item"
+            :value="item[valueField]"
         >
         </el-option>
     </el-select>
 </template>
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
+import { useFormItem } from "@/hooks/components/useFormItem"
 import { PropType } from "vue"
 
 interface OptionsItem {
@@ -52,6 +52,8 @@ export default defineComponent({
     setup(props) {
         const options = ref<Recordable[]>([])
 
+        const [state] = useFormItem(props)
+
         // 选项框的默认属性
         const getSelectOptions = computed(() => {
             const { selectOptions } = props
@@ -82,6 +84,7 @@ export default defineComponent({
         )
 
         return {
+            state,
             getOptions,
             getSelectOptions,
         }

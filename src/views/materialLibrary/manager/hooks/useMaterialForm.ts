@@ -4,7 +4,7 @@ export function useMaterialForm() {
     const getSchemas = computed((): FormItemSchemas[] => {
         return [
             {
-                field: "keywords",
+                field: "keyword",
                 label: "关键字",
                 col: {
                     span: 6,

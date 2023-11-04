@@ -101,7 +101,6 @@ export default defineComponent({
         })
         // 修改props
         function setProps(props: Partial<BasicTableProps>) {
-            console.log("setProps", props)
             innerTableProps.value = { ...unref(innerTableProps), ...props }
         }
 

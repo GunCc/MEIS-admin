@@ -1,8 +1,8 @@
 <template>
     <div
         class="bg-black w-full relative"
-        :class="wrapClass"
         style="padding-top: 100%"
+        :class="wrapClass"
     >
         <el-image
             class="top-0 bottom-0 left-0 right-0"

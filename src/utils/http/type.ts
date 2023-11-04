@@ -1,5 +1,4 @@
 import type { AxiosRequestConfig, AxiosResponse } from "axios"
-import { Result } from "./../../types/axios.d"
 // 异常处理模式
 export type ErrorMessageMode = "none" | "modal" | "message" | undefined
 export type SuccessMessageMode = ErrorMessageMode
@@ -46,5 +45,4 @@ export interface AxiosTranstion {
 export interface AxiosOtherConfig {
     baseURL?: string
     messageModal?: SuccessMessageMode
-    
 }

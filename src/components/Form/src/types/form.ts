@@ -7,6 +7,7 @@ import {
 import { ComponentType } from "../../componentMap"
 import { Arrayable, Nullable } from "vitest"
 import { ColEx } from "./index"
+import { Slot } from "vue"
 
 type RegisterFn = () => void
 
@@ -43,14 +44,16 @@ export interface FormActionType extends Partial<FormInstance> {
     // 表单验证特定字段
     validateField: (item?: Arrayable<FormItemProp>) => Promise<any>
     // 清除表单校验项
-    clearValidate: (item?: Arrayable<FormItemProp>) => Promise<any>
+    clearValidate: (props?: Arrayable<FormItemProp>) => void
+    resetFields: (props?: Arrayable<FormItemProp>) => void
 }
 
 // 表单布局
 export interface FormItemSchemas extends Partial<FormItemProps> {
     // 字段名
     field: string
-
+    // slot 自定义插槽在input中
+    slot?: string
     // 布局
     col?: Partial<ColEx>
     // 默认值
@@ -61,10 +64,17 @@ export interface FormItemSchemas extends Partial<FormItemProps> {
     componentProps?: Recordable
     // formItem 参数
     formItemProps?: Recordable
-    // 组件定制渲染
+    // 组件内部定制渲染
     renderComponentContent?:
         | ((renderCallbackParams: RenderCallbackParams) => any)
         | VNode
         | VNode[]
         | string
+    render?: (
+        renderCallbackParams: RenderCallbackParams
+    ) => VNode | VNode[] | string
+    // 插槽jsx自定义
+    renderColContent?: (
+        renderCallbackParams: RenderCallbackParams
+    ) => VNode | VNode[] | string
 }

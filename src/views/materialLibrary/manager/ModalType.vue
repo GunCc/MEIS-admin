@@ -107,7 +107,6 @@ export default defineComponent({
         watch(
             () => props.uploadTypes,
             val => {
-                console.log("ModalType", val)
                 setProps({
                     dataSource: val,
                 })

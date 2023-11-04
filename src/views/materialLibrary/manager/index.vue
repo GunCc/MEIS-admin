@@ -1,7 +1,11 @@
 <template>
-    <PageWrapper content-class="p-5 ">
+    <PageWrapper content-class="p-5 " v-loading="loadingRef">
         <div class="bg-white p-5 mb-5 shadow" ref="wrapperElRef">
-            <BasicForm @register="register" ref="formElRef">
+            <BasicForm
+                @register="register"
+                ref="formElRef"
+                @submit="handleFormSubmit"
+            >
                 <template #action-center>
                     <el-button type="success" @click="handleAddImage">
                         添加
@@ -28,18 +32,19 @@
                     <el-row>
                         <el-col
                             v-bind="getImageColOptions"
-                            v-for="item in 30"
-                            :key="item"
+                            v-for="item in getImageList"
+                            :key="item.id"
                         >
                             <div class="mr-5">
                                 <BasicImage
                                     wrap-class="rounded overflow-hidden"
-                                    src="https://fuss10.elemecdn.com/e/5d/4a731a90594a4af544c0c25941171jpeg.jpeg"
+                                    :src="item.url"
                                 />
                                 <div
                                     class="dark:text-gray-100 text-sm py-3 flex items-center justify-center text-gray-700"
+                                    @click="handleEditImageName(item)"
                                 >
-                                    图片名字
+                                    {{ item.name }}
                                     <SvgIcon
                                         icon-name="bianji"
                                         icon-class="w-5 h-5"
@@ -50,14 +55,21 @@
                     </el-row>
                 </div>
             </el-scrollbar>
-            <Pagination class="pt-5"></Pagination>
+            <Pagination
+                class="pt-5"
+                v-bind="getPaginationProps"
+                @page-change="handlePageChange"
+            ></Pagination>
             <BasicModal v-model:visible="visible" width="500px">
                 <template #header> {{ getModalProps.title }}</template>
                 <template #default>
                     <component
                         :is="getModalProps.component"
                         :upload-types="unref(getUploadFiles)"
+                        :current-image-info="currentImageInfo"
                         @change="uploadFiledReload"
+                        @upload-submit="handleUploadSubmit"
+                        @update-success="handleUpdateSubmit"
                     >
                     </component>
                 </template>
@@ -86,6 +98,8 @@ import { ResourceType } from "@/api/model/upload/request"
 const formElRef = ref(null)
 const wrapperElRef = ref(null)
 const visible = ref<boolean>(false)
+const loadingRef = ref<boolean>(false)
+
 const modelProps = ref<Recordable>({
     title: "添加图片",
 })
@@ -103,17 +117,25 @@ const { getUploadFiles, reload: uploadFiledReload } = useUploadType()
 const { getFormProps } = useMaterialForm()
 // 素材库高度控制
 const { getWrapHeight } = useMaterial(wrapperElRef, formElRef)
-// 素材库获取图片资源
-const { getImageColOptions, handleAddImage } = useMaterialList(
-    handleOpen,
-    getModalProps
-)
 // 素材库获取Tabs控件
 const { getCurrent, getCustomOptions, handleTypeEdit } = useCustomTabs(
-    handleOpen,
+    handleVisibleTragger,
     getModalProps,
     getUploadFiles
 )
+// 素材库获取图片资源
+const {
+    getImageList,
+    getPaginationProps,
+    getImageColOptions,
+    handleAddImage,
+    handleUploadSubmit,
+    handlePageChange,
+    handleFormSubmit,
+    handleEditImageName,
+    currentImageInfo,
+    handleUpdateSubmit,
+} = useMaterialList(handleVisibleTragger, getModalProps, setLoading, getCurrent)
 
 defineExpose({
     getCurrent,
@@ -124,8 +146,12 @@ defineExpose({
 })
 const [register] = useForm(unref(getFormProps))
 
-function handleOpen() {
-    visible.value = true
+function handleVisibleTragger(flag: boolean = true) {
+    visible.value = flag
+}
+
+function setLoading(flag: boolean = true) {
+    loadingRef.value = flag
 }
 </script>
 <style lang="scss"></style>

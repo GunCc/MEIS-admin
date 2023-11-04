@@ -16,7 +16,6 @@ declare global {
   const ElInput: typeof import('element-plus/es')['ElInput']
   const ElMessage: typeof import('element-plus/es')['ElMessage']
   const ElMessageBox: typeof import('element-plus/es')['ElMessageBox']
-  const ElSelect: typeof import('element-plus/es')['ElSelect']
   const axios: typeof import('axios')['default']
   const computed: typeof import('vue')['computed']
   const createApp: typeof import('vue')['createApp']
@@ -97,7 +96,6 @@ declare module 'vue' {
     readonly ElInput: UnwrapRef<typeof import('element-plus/es')['ElInput']>
     readonly ElMessage: UnwrapRef<typeof import('element-plus/es')['ElMessage']>
     readonly ElMessageBox: UnwrapRef<typeof import('element-plus/es')['ElMessageBox']>
-    readonly ElSelect: UnwrapRef<typeof import('element-plus/es')['ElSelect']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>
@@ -172,7 +170,6 @@ declare module '@vue/runtime-core' {
     readonly ElInput: UnwrapRef<typeof import('element-plus/es')['ElInput']>
     readonly ElMessage: UnwrapRef<typeof import('element-plus/es')['ElMessage']>
     readonly ElMessageBox: UnwrapRef<typeof import('element-plus/es')['ElMessageBox']>
-    readonly ElSelect: UnwrapRef<typeof import('element-plus/es')['ElSelect']>
     readonly axios: UnwrapRef<typeof import('axios')['default']>
     readonly computed: UnwrapRef<typeof import('vue')['computed']>
     readonly createApp: UnwrapRef<typeof import('vue')['createApp']>

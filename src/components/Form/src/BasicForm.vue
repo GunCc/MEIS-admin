@@ -129,6 +129,7 @@ export default defineComponent({
             validateField,
             getFormField,
             clearValidate,
+            resetFields
         }
 
         // 创建 action 函数

@@ -50,20 +50,20 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
             return getForm()?.getFormField(fields)
         },
 
-
         validateField: async (
             item?: Arrayable<FormItemProp>
         ): Promise<Recordable> => {
             const form = await getForm()
             return form?.validateField(item)
         },
-        clearValidate: async (
-            item?: Arrayable<FormItemProp>
-        ): Promise<Recordable> => {
+        clearValidate: async (item?: Arrayable<FormItemProp>) => {
             const form = await getForm()
-            return form?.clearValidate(item)
+            form?.clearValidate(item)
         },
-
+        resetFields: async (item?: Arrayable<FormItemProp>) => {
+            const form = await getForm()
+            form?.resetFields(item)
+        },
     }
     return [register, actions]
 }

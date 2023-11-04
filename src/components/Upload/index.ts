@@ -1,2 +1,2 @@
-import BasicploadFile from "./src/index.vue"
-export { BasicploadFile }
+import BasicUploadFile from "./src/index.vue"
+export { BasicUploadFile }

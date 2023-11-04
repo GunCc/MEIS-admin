@@ -4,6 +4,7 @@ import { FormItemSchemas } from "../types/form"
 import { Nullable } from "vitest"
 import { isFunction, merge } from "lodash"
 import { componentMap } from "../../componentMap"
+import { getSlot } from "@/utils/helper/tsxhelper"
 
 export default defineComponent({
     name: "FormItem",
@@ -21,7 +22,7 @@ export default defineComponent({
             default: null,
         },
     },
-    setup(props, {}) {
+    setup(props, { slots }) {
         const getSchema = computed(() => {
             return {
                 class: "w-full",
@@ -44,23 +45,21 @@ export default defineComponent({
             }
         })
 
-        function getContext() {
+        function renderItem() {
             const {
                 field,
-                componentProps,
-                renderComponentContent,
                 formItemProps,
-                component,
+                slot,
+                render,
                 col = { span: 24 },
             } = unref(getSchema)
 
-            const onEvent = {
-                onChange: (...args: Nullable<Recordable>[]) => {
-                    const [e] = args
-                    const target = e ? e.target : null
-                    const value = target ? target.value : e
-                    props.setFormModel(field, value)
-                },
+            const getContent = () => {
+                return slot
+                    ? getSlot(slots, slot, unref(getValues))
+                    : render
+                    ? render(unref(getValues))
+                    : renderComponent()
             }
 
             const formItemAttr = {
@@ -69,9 +68,29 @@ export default defineComponent({
                 ...unref(getSchema),
             }
 
+            return (
+                <el-col {...col}>
+                    <el-form-item {...formItemAttr}>
+                        {getContent()}
+                    </el-form-item>
+                </el-col>
+            )
+        }
+
+        function renderComponent() {
+            const { componentProps, renderComponentContent, component, field } =
+                unref(getSchema)
             const Comp = componentMap.get(component || "Input") as ReturnType<
                 typeof defineComponent
             >
+            const onEvent = {
+                onChange: (...args: Nullable<Recordable>[]) => {
+                    const [e] = args
+                    const target = e ? e.target : null
+                    const value = target ? target.value : e
+                    props.setFormModel(field, value)
+                },
+            }
 
             const CompAttr = {
                 ...onEvent,
@@ -84,19 +103,25 @@ export default defineComponent({
                       default: () => renderComponentContent,
                   }
 
-
             return (
-                <el-col {...col}>
-                    <el-form-item {...formItemAttr}>
-                        <Comp {...CompAttr} v-model={props.formModal[field]}>
-                            {compSlot}
-                        </Comp>
-                    </el-form-item>
-                </el-col>
+                <Comp {...CompAttr} v-model={props.formModal[field]}>
+                    {compSlot}
+                </Comp>
             )
         }
 
-        return () => <>{getContext()}</>
+        return () => {
+            const { renderColContent } = props.schema
+
+            const values = unref(getValues)
+
+            function getContext() {
+                return renderColContent
+                    ? renderColContent(values)
+                    : renderItem()
+            }
+            return <>{getContext()}</>
+        }
     },
 })
 </script>
