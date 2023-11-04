@@ -49,7 +49,6 @@ export const userStore = defineStore({
             if (!this.getToken) return
 
             const { redirect = PageEnum.BASE_HOME } = this.getUserInfo
-            console.log(redirect, "123")
 
             await router.replace(redirect || PageEnum.BASE_HOME)
         },

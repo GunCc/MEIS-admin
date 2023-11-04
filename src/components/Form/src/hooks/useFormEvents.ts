@@ -25,7 +25,6 @@ export function useFormEvents(
     }: UseFormEventsContext
 ) {
     async function setFormSchemas(schemas: FormItemSchemas[]) {
-        console.log("schemas",schemas)
         await setProps({
             schemas,
         })
@@ -44,7 +43,6 @@ export function useFormEvents(
         } else {
             let res: any
             for (let key in unref(formModel)) {
-                console.log(key, unref(formModel)[key])
                 if (fields.includes(key)) {
                     res[key] = unref(formModel)[key]
                 }
@@ -99,7 +97,6 @@ export function useFormEvents(
         nextTick(() => clearValidate())
 
         emit("reset", toRaw(formModel))
-        console.log("重置", submitOnReset)
 
         submitOnReset && handleSubmit()
     }

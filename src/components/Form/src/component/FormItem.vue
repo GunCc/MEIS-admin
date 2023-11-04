@@ -3,6 +3,7 @@ import { PropType, computed, defineComponent, unref } from "vue"
 import { FormItemSchemas } from "../types/form"
 import { Nullable } from "vitest"
 import { isFunction, merge } from "lodash"
+import { componentMap } from "../../componentMap"
 
 export default defineComponent({
     name: "FormItem",
@@ -49,6 +50,7 @@ export default defineComponent({
                 componentProps,
                 renderComponentContent,
                 formItemProps,
+                component,
                 col = { span: 24 },
             } = unref(getSchema)
 
@@ -60,13 +62,16 @@ export default defineComponent({
                     props.setFormModel(field, value)
                 },
             }
-            console.log(formItemProps)
 
             const formItemAttr = {
                 prop: field,
                 ...merge(formItemProps),
                 ...unref(getSchema),
             }
+
+            const Comp = componentMap.get(component || "Input") as ReturnType<
+                typeof defineComponent
+            >
 
             const CompAttr = {
                 ...onEvent,
@@ -79,15 +84,13 @@ export default defineComponent({
                       default: () => renderComponentContent,
                   }
 
+
             return (
                 <el-col {...col}>
                     <el-form-item {...formItemAttr}>
-                        <el-input
-                            {...CompAttr}
-                            v-model={props.formModal[field]}
-                        >
+                        <Comp {...CompAttr} v-model={props.formModal[field]}>
                             {compSlot}
-                        </el-input>
+                        </Comp>
                     </el-form-item>
                 </el-col>
             )

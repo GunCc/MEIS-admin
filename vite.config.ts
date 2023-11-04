@@ -25,6 +25,7 @@ export default defineConfig({
                 }),
             ],
             dts: "src/auto-imports.d.ts",
+
             include: [
                 /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
                 /\.vue$/,
@@ -56,6 +57,13 @@ export default defineConfig({
                 ElementPlusResolver({
                     importStyle: "sass",
                 }),
+            ],
+            // 增加这个才能让自动引入再jsx文件中生效
+            include: [
+                /\.[tj]sx?$/, // .ts, .tsx, .js, .jsx
+                /\.vue$/,
+                /\.vue\?vue/, // .vue
+                /\.md$/, // .md
             ],
         }),
         WindiCSS(),

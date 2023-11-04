@@ -30,6 +30,8 @@ export interface BasicTableProps {
     showPagination?: boolean
     // 请求设置
     fetchSetting?: Partial<FetchSetting>
+    // 表格无请求时的数据
+    dataSource?: Recordable[]
 }
 
 export interface PaginationSetting extends PaginationProps {}

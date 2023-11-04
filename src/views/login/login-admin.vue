@@ -1,6 +1,7 @@
 <template>
     <div class="h-100vh flex flex-col">
         <LoginWrapHeader />
+
         <div class="w-full flex-1 flex items-center">
             <div
                 class="container mx-auto max-w-xl rounded-xl overflow-hidden shadow"
@@ -90,7 +91,6 @@ async function handleSubmit() {
         const useUserStore = userStore()
         const params = getFormValues() as Login
         params.captcha_id = unref(captcha)?.captcha_id || ""
-        console.log(useUserStore)
         await useUserStore.handleLogin(params)
     } catch (error) {
         // 失败后要重新获取image

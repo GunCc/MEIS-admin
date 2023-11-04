@@ -40,22 +40,27 @@
 </template>
 <script lang="ts">
 import { BasicTable, useTable } from "@c/Table/index"
-import { getFileType } from "@/api/v1/system/upload"
 import { TableColumnAction } from "@c/TableAction"
 import { BasicForm, useForm } from "@c/Form"
 import { useModalType } from "./hooks/useModalType"
+import { ResourceType } from "@/api/model/upload/request"
 
 export default defineComponent({
     name: "ManagerModalType",
     components: { BasicTable, TableColumnAction, BasicForm },
-    setup() {
+    props: {
+        uploadTypes: {
+            type: Array as PropType<ResourceType[]>,
+            default: () => [],
+        },
+    },
+    setup(props, { emit }) {
         const visible = ref<boolean>(false)
 
         const [registerForm, { setFormSchemas }] = useForm()
 
-        const [register, { getVialdColumn, reload }] = useTable({
-            api: getFileType,
-            immediate: true,
+        const [register, { getVialdColumn, setProps }] = useTable({
+            dataSource: props.uploadTypes,
             showShadow: false,
             showSearchForm: false,
             showPagination: false,
@@ -91,18 +96,27 @@ export default defineComponent({
             handleActionEdit,
             handleAdd,
             handleFormSubmit,
-        } = useModalType(
-            reload,
-            setVisible,
-            getVialdColumn,
-            setFormSchemas
-        )
+        } = useModalType(setVisible, getVialdColumn, setFormSchemas, emit)
 
         const getButtonSetting = computed(() => row => {
             return {
                 disabled: row.id == "-1" ?? true,
             }
         })
+
+        watch(
+            () => props.uploadTypes,
+            val => {
+                console.log("ModalType", val)
+                setProps({
+                    dataSource: val,
+                })
+            },
+            {
+                immediate: true,
+                deep: true,
+            }
+        )
 
         function setVisible(flag: boolean = true) {
             visible.value = flag

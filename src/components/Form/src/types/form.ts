@@ -4,9 +4,8 @@ import {
     FormInstance,
     FormItemProp,
 } from "element-plus"
-import { componentType } from "../../componentMap"
+import { ComponentType } from "../../componentMap"
 import { Arrayable, Nullable } from "vitest"
-import { Slot } from "vue"
 import { ColEx } from "./index"
 
 type RegisterFn = () => void
@@ -57,7 +56,7 @@ export interface FormItemSchemas extends Partial<FormItemProps> {
     // 默认值
     defaultValue?: any
     // 组件
-    component?: componentType
+    component?: ComponentType
     // 组件参数
     componentProps?: Recordable
     // formItem 参数

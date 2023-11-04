@@ -54,7 +54,12 @@
             <BasicModal v-model:visible="visible" width="500px">
                 <template #header> {{ getModalProps.title }}</template>
                 <template #default>
-                    <component :is="getModalProps.component"></component>
+                    <component
+                        :is="getModalProps.component"
+                        :upload-types="unref(getUploadFiles)"
+                        @change="uploadFiledReload"
+                    >
+                    </component>
                 </template>
             </BasicModal>
         </div>
@@ -72,9 +77,11 @@ import {
     useMaterial,
     useCustomTabs,
     useMaterialList,
+    useUploadType,
 } from "./hooks/index"
 import { BasicModal } from "@c/Modal/index"
 import { CustomTabs } from "@c/Tabs/index"
+import { ResourceType } from "@/api/model/upload/request"
 
 const formElRef = ref(null)
 const wrapperElRef = ref(null)
@@ -90,16 +97,24 @@ const getModalProps = computed({
     },
 })
 
+// 素材库上传文件类型控制
+const { getUploadFiles, reload: uploadFiledReload } = useUploadType()
+// 素材库搜索控件
 const { getFormProps } = useMaterialForm()
+// 素材库高度控制
 const { getWrapHeight } = useMaterial(wrapperElRef, formElRef)
+// 素材库获取图片资源
 const { getImageColOptions, handleAddImage } = useMaterialList(
     handleOpen,
     getModalProps
 )
+// 素材库获取Tabs控件
 const { getCurrent, getCustomOptions, handleTypeEdit } = useCustomTabs(
     handleOpen,
-    getModalProps
+    getModalProps,
+    getUploadFiles
 )
+
 defineExpose({
     getCurrent,
     getCustomOptions,

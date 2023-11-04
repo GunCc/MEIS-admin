@@ -8,10 +8,10 @@ import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { nextTick } from "vue"
 
 export function useModalType(
-    reload: () => Promise<any>,
     setVisible: (flag?: boolean) => void,
     getVialdColumn: () => Recordable<any>[],
-    setFormSchemas: (props: FormItemSchemas[]) => void
+    setFormSchemas: (props: FormItemSchemas[]) => void,
+    emit: EmitType
 ) {
     const modalType = ref<"edit" | "add">("edit")
     const rowRef = ref<Recordable>({})
@@ -33,19 +33,7 @@ export function useModalType(
         }
     }
 
-    async function handleActionDelete(row) {
-        try {
-            await removeFileType({
-                id: row.id,
-            })
-            await reload()
-        } catch (error) {
-            console.error(error)
-        }
-    }
-
     function handleActionEdit(row) {
-        console.log(row, 123)
         modalType.value = "edit"
         rowRef.value = row
         setVisible()
@@ -84,6 +72,17 @@ export function useModalType(
         })
     }
 
+    async function handleActionDelete(row) {
+        try {
+            await removeFileType({
+                id: row.id,
+            })
+            emit("change")
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
     async function handleFormSubmit(data: Recordable) {
         try {
             const getApi =
@@ -95,7 +94,7 @@ export function useModalType(
             } as ResourceType
             await getApi(params)
             setVisible(false)
-            await reload()
+            emit("change")
         } catch (error) {
             console.error(error)
         }

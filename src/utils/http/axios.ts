@@ -105,7 +105,6 @@ export class CustomAxios {
         if (beforeRequest && isFunction(beforeRequest)) {
             conf = beforeRequest(conf, opt)
         }
-        console.log(conf)
         return new Promise((resolve, reject) => {
             this.instance
                 .request<any, AxiosResponse<Result>>(conf)

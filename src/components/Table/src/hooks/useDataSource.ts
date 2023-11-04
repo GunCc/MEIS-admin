@@ -118,6 +118,17 @@ export function useDataSource({
         return await handleFetch(opt)
     }
 
+    watch(
+        () => unref(getProps).dataSource,
+        () => {
+            const { dataSource, api } = unref(getProps)
+            !api && dataSource && (dataSourceRef.value = dataSource)
+        },
+        {
+            immediate: true,
+        }
+    )
+
     onMounted(() => {
         useTimeoutFn(() => {
             unref(getProps).immediate && handleFetch()
