@@ -4,7 +4,7 @@ import { PaginationSetting } from "@/components/Table/src/types"
 import ManagerModalUpload from "../ModalUpload.vue"
 import ManagerModalImageEdit from "../ModalImageEdit.vue"
 
-const PAGE_SIZE = 4
+const PAGE_SIZE = 32
 const { VITE_HTTP_URL } = import.meta.env
 import { get } from "lodash"
 

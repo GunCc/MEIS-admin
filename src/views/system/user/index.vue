@@ -4,10 +4,8 @@
             <template #action="{ row }">
                 <TableColumnAction
                     :row="row"
-                    :schemas-setting="schemasSetting"
-                    @action-edit="handleActionEdit"
                     @action-remove="handleActionDelete"
-                />
+                ></TableColumnAction>
             </template>
         </basic-table>
     </PageWrapper>
@@ -37,27 +35,39 @@ const [register, { getVialdColumn }] = useTable({
         {
             prop: "uuid",
             label: "uuid",
+            width: 300,
         },
         {
             prop: "email",
             label: "邮箱",
+            width: 220,
         },
         {
             prop: "nickname",
             label: "昵称",
             canViald: true,
+            width: 100,
+        },
+        {
+            prop: "enable",
+            label: "是否冻结",
+            canViald: true,
+            width: 80,
         },
         {
             prop: "created_at",
             label: "创建时间",
+            width: 260,
         },
         {
             prop: "updated_at",
             label: "上次修改时间",
+            width: 260,
         },
         {
             prop: "action",
             label: "操作",
+            fixed: "right",
         },
     ],
 })

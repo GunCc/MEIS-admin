@@ -27,6 +27,22 @@ const systemRoutes: Array<RouteRecordRaw> = [
                     title: "角色管理",
                 },
             },
+            {
+                path: "menu",
+                name: "Menu",
+                component: () => import("@/views/system/menu/index.vue"),
+                meta: {
+                    title: "菜单管理",
+                },
+            },
+            {
+                path: "logger",
+                name: "Logger",
+                component: () => import("@/views/system/logger/index.vue"),
+                meta: {
+                    title: "日志",
+                },
+            },
         ],
     },
 ]

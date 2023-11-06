@@ -38,6 +38,16 @@ export default defineComponent({
                                 key: "/system/role",
                                 path: "/system/role",
                             },
+                            {
+                                title: "菜单管理",
+                                key: "/system/menu",
+                                path: "/system/menu",
+                            },
+                            {
+                                title: "日志列表",
+                                key: "/system/logger",
+                                path: "/system/logger",
+                            },
                         ],
                     },
 

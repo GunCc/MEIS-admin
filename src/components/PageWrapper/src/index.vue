@@ -29,6 +29,7 @@ export default defineComponent({
             return {
                 minHeight: height,
                 height,
+                maxWidth:`calc(100vw - 220px)`
             }
         })
         const getContentClass = computed(() => {

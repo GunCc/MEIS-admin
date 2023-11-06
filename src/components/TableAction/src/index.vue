@@ -19,10 +19,11 @@ import { propTypes } from "@/utils/propTypes"
 import { ButtonProps } from "element-plus"
 import { PropType } from "vue"
 import { useWarnMessage } from "@c/Modal/index"
-import { isArray } from "lodash"
+import { isArray, isFunction } from "lodash"
 import { TableActionInstance } from "./types"
 interface ActionButtonSetting extends Partial<ButtonProps> {
-    title: string
+    title: string | ((...args: any) => string)
+    context: string | ((...args: any) => string)
     handle: (...args) => void
 }
 export default defineComponent({
@@ -69,10 +70,12 @@ export default defineComponent({
             return buttonList
         })
         function defaultHandleRemove() {
-            const { row } = props
+            const { row, removeButtonSetting } = props
+            const { title = "删除", context = "您确定删除嘛？" } =
+                removeButtonSetting
             useWarnMessage({
-                title: "删除",
-                context: `您确定删除嘛？`,
+                title: isFunction(title) ? title(row) : title,
+                context: isFunction(context) ? context(row) : context,
                 successFn: () => {
                     emit("action-remove", row)
                 },

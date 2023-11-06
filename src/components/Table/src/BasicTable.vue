@@ -20,13 +20,11 @@
             {{ getProps.title || "表格" }}
         </div>
 
-        <el-table v-bind="getTableProps">
+        <el-table v-bind="getTableProps" style="width: 100%">
             <el-table-column
                 v-for="item in getColumn"
                 :key="item.prop"
-                :prop="item.prop"
-                :label="item.label"
-                :width="item.width"
+                v-bind="item"
             >
                 <template
                     #default="scope"
