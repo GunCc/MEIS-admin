@@ -11,7 +11,18 @@
             @submit="handleSearchInfoChange"
             v-bind="getFormSetting"
             v-if="getProps.showSearchForm"
-        ></BasicForm>
+        >
+            <template
+                v-for="item in [
+                    `action-before`,
+                    'action-center',
+                    'action-after',
+                ]"
+                #[item]
+            >
+                <slot :name="item"></slot>
+            </template>
+        </BasicForm>
 
         <div
             class="text-lg font-weight-bold pb-5 table-title"
@@ -141,7 +152,6 @@ export default defineComponent({
         }
 
         onMounted(() => {
-            console.log("actions", actions)
             emit("register", actions)
         })
         return {

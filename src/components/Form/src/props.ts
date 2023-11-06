@@ -9,6 +9,7 @@ export const basicProps = {
     },
     showAction: propTypes.bool.def(true),
     submitOnReset: propTypes.bool.def(true),
+    validateOnSubmit: propTypes.bool.def(true),
 
     actionColOptions: {
         type: Object as PropType<Partial<ColEx>>,

@@ -5,9 +5,14 @@ interface useTableColumnContext {
 
 export function useTableColumn({ getProps }: useTableColumnContext) {
     const getColumn = computed(() => {
-        const { column } = unref(getProps)
-        console.log("getColumn",column)
-        return column
+        const { column = [] } = unref(getProps)
+        return column.map(item => {
+            const { columnToForm = {} } = item
+            return {
+                ...item,
+                ...columnToForm,
+            }
+        })
     })
 
     function getVialdColumn(): Recordable[] {

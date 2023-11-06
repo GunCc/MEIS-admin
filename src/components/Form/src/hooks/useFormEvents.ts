@@ -68,11 +68,13 @@ export function useFormEvents(
 
     // 表单点击提交事件
     async function handleSubmit(e?: Event): Promise<void> {
+        const { validateOnSubmit } = unref(getProps)
         e && e.preventDefault()
         const formEl = unref(formElRef)
         if (!formEl) return
         try {
-            await validate()
+            console.log("validateOnSubmit",validateOnSubmit)
+            validateOnSubmit && (await validate())
             const res = getFormValues()
             emit("submit", res)
         } catch (error: any) {

@@ -1,4 +1,4 @@
-import { BaseListRequest } from "@/api/model/commen/request"
+import { BaseListRequest, GetById } from "@/api/model/commen/request"
 import { MEIS_http } from "@/utils/http"
 
 export function getList(params: BaseListRequest) {
@@ -7,6 +7,30 @@ export function getList(params: BaseListRequest) {
         params,
     })
 }
+
+export function removeUser(params: GetById) {
+    return MEIS_http.post({
+        url: getUrl("/remove"),
+        params,
+    })
+}
+
+
+export function registerUser(params: GetById) {
+    return MEIS_http.post({
+        url: getUrl("/registerAdmin"),
+        params,
+    })
+}
+
+
+export function updateUser(params: GetById) {
+    return MEIS_http.post({
+        url: getUrl("/update"),
+        params,
+    })
+}
+
 function getUrl(url: string) {
     return "/user" + url
 }

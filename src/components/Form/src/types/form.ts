@@ -21,6 +21,8 @@ export interface BasicFormProps extends Partial<FormProps> {
     actionColOptions?: Partial<ColEx>
     // 是否在点击重置按钮的时候也请求表单
     submitOnReset?: boolean
+    // 提交时是否校验
+    validateOnSubmit?: boolean
 }
 
 // 插槽返回的数据

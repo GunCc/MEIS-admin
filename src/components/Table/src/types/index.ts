@@ -50,6 +50,8 @@ interface FetchSetting {
 interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {
     // 是否可以获取字段 用于编辑和添加
     canViald?: boolean
+    // 传递给form表单的自定义参数
+    columnToForm?: Recordable
 }
 
 export interface FetchParams {
