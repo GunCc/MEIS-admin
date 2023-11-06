@@ -12,6 +12,7 @@ interface useDataSourceContext {
     setPagination: (info: Partial<PaginationSetting>) => void
     getPaginationProps: ComputedRef<PaginationSetting>
     getFormValues: () => Recordable
+    setLoading: (bool: boolean) => void
 }
 
 export function useDataSource({
@@ -20,6 +21,7 @@ export function useDataSource({
     setPagination,
     getPaginationProps,
     getFormValues,
+    setLoading,
 }: useDataSourceContext) {
     const dataSourceRef = ref<Recordable[]>([])
     const rawDataSourceRef = ref<Recordable>({})
@@ -53,6 +55,7 @@ export function useDataSource({
             return api
         }
         try {
+            setLoading(true)
             let params = {}
             const { pageField, sizeField, listField, totalField } =
                 Object.assign(
@@ -111,6 +114,8 @@ export function useDataSource({
             return resultItems
         } catch (error) {
             console.log(error)
+        } finally {
+            setLoading(false)
         }
     }
 

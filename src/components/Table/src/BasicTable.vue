@@ -31,7 +31,11 @@
             {{ getProps.title || "表格" }}
         </div>
 
-        <el-table v-bind="getTableProps" style="width: 100%">
+        <el-table
+            v-bind="getTableProps"
+            style="width: 100%"
+            v-loading="getLoading"
+        >
             <el-table-column
                 v-for="item in getColumn"
                 :key="item.prop"
@@ -62,6 +66,7 @@ import { TableActions } from "./types/actions"
 import { useDataSource } from "./hooks/useDataSource"
 import { usePagination } from "./hooks/usePagination"
 import { useTableColumn } from "./hooks/useTableColumn"
+import { useLoading } from "./hooks/useLoading"
 import { useTableForm } from "./hooks/useTableForm"
 import { Pagination } from "@c/Pagination/index"
 import { BasicForm, useForm } from "@c/Form/index"
@@ -92,8 +97,6 @@ export default defineComponent({
         // const paginationRef = ref<Partial<BasicTableProps>>()
         // const loadingRef = ref<boolean>(false);
 
-        // 使用form表单进行搜索
-        const [registerTableForm, formActions] = useForm()
         const getProps = computed(() => {
             return {
                 ...props,
@@ -113,6 +116,12 @@ export default defineComponent({
             innerTableProps.value = { ...unref(innerTableProps), ...props }
         }
 
+        // 使用loading
+        const { setLoading, getLoading } = useLoading()
+
+        // 使用form表单进行搜索
+        const [registerTableForm, formActions] = useForm()
+
         // 获取column
         const { getColumn, getVialdColumn } = useTableColumn({
             getProps,
@@ -131,6 +140,7 @@ export default defineComponent({
                 setPagination,
                 getPaginationProps,
                 getFormValues: formActions.getFormValues,
+                setLoading,
             })
         // 表格使用form表单
         const { getFormSetting, handleSearchInfoChange } = useTableForm({
@@ -157,6 +167,7 @@ export default defineComponent({
         return {
             tableElRef,
             formElRef,
+            getLoading,
             setProps,
             getProps,
             getTableProps,
