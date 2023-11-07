@@ -126,7 +126,6 @@ const [register, { getVialdColumn, reload }] = useTable({
             columnToForm: {
                 slot: "enable",
             },
-            width: 80,
         },
         {
             prop: "created_at",
