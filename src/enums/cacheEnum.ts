@@ -13,6 +13,9 @@ export const LOCK_INFO_KEY = "LOCK__INFO__KEY__"
 // 用户信息
 export const USER_INFO_KEY = "USER__INFO__"
 
+// 项目配置信息
+export const PROJ_CFG_KEY = "PROJ__CFG__KEY__"
+
 // 缓存类型
 export enum CacheTypeEnum {
     SESSION,

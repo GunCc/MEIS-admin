@@ -72,7 +72,6 @@ const [register, { reload }] = useTable({
             prop: "created_at",
             label: "创建时间",
             width: 320,
-
         },
         {
             prop: "action",

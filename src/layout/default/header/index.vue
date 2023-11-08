@@ -35,7 +35,7 @@
 import { Sunny, Moon } from "@element-plus/icons-vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { SvgImage } from "@c/SvgImage"
-import { appStore } from "@/store/modules/app"
+import { useAppStore } from "@/store/modules/app"
 export default defineComponent({
     name: "LayoutHeader",
     components: {
@@ -44,10 +44,10 @@ export default defineComponent({
     },
     setup() {
         const theme = ref<boolean>(false)
-        const useAppStore = appStore()
+        const appStore = useAppStore()
 
         function handleTheme(theme: boolean) {
-            useAppStore.setTheme(theme)
+            appStore.setTheme(theme)
         }
         return { theme, Moon, Sunny, handleTheme }
     },

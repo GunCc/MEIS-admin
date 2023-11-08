@@ -1,11 +1,12 @@
 import { createApp } from "vue"
 import App from "./App.vue"
 // import { createPinia } from "pinia"
-import { setupRouter } from "./router"
+import { setupRouter, router } from "./router"
 import "virtual:windi.css"
 import "@/design/index.scss"
-import { setupStore } from './store/index';
-
+import 'nprogress/nprogress.css'
+import { setupStore } from "./store/index"
+import { setupRouterGuard } from "./router/guard"
 
 // 启动项目
 async function init() {
@@ -13,6 +14,8 @@ async function init() {
 
     setupRouter(app)
 
+    // 设置路由守卫
+    setupRouterGuard(router)
 
     // 调用store
     setupStore(app)
