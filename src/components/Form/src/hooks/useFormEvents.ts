@@ -37,8 +37,9 @@ export function useFormEvents(
     }
 
     // 获取表单中某个字段的值
-    function getFormField(fields: string[] | string): any {
+    async function getFormField(fields: string[] | string) {
         if (isString(fields)) {
+            console.log("formModal", unref(formModel))
             return unref(formModel)[fields]
         } else {
             let res: any
@@ -73,7 +74,7 @@ export function useFormEvents(
         const formEl = unref(formElRef)
         if (!formEl) return
         try {
-            console.log("validateOnSubmit",validateOnSubmit)
+            console.log("validateOnSubmit", validateOnSubmit)
             validateOnSubmit && (await validate())
             const res = getFormValues()
             emit("submit", res)

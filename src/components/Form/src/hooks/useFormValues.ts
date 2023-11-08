@@ -1,6 +1,6 @@
 import { computed } from "vue"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
-import { cloneDeep } from "lodash"
+import { cloneDeep, isBoolean } from "lodash"
 
 interface UseFormValuesContext {
     getProps: ComputedRef<BasicFormProps>
@@ -27,7 +27,10 @@ export function useFormValues({
         const schemas = unref(getSchema)
         const obj: Recordable = {}
         schemas.forEach(item => {
-            obj[item.field] = item.defaultValue || ""
+            obj[item.field] =
+                item.defaultValue || isBoolean(item.defaultValue)
+                    ? item.defaultValue
+                    : ""
         })
         Object.assign(formModel, obj)
         defaultValueRef.value = cloneDeep(obj)

@@ -40,7 +40,7 @@ export interface FormActionType extends Partial<FormInstance> {
     setFormSchemas: (props: FormItemSchemas[]) => void
     getFormValues: () => Recordable
     // 获取指定字段值
-    getFormField: (fields: string[] | string) => any
+    getFormField: (fields: string[] | string) => Promise<any>
     // 表单校验
     validate: () => Promise<any>
     // 表单验证特定字段
