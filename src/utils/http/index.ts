@@ -53,7 +53,6 @@ const transform: AxiosTranstion = {
         if (token) {
             ;(config as Recordable).headers["x-token"] = token
         }
-        debugger
         return config
     },
     afterResponse(res: AxiosResponse<Result>, otherConfig: AxiosOtherConfig) {

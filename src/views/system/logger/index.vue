@@ -4,8 +4,7 @@
             <template #action="{ row }">
                 <TableColumnAction
                     :row="row"
-                    :schemas-setting="schemasSetting"
-                    @action-edit="handleActionEdit"
+                    :remove-button-setting="actionRemoveSetting"
                     @action-remove="handleActionDelete"
                 />
             </template>
@@ -15,10 +14,10 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import { getList } from "@/api/v1/system/user"
+import { getList, removeOperation } from "@/api/v1/system/operationRecord"
 import { TableColumnAction } from "@c/TableAction"
-const [register, { getVialdColumn }] = useTable({
-    title: "用户管理",
+const [register, { reload }] = useTable({
+    title: "日志列表",
     api: getList,
     immediate: true,
     formSettings: {
@@ -35,25 +34,45 @@ const [register, { getVialdColumn }] = useTable({
     },
     column: [
         {
-            prop: "uuid",
-            label: "uuid",
+            prop: "ip",
+            label: "IP地址",
+            width: 80,
         },
         {
-            prop: "email",
-            label: "邮箱",
+            prop: "method",
+            label: "请求方法",
+            width: 80,
+
         },
         {
-            prop: "nickname",
-            label: "昵称",
-            canViald: true,
+            prop: "path",
+            label: "请求路径",
+            width: 250,
+
+        },
+        {
+            prop: "status",
+            label: "请求状态",
+            width: 80,
+
+        },
+        {
+            prop: "agent",
+            label: "代理",
+            width: 400,
+
+        },
+        {
+            prop: "error_message",
+            label: "错误信息",
+            width: 220,
+
         },
         {
             prop: "created_at",
             label: "创建时间",
-        },
-        {
-            prop: "updated_at",
-            label: "上次修改时间",
+            width: 320,
+
         },
         {
             prop: "action",
@@ -63,16 +82,21 @@ const [register, { getVialdColumn }] = useTable({
 })
 let schemasSetting = ref<Recordable[]>([])
 
-function handleActionEdit(row) {
-    schemasSetting.value = getVialdColumn().map(item => {
-        let key = item.prop
-        item.defaultValue = row[key]
-        return item
-    })
-}
+const actionRemoveSetting = computed(() => {
+    return {
+        context: row => {
+            return `确定删除${row.id}这个日志吗？`
+        },
+    }
+})
 
-function handleActionDelete(row) {
-    console.log("删除成功", row)
+async function handleActionDelete(row) {
+    try {
+        await removeOperation(row)
+        reload()
+    } catch (error) {
+        console.error(error)
+    }
 }
 </script>
 <style lang="scss"></style>

@@ -7,3 +7,7 @@ export interface BaseListRequest {
 export interface GetById {
     id: string | number
 }
+
+export interface GetByIds {
+    id: string[] | number[]
+}
