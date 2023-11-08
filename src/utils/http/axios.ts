@@ -4,6 +4,7 @@ import type { AxiosInstance, AxiosRequestConfig, AxiosResponse } from "axios"
 import { cloneDeep, isEmpty, isFunction, isNull, isUndefined } from "lodash"
 import { AxiosCanceler } from "./cancel"
 import { AxiosOtherConfig, CreateAxiosConfig } from "./type"
+import { userStoreOutset } from "@/store/modules/user"
 
 export class CustomAxios {
     private instance: AxiosInstance
@@ -88,37 +89,9 @@ export class CustomAxios {
     }
 
     // 上传文件
-    async uploadFile(res: Result) {
-        const { code, message, data } = res
-        // 请求是否成功
-        const hasSuccess = code === ResultEnum.SUCCESS
-
-        const { createMessage } = useMessage()
-        if (hasSuccess) {
-            let successMsg = message
-
-            if (
-                isNull(successMsg) ||
-                isUndefined(successMsg) ||
-                isEmpty(successMsg)
-            ) {
-                successMsg = "操作成功"
-            }
-
-            createMessage.success(successMsg)
-            return data
-        }
-
-        // 根据不同的code进行修改
-        let errorMsg = ""
-        switch (code) {
-            default:
-                if (message) {
-                    errorMsg = message
-                }
-        }
-        createMessage.error(errorMsg)
-        throw new Error(errorMsg || "api请求报错")
+    async uploadFile(res: Result, options?: AxiosOtherConfig) {
+        const { afterResponse } = this.getTransform() || {}
+        isFunction(afterResponse) && afterResponse(res, options)
     }
 
     // 请求

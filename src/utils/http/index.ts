@@ -8,6 +8,8 @@ import { AxiosOtherConfig } from "./type"
 import { ResultEnum } from "@/enums/resultEnum"
 import { useMessage } from "./../../hooks/web/useMessage"
 import { RequestEnum } from "@/enums/requestEnum"
+import { userStoreOutset } from "@/store/modules/user"
+import { getToken } from "../auth"
 
 // axios 拦截器数据 ---- 处理数据
 const transform: AxiosTranstion = {
@@ -44,6 +46,16 @@ const transform: AxiosTranstion = {
         }
         return config
     },
+
+    beforeRequestInterceptors: (config, options) => {
+        // 请求之前处理config
+        const token = getToken()
+        if (token) {
+            ;(config as Recordable).headers["x-token"] = token
+        }
+        debugger
+        return config
+    },
     afterResponse(res: AxiosResponse<Result>, otherConfig: AxiosOtherConfig) {
         const { messageModal } = otherConfig
         const { data } = res
@@ -70,14 +82,19 @@ const transform: AxiosTranstion = {
             createMessage.success(successMsg)
             return value
         }
+        const useUserStore = userStoreOutset()
 
         // 根据不同的code进行修改
         let errorMsg = ""
         switch (code) {
-            default:
-                if (message) {
-                    errorMsg = message
-                }
+            case 401:
+                useUserStore.logout()
+                break
+            case 403:
+                break
+        }
+        if (message) {
+            errorMsg = message
         }
         createMessage.error(errorMsg)
         throw new Error(errorMsg || "api请求报错")

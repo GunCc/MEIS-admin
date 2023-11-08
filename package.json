@@ -12,6 +12,7 @@
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "@vue/cli-service": "^5.0.8",
     "axios": "^1.5.1",
+    "crypto-js": "^4.2.0",
     "element-plus": "^2.3.14",
     "pinia": "^2.1.4",
     "vue": "^3.3.4",

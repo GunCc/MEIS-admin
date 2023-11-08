@@ -38,7 +38,7 @@ import { getCaptcha, login } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
 import { Login } from "@/api/model/base/request"
-import { userStore, userStoreOutset } from "@/store/modules/user"
+import { userStore } from "@/store/modules/user"
 
 const captcha = ref<Nullable<CaptchaValue>>(null)
 

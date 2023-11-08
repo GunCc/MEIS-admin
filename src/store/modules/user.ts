@@ -6,6 +6,8 @@ import { Nullable } from "vitest"
 import { UserInfo } from "@/api/model/base/response"
 import { router } from "./../../router/index"
 import { PageEnum } from "@/enums/pageEnum"
+import { getAuthCache, setAuthCache } from "@/utils/auth"
+import { TOKEN_KEY } from "@/enums/cacheEnum"
 
 interface UserState {
     token?: string
@@ -19,22 +21,22 @@ export const userStore = defineStore({
         userInfo: null,
     }),
     getters: {
-        getUserInfo(state): UserInfo {
-            return state.userInfo || {}
+        getUserInfo(state): Nullable<UserInfo> {
+            return state.userInfo || null
         },
         getToken(state): string {
-            return state.token || ""
+            return state.token || getAuthCache<string>(TOKEN_KEY)
         },
     },
     actions: {
         setUserInfo(userInfo: UserInfo | null) {
             this.userInfo = userInfo
         },
-        setToken(token: string) {
+        setToken(token: string | undefined) {
             this.token = token
+            setAuthCache(TOKEN_KEY, token)
         },
         async handleLogin(params: Login) {
-
             try {
                 const res = await login(params)
                 const { token, user } = res
@@ -48,9 +50,15 @@ export const userStore = defineStore({
         async handleLoginAfter() {
             if (!this.getToken) return
 
-            const { redirect = PageEnum.BASE_HOME } = this.getUserInfo
+            const { redirect = PageEnum.BASE_HOME } = this.getUserInfo || {}
 
             await router.replace(redirect || PageEnum.BASE_HOME)
+        },
+        // 登出操作
+        async logout() {
+            this.setUserInfo(null)
+            this.setToken(undefined)
+            await router.push(PageEnum.BASE_ADMIN_LOGIN)
         },
     },
 })
