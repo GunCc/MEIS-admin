@@ -96,42 +96,42 @@ export class Persistent {
 }
 
 // 监听关闭事件
-window.addEventListener("beforeunload", () => {
-    ls.set(APP_LOCAL_CACHE_KEY, {
-        ...omit(localMemory.getCache, LOCK_INFO_KEY),
-        ...pick(ls.get(APP_LOCAL_CACHE_KEY), [
-            TOKEN_KEY,
-            USER_INFO_KEY,
-            LOCK_INFO_KEY,
-        ]),
-    })
-    ss.set(APP_SESSION_CACHE_KEY, {
-        ...omit(sessionMemory.getCache, LOCK_INFO_KEY),
-        ...pick(ss.get(APP_SESSION_CACHE_KEY), [
-            TOKEN_KEY,
-            USER_INFO_KEY,
-            LOCK_INFO_KEY,
-        ]),
-    })
-})
+// window.addEventListener("beforeunload", () => {
+//     ls.set(APP_LOCAL_CACHE_KEY, {
+//         ...omit(localMemory.getCache, LOCK_INFO_KEY),
+//         ...pick(ls.get(APP_LOCAL_CACHE_KEY), [
+//             TOKEN_KEY,
+//             USER_INFO_KEY,
+//             LOCK_INFO_KEY,
+//         ]),
+//     })
+//     ss.set(APP_SESSION_CACHE_KEY, {
+//         ...omit(sessionMemory.getCache, LOCK_INFO_KEY),
+//         ...pick(ss.get(APP_SESSION_CACHE_KEY), [
+//             TOKEN_KEY,
+//             USER_INFO_KEY,
+//             LOCK_INFO_KEY,
+//         ]),
+//     })
+// })
 
 // storage改变事件
-function storageChange(e: any) {
-    const { key, newValue, oldValue } = e
-    if (!key) {
-        Persistent.clearAll()
-        return
-    }
-    if (!!newValue && !!oldValue) {
-        if (APP_LOCAL_CACHE_KEY === key) {
-            Persistent.clearLocal()
-        }
-        if (APP_SESSION_CACHE_KEY === key) {
-            Persistent.clearSession()
-        }
-    }
-}
+// function storageChange(e: any) {
+//     const { key, newValue, oldValue } = e
+//     if (!key) {
+//         Persistent.clearAll()
+//         return
+//     }
+//     if (!!newValue && !!oldValue) {
+//         if (APP_LOCAL_CACHE_KEY === key) {
+//             Persistent.clearLocal()
+//         }
+//         if (APP_SESSION_CACHE_KEY === key) {
+//             Persistent.clearSession()
+//         }
+//     }
+// }
 
-window.addEventListener("storage", storageChange)
+// window.addEventListener("storage", storageChange)
 
 initPersistentMemory()

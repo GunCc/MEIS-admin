@@ -48,6 +48,7 @@ export interface FormActionType extends Partial<FormInstance> {
     // 清除表单校验项
     clearValidate: (props?: Arrayable<FormItemProp>) => void
     resetFields: (props?: Arrayable<FormItemProp>) => void
+    setFieldsValue: (values: Recordable) => Promise<void>
 }
 
 // 表单布局

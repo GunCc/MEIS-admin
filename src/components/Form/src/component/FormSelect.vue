@@ -13,6 +13,8 @@
 import { propTypes } from "@/utils/propTypes"
 import { useFormItem } from "@/hooks/components/useFormItem"
 import { PropType } from "vue"
+import { get, isFunction } from "lodash"
+import { useTimeoutFn } from "@/hooks/core/useTimeout"
 
 interface OptionsItem {
     value: string
@@ -43,6 +45,8 @@ export default defineComponent({
         labelField: propTypes.string.def("label"),
         // value字段
         valueField: propTypes.string.def("value"),
+        // 数据字段
+        listField: propTypes.string.def("list"),
         // 如果不是请求 -- 数据源
         dataSource: {
             type: Array as PropType<Recordable[]>,
@@ -51,6 +55,7 @@ export default defineComponent({
     },
     setup(props) {
         const options = ref<Recordable[]>([])
+        // const emitData = ref<any[]>([])
 
         const [state] = useFormItem(props)
 
@@ -58,6 +63,7 @@ export default defineComponent({
         const getSelectOptions = computed(() => {
             const { selectOptions } = props
             return {
+                class: "w-100",
                 ...selectOptions,
             }
         })
@@ -72,16 +78,34 @@ export default defineComponent({
             }) as OptionsItem[]
         })
 
+        async function fetch() {
+            const { api, params, listField } = props
+            try {
+                const res = await api(params)
+                let list = get(res, listField)
+                options.value = list
+            } catch (error) {
+                console.error(error)
+            }
+        }
+
         watch(
             () => props.dataSource,
             () => {
-                options.value = props.dataSource
+                !isFunction(props.api) && (options.value = props.dataSource)
             },
             {
                 immediate: true,
                 deep: true,
             }
         )
+
+        onMounted(() => {
+            useTimeoutFn(() => {
+                const { immediate, api } = props
+                immediate && isFunction(api) && fetch()
+            }, 16)
+        })
 
         return {
             state,

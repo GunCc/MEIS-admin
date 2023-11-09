@@ -15,7 +15,6 @@ export function removeUser(params: GetById) {
     })
 }
 
-
 export function registerUser(params: GetById) {
     return MEIS_http.post({
         url: getUrl("/registerAdmin"),
@@ -23,10 +22,17 @@ export function registerUser(params: GetById) {
     })
 }
 
-
 export function updateUser(params: GetById) {
     return MEIS_http.post({
         url: getUrl("/update"),
+        params,
+    })
+}
+
+// 重置密码
+export function resetUserPassword(params: GetById) {
+    return MEIS_http.post({
+        url: getUrl("/resetPassword"),
         params,
     })
 }

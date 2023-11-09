@@ -1,6 +1,8 @@
 import { computed } from "vue"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
 import { cloneDeep, isBoolean } from "lodash"
+import { isNullOrUnDef } from "@/utils/is"
+import { deepMerge } from "@/utils"
 
 interface UseFormValuesContext {
     getProps: ComputedRef<BasicFormProps>
@@ -25,12 +27,14 @@ export function useFormValues({
 
     function initForm() {
         const schemas = unref(getSchema)
-        const obj: Recordable = {}
+        let obj: Recordable = {}
         schemas.forEach(item => {
-            obj[item.field] =
-                item.defaultValue || isBoolean(item.defaultValue)
-                    ? item.defaultValue
-                    : ""
+            const { defaultValue } = item
+
+            if (!isNullOrUnDef(defaultValue)) {
+                obj[item.field] = defaultValue
+                // formModel[item.field] = defaultValue
+            }
         })
         Object.assign(formModel, obj)
         defaultValueRef.value = cloneDeep(obj)

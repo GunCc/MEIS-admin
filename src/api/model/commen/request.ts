@@ -1,6 +1,6 @@
 export interface BaseListRequest {
     page: number
-    pageSize: number
+    pagesize: number
     keyword: string
 }
 

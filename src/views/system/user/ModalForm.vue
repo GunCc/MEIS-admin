@@ -23,13 +23,24 @@ export default defineComponent({
             type: Array as PropType<FormItemSchemas[]>,
             default: () => [],
         },
+        // 修改表单值
+        handleSetModalValue: {
+            type: Function as PropType<(values: Recordable) => Promise<void>>,
+        },
     },
     setup(props, { emit }) {
         const enableValue = ref<boolean>(false)
 
         const [
             registerForm,
-            { resetFields, setFormSchemas, getFormField, validateField,clearValidate },
+            {
+                resetFields,
+                setFormSchemas,
+                getFormField,
+                validateField,
+                clearValidate,
+                setFieldsValue,
+            },
         ] = useForm({
             validateOnSubmit: false,
             labelWidth: "80px",
@@ -78,6 +89,7 @@ export default defineComponent({
             () => props.schemaSetting,
             () => {
                 nextTick(() => {
+                    console.log("打开了")
                     init()
                 })
             },
@@ -87,7 +99,7 @@ export default defineComponent({
             }
         )
 
-        return { registerForm, handleSubmit, enableValue }
+        return { registerForm, handleSubmit, enableValue, setFieldsValue }
     },
 })
 </script>

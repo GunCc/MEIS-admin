@@ -88,10 +88,12 @@ export default defineComponent({
         async function setProps(
             formProps: Partial<BasicFormProps>
         ): Promise<void> {
-            innerFormProps.value = mergeData(
-                unref(innerFormProps) || {},
-                formProps
-            )
+            console.log("修改前", unref(innerFormProps))
+            innerFormProps.value = {
+                ...(unref(innerFormProps) || {}),
+                ...formProps,
+            }
+            console.log("修改后", unref(innerFormProps))
         }
         const {
             setFormSchemas,
@@ -102,6 +104,7 @@ export default defineComponent({
             resetFields,
             handleSubmit,
             clearValidate,
+            setFieldsValue,
         } = useFormEvents(emit, {
             getProps,
             setProps,
@@ -109,6 +112,7 @@ export default defineComponent({
             formModel,
             formElRef: formElRef as Ref<FormActionType>,
             defaultValueRef,
+            getSchema,
         })
 
         // 修改表单model
@@ -129,7 +133,8 @@ export default defineComponent({
             validateField,
             getFormField,
             clearValidate,
-            resetFields
+            resetFields,
+            setFieldsValue,
         }
 
         // 创建 action 函数

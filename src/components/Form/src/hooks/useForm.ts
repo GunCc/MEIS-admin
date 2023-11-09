@@ -64,6 +64,10 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
             const form = await getForm()
             form?.resetFields(item)
         },
+        setFieldsValue: async (values: Recordable) => {
+            const form = await getForm()
+            form?.setFieldsValue(values)
+        },
     }
     return [register, actions]
 }

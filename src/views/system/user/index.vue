@@ -6,6 +6,9 @@
                     添加
                 </el-button>
             </template>
+            <template #role_ids="{ row }">
+                {{ row.roles.map(item => item.comment).join(",") }}
+            </template>
             <template #enable="{ row }">
                 <el-switch
                     :model-value="row.enable ? true : false"
@@ -26,6 +29,13 @@
                         >
                             编辑
                         </el-button>
+                        <el-button
+                            type="warning"
+                            size="small"
+                            @click="handleResetPasswordUser(value)"
+                        >
+                            重置密码
+                        </el-button>
                     </template>
                 </TableColumnAction>
             </template>
@@ -34,6 +44,7 @@
             <template #header> {{ getModalProps.title }}</template>
             <template #default>
                 <ModalForm
+                    ref="ModalFormElRef"
                     @success-submit="handleSuccessSubmit"
                     :schema-setting="getModalProps.schema"
                     :row="getModalProps.row"
@@ -45,14 +56,21 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import { getList, removeUser, updateUser } from "@/api/v1/system/user"
+import {
+    getList,
+    removeUser,
+    updateUser,
+    resetUserPassword,
+} from "@/api/v1/system/user"
+import { getAllList } from "@/api/v1/system/role"
 import { TableColumnAction } from "@c/TableAction"
-import { keys, pick } from "lodash"
+import { isFunction, keys, pick } from "lodash"
 import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
 import { clone } from "lodash"
+import { useWarnMessage } from "@/components/Modal"
 
 interface ModalProps {
     title: string
@@ -61,6 +79,8 @@ interface ModalProps {
 }
 
 const visible = ref<boolean>(false)
+
+const ModalFormElRef = ref()
 
 const modalProps = ref<ModalProps>({
     title: "",
@@ -71,10 +91,6 @@ const modalProps = ref<ModalProps>({
 const getModalProps = computed(() => {
     return unref(modalProps)
 })
-
-// const getEnable = computed(() => row => {
-//     return row.enable
-// })
 
 function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
     let innerModalProps = pick(values, keys(unref(modalProps)))
@@ -120,6 +136,29 @@ const [register, { getVialdColumn, reload }] = useTable({
             width: 100,
         },
         {
+            prop: "role_ids",
+            label: "角色",
+            canViald: true,
+            width: 150,
+            columnToForm: {
+                component: "Select",
+
+                formatDefault: row => {
+                    if (!row) return []
+                    return row.roles.map(item => item.id)
+                },
+                componentProps: {
+                    api: getAllList,
+                    immediate: true,
+                    labelField: "name",
+                    valueField: "id",
+                    selectOptions: {
+                        multiple: true,
+                    },
+                },
+            },
+        },
+        {
             prop: "enable",
             label: "是否冻结",
             canViald: true,
@@ -141,7 +180,7 @@ const [register, { getVialdColumn, reload }] = useTable({
             prop: "action",
             label: "操作",
             fixed: "right",
-            width: 160,
+            width: 300,
         },
     ],
 })
@@ -173,11 +212,16 @@ function passwordVaild(rule: any, value: any, callback: any) {
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {
         let key = item.prop
+        let formatDefault = item.formatDefault
         return {
             ...item,
             label: item.label,
             field: item.prop,
-            defaultValue: row ? row[key] : "",
+            defaultValue: isFunction(formatDefault)
+                ? formatDefault(row)
+                : row
+                ? row[key]
+                : "",
         }
     }) as FormItemSchemas[]
     schemas.push(
@@ -208,6 +252,8 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
             },
         ] as FormItemSchemas[])
     )
+
+    console.log("schemas", schemas)
     return schemas
 }
 
@@ -218,6 +264,11 @@ function handleEditUser(row) {
         row,
         schema: getSchema(row),
     })
+    nextTick(() => {
+        // unref(ModalFormElRef).setFieldsValue({
+        //     role_ids: row.roles.map(item => item.id),
+        // })
+    })
 }
 
 function handleCreateUser() {
@@ -227,6 +278,7 @@ function handleCreateUser() {
         row: "create",
         schema: getSchema(),
     })
+    nextTick(() => {})
 }
 
 // 表格switch变化
@@ -243,6 +295,24 @@ async function handleTableSwitch(bool, row) {
     } catch (error) {
         console.error(error)
     }
+}
+
+// 重置密码
+function handleResetPasswordUser(row) {
+    useWarnMessage({
+        context: `您确定重置该用户(${row.nickname})密码嘛？`,
+        successFn: async () => {
+            try {
+                let form = {
+                    ...clone(row),
+                }
+                await resetUserPassword(form)
+                reload()
+            } catch (error) {
+                console.error(error)
+            }
+        },
+    })
 }
 
 function handleSuccessSubmit() {
