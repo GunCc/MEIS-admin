@@ -37,6 +37,12 @@ export function useTable(props?: BasicTableProps): UseRegisterContext {
         async reload(): Promise<any> {
             return getTableEl()?.reload()
         },
+        getTableDataSource(): Recordable[] {
+            return getTableEl()?.getTableDataSource() || []
+        },
+        getTableRawDataSource(): Recordable {
+            return getTableEl()?.getTableRawDataSource() || {}
+        },
     }
 
     return [register, actions]

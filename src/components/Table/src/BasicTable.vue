@@ -86,6 +86,7 @@ export default defineComponent({
         showPagination: propTypes.bool.def(true),
         showShadow: propTypes.bool.def(true),
         tableClass: propTypes.string.def("p-5 m-5 mb-0"),
+        rowKey: propTypes.string.def("id"),
     },
     setup(props, { emit }) {
         // 获取 table 对象
@@ -107,6 +108,7 @@ export default defineComponent({
         const getTableProps = computed(() => {
             const { autoHeight } = unref(getProps)
             return {
+                ...unref(getProps),
                 height: autoHeight ? unref(getTableHeight) : null,
                 data: unref(getDataSource),
             }
@@ -133,15 +135,21 @@ export default defineComponent({
         })
 
         // 获取数据资源
-        const { getDataSource, handlePageChange, handleFetch, reload } =
-            useDataSource({
-                emit,
-                getProps,
-                setPagination,
-                getPaginationProps,
-                getFormValues: formActions.getFormValues,
-                setLoading,
-            })
+        const {
+            getDataSource,
+            handlePageChange,
+            handleFetch,
+            reload,
+            getTableDataSource,
+            getTableRawDataSource,
+        } = useDataSource({
+            emit,
+            getProps,
+            setPagination,
+            getPaginationProps,
+            getFormValues: formActions.getFormValues,
+            setLoading,
+        })
         // 表格使用form表单
         const { getFormSetting, handleSearchInfoChange } = useTableForm({
             getProps,
@@ -159,6 +167,8 @@ export default defineComponent({
             setProps,
             getVialdColumn,
             reload,
+            getTableDataSource,
+            getTableRawDataSource,
         }
 
         onMounted(() => {

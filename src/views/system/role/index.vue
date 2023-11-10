@@ -46,6 +46,7 @@
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeRole, updateRole } from "@/api/v1/system/role"
+import { getList as getAllList } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
 import { keys, pick } from "lodash"
 import { keysOf } from "element-plus/es/utils"
@@ -71,10 +72,6 @@ const modalProps = ref<ModalProps>({
 const getModalProps = computed(() => {
     return unref(modalProps)
 })
-
-// const getEnable = computed(() => row => {
-//     return row.enable
-// })
 
 function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
     let innerModalProps = pick(values, keys(unref(modalProps)))
@@ -119,6 +116,28 @@ const [register, { getVialdColumn, reload }] = useTable({
             canViald: true,
             columnToForm: {
                 slot: "enable",
+            },
+        },
+        {
+            prop: "menu",
+            label: "已绑定路由",
+            canViald: true,
+            width: 200,
+            columnToForm: {
+                component: "Select",
+                formatDefault: row => {
+                    if (!row) return []
+                    return row.roles.map(item => item.id)
+                },
+                componentProps: {
+                    api: getAllList,
+                    immediate: true,
+                    labelField: "name",
+                    valueField: "id",
+                    selectOptions: {
+                        multiple: true,
+                    },
+                },
             },
         },
         {

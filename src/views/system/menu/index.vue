@@ -7,6 +7,10 @@
                 </el-button>
             </template>
 
+            <template #p_id="{ row }">
+                {{ row.p_id == 0? "一级" : row.name }}
+            </template>
+
             <template #hidden="{ row }">
                 {{ row.hidden ? "显示" : "隐藏" }}
             </template>
@@ -46,7 +50,7 @@ import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeMenu, updateMenu } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
-import { keys, pick } from "lodash"
+import { cloneDeep, keys, pick } from "lodash"
 import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
 
@@ -80,10 +84,11 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
     visible.value = !!values.visible
 }
 
-const [register, { getVialdColumn, reload }] = useTable({
+const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
     title: "菜单管理",
     api: getList,
     immediate: true,
+    defaultExpandAll:true,
     formSettings: {
         schemas: [
             {
@@ -98,10 +103,26 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
+            prop: "p_id",
+            label: "父级菜单",
+            canViald: true,
+            width: 200,
+            columnToForm: {
+                component: "Select",
+                componentProps: {
+                    alwaysLoad: true,
+                    dataSource: handleGetSource,
+                    labelField: "name",
+                    valueField: "id",
+                },
+            },
+        },
+        {
             prop: "id",
             label: "id",
             width: 80,
         },
+
         {
             prop: "name",
             label: "菜单名",
@@ -112,7 +133,7 @@ const [register, { getVialdColumn, reload }] = useTable({
             prop: "path",
             label: "路径",
             canViald: true,
-            width: 100,
+            width: 120,
         },
         {
             prop: "component",
@@ -164,6 +185,15 @@ const actionRemoveSetting = computed(() => {
         },
     }
 })
+
+function handleGetSource(): Recordable[] {
+    const values = cloneDeep(getTableDataSource())
+    values.unshift({
+        id: 0,
+        name: "一级菜单",
+    })
+    return values
+}
 
 async function handleActionDelete(row) {
     try {

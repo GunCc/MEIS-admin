@@ -32,6 +32,18 @@ export interface BasicTableProps {
     fetchSetting?: Partial<FetchSetting>
     // 表格无请求时的数据
     dataSource?: Recordable[]
+    // 是否为树形结构
+    defaultExpandAll?: boolean
+    // 定义树形结构的字段
+    treeProps?: TableTreeProps
+    // 每段的key
+    rowKey?: string
+}
+
+// 树形结构
+interface TableTreeProps {
+    children: string
+    hasChildren?: boolean
 }
 
 export interface PaginationSetting extends PaginationProps {}

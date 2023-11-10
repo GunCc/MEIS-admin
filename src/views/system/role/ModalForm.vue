@@ -39,7 +39,7 @@ export default defineComponent({
             },
         ] = useForm({
             validateOnSubmit: false,
-            labelWidth: "80px",
+            labelWidth: "110px",
             submitOnReset: false,
         })
 

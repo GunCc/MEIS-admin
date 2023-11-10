@@ -34,6 +34,16 @@ export function useDataSource({
         return unref(dataSourceRef)
     })
 
+    // 获取表格内容
+    function getTableDataSource() {
+        return unref(dataSourceRef)
+    }
+
+    // 获取表格原始内容
+    function getTableRawDataSource() {
+        return unref(rawDataSourceRef)
+    }
+
     // 表格页面发生变化
     async function handlePageChange(page) {
         setPagination({
@@ -144,6 +154,8 @@ export function useDataSource({
         reload,
         handlePageChange,
         getDataSource,
+        getTableDataSource,
+        getTableRawDataSource,
         handleFetch,
     }
 }

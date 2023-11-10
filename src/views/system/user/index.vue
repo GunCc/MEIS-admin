@@ -180,7 +180,7 @@ const [register, { getVialdColumn, reload }] = useTable({
             prop: "action",
             label: "操作",
             fixed: "right",
-            width: 300,
+            width: 220,
         },
     ],
 })

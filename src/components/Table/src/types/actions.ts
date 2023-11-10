@@ -10,4 +10,8 @@ export interface TableActions {
     getVialdColumn: () => Recordable[]
     // 重新加载
     reload: () => Promise<any>
+    // 返回表格数据
+    getTableDataSource: () => Recordable[]
+    // 返回获取表格数据对象
+    getTableRawDataSource: () => Recordable
 }

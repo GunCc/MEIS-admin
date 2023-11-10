@@ -1,17 +1,5 @@
 <template>
-    <el-select
-        v-bind="getSelectOptions"
-        @visible-change="handleSelectVisible"
-        v-model="state"
-    >
-        <el-option
-            v-for="item in getOptions"
-            :key="item[valueField]"
-            :label="item.label"
-            :value="item[valueField]"
-        >
-        </el-option>
-    </el-select>
+    <el-cascader v-bind="getCascaderOptions" v-model="state"> </el-cascader>
 </template>
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
@@ -19,6 +7,8 @@ import { useFormItem } from "@/hooks/components/useFormItem"
 import { PropType } from "vue"
 import { get, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
+import { CascaderProps } from "element-plus/es/components/cascader-panel/src/node"
+import { CascaderInstance } from "element-plus"
 
 interface OptionsItem {
     value: string
@@ -26,8 +16,11 @@ interface OptionsItem {
     disabled?: boolean
 }
 
+interface CascaderOptionsContext extends CascaderInstance {}
+interface CascaderPropContext extends CascaderProps {}
+
 export default defineComponent({
-    name: "FormSelect",
+    name: "FormCascader",
     props: {
         value: [Array, Object, String, Number],
         // 如果异步请求
@@ -37,8 +30,12 @@ export default defineComponent({
         },
         // 请求api传参
         params: propTypes.any.def({}),
-        selectOptions: {
-            type: Object as PropType<Recordable>,
+        cascaderOptions: {
+            type: Object as PropType<Partial<CascaderOptionsContext>>,
+            default: () => {},
+        },
+        cascaderProps: {
+            type: Object as PropType<Partial<CascaderPropContext>>,
             default: () => {},
         },
         // 是否立即请求
@@ -53,9 +50,7 @@ export default defineComponent({
         listField: propTypes.string.def("list"),
         // 如果不是请求 -- 数据源
         dataSource: {
-            type: [Array, Function] as PropType<
-                Recordable[] | (() => Recordable[])
-            >,
+            type: Array as PropType<Recordable[]>,
             default: () => [],
         },
     },
@@ -65,14 +60,6 @@ export default defineComponent({
 
         const [state] = useFormItem(props)
 
-        // 选项框的默认属性
-        const getSelectOptions = computed(() => {
-            const { selectOptions } = props
-            return {
-                class: "w-100",
-                ...selectOptions,
-            }
-        })
         // 获取options数据
         const getOptions = computed(() => {
             const { labelField, valueField } = props
@@ -84,18 +71,16 @@ export default defineComponent({
             }) as OptionsItem[]
         })
 
-        function handleSelectVisible(visible) {
-            if (visible) {
-                if (props.alwaysLoad) {
-                    const { dataSource, api } = props
-                    if (isFunction(api)) fetch()
-                    else
-                        options.value = isFunction(dataSource)
-                            ? dataSource()
-                            : dataSource
-                }
+        // 选项框的默认属性
+        const getCascaderOptions = computed(() => {
+            const { cascaderOptions, cascaderProps } = props
+            return {
+                class: "w-100",
+                ...cascaderOptions,
+                props: cascaderProps,
+                options: unref(getOptions),
             }
-        }
+        })
 
         async function fetch() {
             const { api, params, listField } = props
@@ -111,11 +96,7 @@ export default defineComponent({
         watch(
             () => props.dataSource,
             () => {
-                const { dataSource, api } = props
-                if (isFunction(api)) return
-                options.value = isFunction(dataSource)
-                    ? dataSource()
-                    : dataSource
+                !isFunction(props.api) && (options.value = props.dataSource)
             },
             {
                 immediate: true,
@@ -133,8 +114,7 @@ export default defineComponent({
         return {
             state,
             getOptions,
-            getSelectOptions,
-            handleSelectVisible,
+            getCascaderOptions,
         }
     },
 })
