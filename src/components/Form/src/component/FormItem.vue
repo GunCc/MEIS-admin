@@ -102,7 +102,6 @@ export default defineComponent({
                 : {
                       default: () => renderComponentContent,
                   }
-
             return (
                 <Comp {...CompAttr} v-model={props.formModal[field]}>
                     {compSlot}

@@ -1,12 +1,16 @@
 import { isEqual } from "lodash"
-import { DeepReadonly, UnwrapRef } from 'vue';
+import { DeepReadonly, UnwrapRef } from "vue"
 
-export function useFormItem<T extends Recordable, K extends keyof T, V = UnwrapRef<T[K]>>(
+export function useFormItem<
+    T extends Recordable,
+    K extends keyof T,
+    V = UnwrapRef<T[K]>
+>(
     props: T,
     key?: K,
     changeEvent?,
-    emitData?: Ref<any[]>,
-  ): [WritableComputedRef<V>, (val: V) => void, DeepReadonly<V>];
+    emitData?: Ref<any[]>
+): [WritableComputedRef<V>, (val: V) => void, DeepReadonly<V>]
 
 // 表单 items 中双向绑定
 export function useFormItem<T extends Recordable>(

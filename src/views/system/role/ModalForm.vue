@@ -8,11 +8,12 @@
 <script lang="ts">
 import { updateRole, createRole } from "@/api/v1/system/role"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
+import { flattenArray, repetitionArray } from "@/utils/helper"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
 export default defineComponent({
-    name: "ManagerModalUpload",
+    name: "RoleModalForm",
     components: { BasicForm },
     props: {
         row: {
@@ -33,9 +34,7 @@ export default defineComponent({
                 resetFields,
                 setFormSchemas,
                 getFormField,
-                validateField,
                 clearValidate,
-                getFormValues
             },
         ] = useForm({
             validateOnSubmit: false,
@@ -53,13 +52,8 @@ export default defineComponent({
                     ...(isObj && row),
                     ...form,
                 }
+                form.menus_ids = repetitionArray(flattenArray(form.menus_ids))
                 form.enable = unref(enableValue) ? 1 : 0
-                if (
-                    (form.password || form.passwords) &&
-                    form.password != form.passwords
-                ) {
-                    await validateField(["password", "passwords"])
-                }
                 await api(form)
                 clearForm()
                 emit("success-submit")
@@ -78,7 +72,6 @@ export default defineComponent({
         async function init() {
             clearValidate()
             setFormSchemas(props.schemaSetting)
-            console.log("123",await getFormValues())
             enableValue.value = !!(await getFormField("enable"))
         }
 

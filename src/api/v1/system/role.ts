@@ -1,5 +1,5 @@
 import { BaseListRequest, GetById } from "@/api/model/commen/request"
-import { Role } from "@/api/model/system/role"
+import { Role, RoleBindMenus } from "@/api/model/system/role"
 import { MEIS_http } from "@/utils/http"
 import { ALL_LIST_INFO } from "./../const"
 
@@ -34,6 +34,13 @@ export function createRole(params: Role) {
 export function updateRole(params: Partial<Role>) {
     return MEIS_http.post({
         url: getUrl("/update"),
+        params,
+    })
+}
+
+export function bindRoleMenus(params: Partial<RoleBindMenus>) {
+    return MEIS_http.post({
+        url: getUrl("/bindMenus"),
         params,
     })
 }

@@ -2,10 +2,10 @@ import { Component, VNode } from "vue"
 import FormSelect from "./src/component/FormSelect.vue"
 import FormUpload from "./src/component/FormUpload.vue"
 import FormCascader from "./src/component/FormCascader.vue"
+import FormTree from "./src/component/FormTree.vue"
 import { RenderCallbackParams } from "./src/types/form"
-// import { ElInput } from "element-plus"
 
-export type ComponentType = "Select" | "Input" | "Upload" | "Cascader"
+export type ComponentType = "Select" | "Input" | "Upload" | "Cascader" | "Tree"
 
 export interface CustomComponentProps {
     compAttr: Recordable
@@ -23,5 +23,6 @@ componentMap.set("Input", ElInput)
 
 componentMap.set("Select", FormSelect)
 componentMap.set("Cascader", FormCascader)
+componentMap.set("Tree", FormTree)
 
 componentMap.set("Upload", FormUpload)

@@ -19,3 +19,15 @@ export function mergeData<
         }
     })
 }
+
+// 扁平化数组
+export function flattenArray<T>(arr: T[]) {
+    if (!isArray(arr)) return []
+    return arr.flat(1)
+}
+
+// 数组去重
+export function repetitionArray<T>(arr: T[]) {
+    if (!isArray(arr)) return []
+    return [...new Set(arr)]
+}

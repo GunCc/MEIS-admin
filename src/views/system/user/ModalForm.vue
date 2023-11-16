@@ -12,7 +12,7 @@ import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
 export default defineComponent({
-    name: "ManagerModalUpload",
+    name: "ModelUserForm",
     components: { BasicForm },
     props: {
         row: {

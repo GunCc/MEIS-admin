@@ -1,14 +1,14 @@
 <template>
-    <el-cascader v-bind="getCascaderOptions" v-model="state"> </el-cascader>
+    <el-tree ref="treeRef" v-bind="getTreeOptions" @check="handleCheckChange">
+    </el-tree>
 </template>
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
-import { useFormItem } from "@/hooks/components/useFormItem"
 import { PropType } from "vue"
 import { get, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
-import { CascaderProps } from "element-plus/es/components/cascader-panel/src/node"
-import { CascaderInstance } from "element-plus"
+import { TreeComponentProps } from "element-plus/es/components/tree/src/tree.type"
+import { ElTree } from "element-plus"
 
 interface OptionsItem {
     value: string
@@ -17,13 +17,22 @@ interface OptionsItem {
     disabled?: boolean
 }
 
-interface CascaderOptionsContext extends CascaderInstance {}
-interface CascaderPropContext extends CascaderProps {}
+interface TreeCheckObject {
+    checkedKeys: number[]
+    checkedNodes: Recordable[]
+    halfCheckedNodes: Recordable[]
+    halfCheckedKeys: number[]
+}
+
+interface TreeOptions extends TreeComponentProps {}
 
 export default defineComponent({
-    name: "FormCascader",
+    name: "FormTree",
     props: {
-        value: [Array, Object, String, Number],
+        modelValue: {
+            type: Array as PropType<number[] | string[]>,
+            default: () => [],
+        },
         // 如果异步请求
         api: {
             type: Function as PropType<(arg?: Recordable) => Promise<any>>,
@@ -31,14 +40,6 @@ export default defineComponent({
         },
         // 请求api传参
         params: propTypes.any.def({}),
-        cascaderOptions: {
-            type: Object as PropType<Partial<CascaderOptionsContext>>,
-            default: () => {},
-        },
-        cascaderProps: {
-            type: Object as PropType<Partial<CascaderPropContext>>,
-            default: () => {},
-        },
         // 是否立即请求
         immediate: propTypes.bool.def(true),
         // 是否总是加载
@@ -56,12 +57,17 @@ export default defineComponent({
             type: Array as PropType<Recordable[]>,
             default: () => [],
         },
+        TreeOptions: {
+            type: Object as PropType<Partial<TreeOptions>>,
+            default: () => ({}),
+        },
     },
-    setup(props) {
-        const options = ref<Recordable[]>([])
-        // const emitData = ref<any[]>([])
+    emits: ["change"],
+    setup(props, { emit }) {
+        const checkValues = ref<Recordable[]>([])
 
-        const [state] = useFormItem(props)
+        const treeRef = ref<InstanceType<typeof ElTree>>()
+        const options = ref<Recordable[]>([])
 
         // 获取options数据
         const getOptions = computed(() => {
@@ -69,15 +75,32 @@ export default defineComponent({
         })
 
         // 选项框的默认属性
-        const getCascaderOptions = computed(() => {
-            const { cascaderOptions, cascaderProps } = props
+        const getTreeOptions = computed(() => {
+            const { TreeOptions } = props
             return {
                 class: "w-100",
-                ...cascaderOptions,
-                props: cascaderProps,
-                options: unref(getOptions),
+                data: unref(getOptions),
+                ...TreeOptions,
             }
         })
+
+        function setCheckValues(values: Recordable[] = []) {
+            checkValues.value = values
+        }
+
+        function handleCheckChange(_, treeObj: TreeCheckObject) {
+            const { checkedKeys } = treeObj
+            emit("change", checkedKeys)
+        }
+
+        function setCheckedKeys(values: number[] | string[]) {
+            nextTick(() => {
+                treeRef.value!.setCheckedKeys(values, false)
+            })
+        }
+        function resetChecked() {
+            treeRef.value!.setCheckedKeys([], false)
+        }
 
         function computedToGetOptions(info: Recordable[]) {
             const { labelField, valueField, childField } = props
@@ -113,6 +136,17 @@ export default defineComponent({
             }
         )
 
+        watch(
+            () => props.modelValue,
+            () => {
+                setCheckedKeys(props.modelValue)
+            },
+            {
+                immediate: true,
+                deep: true,
+            }
+        )
+
         onMounted(() => {
             useTimeoutFn(() => {
                 const { immediate, api } = props
@@ -121,9 +155,12 @@ export default defineComponent({
         })
 
         return {
-            state,
+            treeRef,
             getOptions,
-            getCascaderOptions,
+            getTreeOptions,
+            handleCheckChange,
+            setCheckedKeys,
+            resetChecked,
         }
     },
 })

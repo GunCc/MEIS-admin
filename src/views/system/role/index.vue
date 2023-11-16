@@ -2,7 +2,7 @@
     <PageWrapper>
         <basic-table @register="register">
             <template #action-before>
-                <el-button type="success" @click="handleCreateUser">
+                <el-button type="success" @click="handleCreateRole">
                     添加
                 </el-button>
             </template>
@@ -20,9 +20,16 @@
                 >
                     <template #before-action="{ value }">
                         <el-button
+                            type="warning"
+                            size="small"
+                            @click="handleRoleBindMenus(value)"
+                        >
+                            绑定菜单
+                        </el-button>
+                        <el-button
                             type="primary"
                             size="small"
-                            @click="handleEditUser(value)"
+                            @click="handleEditRole(value)"
                         >
                             编辑
                         </el-button>
@@ -33,11 +40,12 @@
         <BasicModal v-model:visible="visible" width="500px">
             <template #header> {{ getModalProps.title }}</template>
             <template #default>
-                <ModalForm
+                <component
+                    :is="getModalProps.component"
                     @success-submit="handleSuccessSubmit"
                     :schema-setting="getModalProps.schema"
                     :row="getModalProps.row"
-                ></ModalForm>
+                ></component>
             </template>
         </BasicModal>
     </PageWrapper>
@@ -46,19 +54,20 @@
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeRole, updateRole } from "@/api/v1/system/role"
-import { getList as getAllList } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
 import { keys, pick } from "lodash"
 import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
+import RoleBindMenusModalForm from "./ModalBindMenus.vue"
 import { clone } from "lodash"
 
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
     row: Recordable | "create"
+    component: Component
 }
 
 const visible = ref<boolean>(false)
@@ -67,6 +76,7 @@ const modalProps = ref<ModalProps>({
     title: "",
     schema: [],
     row: "create",
+    component: ModalForm,
 })
 
 const getModalProps = computed(() => {
@@ -119,28 +129,6 @@ const [register, { getVialdColumn, reload }] = useTable({
             },
         },
         {
-            prop: "menu",
-            label: "已绑定路由",
-            canViald: true,
-            width: 200,
-            columnToForm: {
-                component: "Select",
-                formatDefault: row => {
-                    if (!row) return []
-                    return row.roles.map(item => item.id)
-                },
-                componentProps: {
-                    api: getAllList,
-                    immediate: true,
-                    labelField: "name",
-                    valueField: "id",
-                    selectOptions: {
-                        multiple: true,
-                    },
-                },
-            },
-        },
-        {
             prop: "comment",
             label: "备注",
             canViald: true,
@@ -160,7 +148,7 @@ const [register, { getVialdColumn, reload }] = useTable({
             prop: "action",
             label: "操作",
             fixed: "right",
-            width: 160,
+            width: 220,
         },
     ],
 })
@@ -202,21 +190,33 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
     return schemas
 }
 
-function handleEditUser(row) {
+function handleEditRole(row) {
     setModalValue({
         visible: true,
         title: "编辑角色",
         row,
         schema: getSchema(row),
+        component:markRaw(ModalForm),
     })
 }
 
-function handleCreateUser() {
+function handleRoleBindMenus(row) {
+    setModalValue({
+        visible: true,
+        title: "编辑角色",
+        row,
+        schema: getSchema(row),
+        component: markRaw(RoleBindMenusModalForm),
+    })
+}
+
+function handleCreateRole() {
     setModalValue({
         visible: true,
         title: "创建角色",
         row: "create",
         schema: getSchema(),
+        component: markRaw(ModalForm),
     })
 }
 
