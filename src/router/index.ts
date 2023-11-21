@@ -1,6 +1,7 @@
 import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
 import type { App } from "vue"
-import { LoginRoute, asyncRoute } from "./routes"
+import { LoginRoute } from "./routes"
+import baseRoutes from './routes/modules/base';
 
 const routes: Array<RouteRecordRaw> = [
     {
@@ -12,7 +13,7 @@ const routes: Array<RouteRecordRaw> = [
 
 export const router = createRouter({
     history: createWebHashHistory(),
-    routes: [...routes, ...LoginRoute, ...asyncRoute],
+    routes: [...routes, ...LoginRoute,...baseRoutes],
 })
 
 function setupRouter(app: App) {

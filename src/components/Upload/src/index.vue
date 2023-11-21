@@ -26,6 +26,7 @@ import { PropType } from "vue"
 import { MEIS_http } from "@/utils/http"
 import { BasicImage } from "@c/Image/index"
 import { ColEx } from "@/components/Form/src/types"
+import { error} from "@/utils/log"
 
 const { VITE_HTTP_URL } = import.meta.env
 export default defineComponent({
@@ -89,8 +90,8 @@ export default defineComponent({
 
                 imageList.value = [...unref(imageList), res]
                 emit("update:modelValue", [...toRaw(unref(imageList))])
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         }
 

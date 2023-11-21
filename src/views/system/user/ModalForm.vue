@@ -11,6 +11,7 @@ import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
+import { error } from "@/utils/log"
 export default defineComponent({
     name: "ModelUserForm",
     components: { BasicForm },
@@ -67,11 +68,10 @@ export default defineComponent({
                 await api(form)
                 clearForm()
                 emit("success-submit")
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
 
-            console.log("提交", values)
         }
 
         function clearForm() {
@@ -89,7 +89,6 @@ export default defineComponent({
             () => props.schemaSetting,
             () => {
                 nextTick(() => {
-                    console.log("打开了")
                     init()
                 })
             },

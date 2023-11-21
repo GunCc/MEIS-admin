@@ -1,5 +1,6 @@
 import { getFileType } from "@/api/v1/system/upload"
 import { ResourceType } from "@/api/model/upload/request"
+import { error } from "@/utils/log"
 
 export function useUploadType() {
     const uploadTypesList = ref<ResourceType[]>([])
@@ -16,8 +17,8 @@ export function useUploadType() {
                 id: "-1",
             })
             uploadTypesList.value = list
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            error(err as string)
         }
     }
 

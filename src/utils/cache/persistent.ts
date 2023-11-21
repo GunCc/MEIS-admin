@@ -3,19 +3,21 @@ import {
     APP_SESSION_CACHE_KEY,
     LOCK_INFO_KEY,
     TOKEN_KEY,
-    USER_INFO_KEY,
-    PROJ_CFG_KEY
+    MENUS_KEY,
+    PROJ_CFG_KEY,
 } from "@/enums/cacheEnum"
 import { DEFAULT_CACHE_TIME } from "@/settings/encryptionSetting"
 import { omit, pick } from "lodash"
 import { Nullable } from "vitest"
 import { createLocalStorage, createSessionStorage } from "."
 import { Memory } from "./memory"
-import { ProjectSetting } from '@/types/config.d';
+import { ProjectSetting } from "@/types/config.d"
+import { AppRouteRecordRaw } from "@/router/types"
 
 interface BasicStore {
     [TOKEN_KEY]: string | number | null | undefined
-    [PROJ_CFG_KEY]: ProjectSetting;
+    [MENUS_KEY]: AppRouteRecordRaw[]
+    [PROJ_CFG_KEY]: ProjectSetting
 }
 
 type LocalStore = BasicStore

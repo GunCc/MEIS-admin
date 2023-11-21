@@ -9,6 +9,7 @@ import { get, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 import { TreeComponentProps } from "element-plus/es/components/tree/src/tree.type"
 import { ElTree } from "element-plus"
+import { error } from "@/utils/log"
 
 interface OptionsItem {
     value: string
@@ -84,10 +85,6 @@ export default defineComponent({
             }
         })
 
-        function setCheckValues(values: Recordable[] = []) {
-            checkValues.value = values
-        }
-
         function handleCheckChange(_, treeObj: TreeCheckObject) {
             const { checkedKeys } = treeObj
             emit("change", checkedKeys)
@@ -120,8 +117,8 @@ export default defineComponent({
                 const res = await api(params)
                 let list = get(res, listField)
                 options.value = list
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         }
 

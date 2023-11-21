@@ -1,9 +1,10 @@
 import { Router } from "vue-router"
 import nProgress from "nprogress"
-import { useTransitionSetting } from "@/settings/useTransitionSetting"
+import { createPermissionGuard } from "./createPermissionGuard"
 
 export function setupRouterGuard(router: Router) {
     createProgressGuard(router)
+    createPermissionGuard(router)
 }
 
 // 页面切换显示进度条

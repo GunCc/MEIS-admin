@@ -71,7 +71,7 @@ import { FormItemSchemas } from "@/components/Form"
 import ModalForm from "./ModalForm.vue"
 import { clone } from "lodash"
 import { useWarnMessage } from "@/components/Modal"
-
+import { error } from "@/utils/log"
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
@@ -198,8 +198,8 @@ async function handleActionDelete(row) {
     try {
         await removeUser(row)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+       error(err as string)
     }
 }
 
@@ -253,7 +253,6 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
         ] as FormItemSchemas[])
     )
 
-    console.log("schemas", schemas)
     return schemas
 }
 
@@ -292,8 +291,8 @@ async function handleTableSwitch(bool, row) {
         }
         await updateUser(form)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 
@@ -308,8 +307,8 @@ function handleResetPasswordUser(row) {
                 }
                 await resetUserPassword(form)
                 reload()
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         },
     })

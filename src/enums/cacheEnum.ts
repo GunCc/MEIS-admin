@@ -1,6 +1,10 @@
 // token key
 export const TOKEN_KEY = "TOKEN__"
 
+// 菜单缓存
+export const MENUS_KEY = "MENUS__"
+
+
 // 全局local缓存key
 export const APP_LOCAL_CACHE_KEY = "COMMON__LOCAL__"
 

@@ -3,10 +3,11 @@ import { getFileList } from "@/api/v1/system/upload"
 import { PaginationSetting } from "@/components/Table/src/types"
 import ManagerModalUpload from "../ModalUpload.vue"
 import ManagerModalImageEdit from "../ModalImageEdit.vue"
-
-const PAGE_SIZE = 32
-const { VITE_HTTP_URL } = import.meta.env
+import { error } from "@/utils/log"
 import { get } from "lodash"
+
+const { VITE_HTTP_URL } = import.meta.env
+const PAGE_SIZE = 32
 
 export function useMaterialList(
     handleOpen: (flag?: boolean) => void,
@@ -122,8 +123,8 @@ export function useMaterialList(
             setPagination({
                 total: resultTotal || 0,
             })
-        } catch (error) {
-            console.error(error)
+        } catch (err) {
+            error(err as string)
         } finally {
             setLoading(false)
         }
@@ -132,7 +133,6 @@ export function useMaterialList(
     watch(
         () => unref(getTabsCurrent),
         () => {
-            console.log("变化", unref(getTabsCurrent))
             handlePageChange()
         },
         {

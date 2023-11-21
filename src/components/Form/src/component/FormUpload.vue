@@ -26,6 +26,7 @@ import { PropType } from "vue"
 const { VITE_HTTP_URL } = import.meta.env
 import { MEIS_http } from "@/utils/http"
 import { ColEx } from "../types"
+import { error } from "@/utils/log"
 
 import { BasicImage } from "@c/Image/index"
 
@@ -81,8 +82,8 @@ export default defineComponent({
                     ...unref(imageList),
                     `${VITE_HTTP_URL}/${res.url}`,
                 ]
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         }
 

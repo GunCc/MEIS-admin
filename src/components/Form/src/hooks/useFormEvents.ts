@@ -185,8 +185,6 @@ export function useFormEvents(
             }
         })
         validateField(validKeys).catch(_ => {})
-
-        console.groupEnd
     }
 
     return {

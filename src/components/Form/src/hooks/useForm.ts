@@ -7,6 +7,7 @@ import {
 } from "../types/form"
 import { Arrayable, Nullable } from "vitest"
 import { FormItemProp } from "element-plus"
+import { error } from "@/utils/log"
 
 export function useForm(props?: BasicFormProps): ReturnUseFormType {
     const formEl = ref<Nullable<FormActionType>>()
@@ -14,7 +15,7 @@ export function useForm(props?: BasicFormProps): ReturnUseFormType {
     function getForm() {
         const form = unref(formEl)
         if (!form) {
-            console.error("form没有实例化！")
+            error("form没有实例化！")
             return
         }
         return form

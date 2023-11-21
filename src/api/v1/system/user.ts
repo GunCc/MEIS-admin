@@ -1,4 +1,5 @@
 import { BaseListRequest, GetById } from "@/api/model/commen/request"
+import { GetUserInfo } from "@/api/model/system/user"
 import { MEIS_http } from "@/utils/http"
 
 export function getList(params: BaseListRequest) {
@@ -34,6 +35,13 @@ export function resetUserPassword(params: GetById) {
     return MEIS_http.post({
         url: getUrl("/resetPassword"),
         params,
+    })
+}
+
+// 获取用户信息
+export function getUserInfo(){
+    return MEIS_http.post<GetUserInfo>({
+        url: getUrl("/getUserInfo"),
     })
 }
 

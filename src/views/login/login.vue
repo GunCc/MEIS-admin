@@ -79,6 +79,7 @@ import { useGo } from "@/hooks/web/usePage"
 import { getCaptcha } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
+import { error } from "@/utils/log"
 
 const go = useGo()
 
@@ -114,7 +115,7 @@ roleMap.set("Teacher", [
                     h("img", {
                         width: 80,
                         height: 30,
-                        style:"margin:-20px",
+                        style: "margin:-20px",
                         src: unref(captcha)?.image_path,
                         onClick: getCaptchaImage,
                     }),
@@ -175,8 +176,8 @@ async function getCaptchaImage() {
     try {
         const res = await getCaptcha()
         captcha.value = res
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 

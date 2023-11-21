@@ -87,12 +87,10 @@ export default defineComponent({
         async function setProps(
             formProps: Partial<BasicFormProps>
         ): Promise<void> {
-            console.log("修改前", unref(innerFormProps))
             innerFormProps.value = {
                 ...(unref(innerFormProps) || {}),
                 ...formProps,
             }
-            console.log("修改后", unref(innerFormProps))
         }
         const {
             setFormSchemas,

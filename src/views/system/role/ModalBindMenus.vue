@@ -7,7 +7,7 @@ import { BasicForm, useForm } from "@c/Form"
 import { clone } from "lodash"
 import { PropType } from "vue"
 import { getList as getAllList } from "@/api/v1/system/menu"
-
+import { error } from "@/utils/log"
 export default defineComponent({
     name: "RoleBindMenusModalForm",
     components: { BasicForm },
@@ -54,8 +54,8 @@ export default defineComponent({
                 form.role_id = row.id
                 await bindRoleMenus(form)
                 emit("success-submit")
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         }
 

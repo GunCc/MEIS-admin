@@ -1,13 +1,15 @@
 import { login } from "@/api/v1/system/base"
+import { getUserInfo } from "@/api/v1/system/user"
 import { defineStore } from "pinia"
 import { store } from ".."
-import { Login } from "./../../api/model/base/request"
 import { Nullable } from "vitest"
+import { Login } from "@/api/model/base/request"
 import { UserInfo } from "@/api/model/base/response"
-import { router } from "./../../router/index"
+import { router } from "@/router/index"
 import { PageEnum } from "@/enums/pageEnum"
 import { getAuthCache, setAuthCache } from "@/utils/auth"
 import { TOKEN_KEY } from "@/enums/cacheEnum"
+import { menuStore } from "./menu"
 
 interface UserState {
     token?: string
@@ -39,10 +41,10 @@ export const userStore = defineStore({
         async handleLogin(params: Login) {
             try {
                 const res = await login(params)
-                const { token, user } = res
+                const { token } = res
                 this.setToken(token)
-                this.setUserInfo(user)
-                this.handleLoginAfter()
+
+                await this.handleLoginAfter()
             } catch (error) {
                 console.error(error)
             }
@@ -50,8 +52,12 @@ export const userStore = defineStore({
         async handleLoginAfter() {
             if (!this.getToken) return
 
+            const userMenuStore = menuStore()
+            const res = await getUserInfo()
+            const { user, menus } = res
+            this.setUserInfo(user)
+            userMenuStore.setDefaultMenu(menus)
             const { redirect = PageEnum.BASE_HOME } = this.getUserInfo || {}
-
             await router.replace(redirect || PageEnum.BASE_HOME)
         },
         // 登出操作

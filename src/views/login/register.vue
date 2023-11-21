@@ -47,6 +47,7 @@ import { sendEmailCode, register } from "@/api/v1/system/base"
 import { Register } from "@/api/model/base/request"
 import { useGo } from "@/hooks/web/usePage"
 import { PageEnum } from "@/enums/pageEnum"
+import { error } from "@/utils/log"
 
 const getCountdownContext = ref<string>("获取验证码")
 const go = useGo()
@@ -134,8 +135,8 @@ async function handleCaptchaFetch() {
                 getCountdownContext.value = "重新获取"
             }
         }, 1000)
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 
@@ -148,10 +149,9 @@ async function handleSubmit() {
         go({
             path: PageEnum.BASE_LOGIN,
         })
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 </script>
 <style lang="scss" scoped></style>
-@/api/model/base/request

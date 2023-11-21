@@ -7,6 +7,8 @@ import { BasicForm, useForm } from "@c/Form"
 import { PropType } from "vue"
 import { updateFile } from "@/api/v1/system/upload"
 import { clone } from "lodash"
+import { error } from "@/utils/log"
+
 export default defineComponent({
     name: "ManagerModalImageEdit",
     components: { BasicForm },
@@ -51,11 +53,9 @@ export default defineComponent({
                 form.id = props.currentImageInfo.id
                 await updateFile(form)
                 emit("update-success", form)
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
-
-            console.log("提交", values)
         }
 
         return { registerForm, handleSubmit }

@@ -6,6 +6,8 @@ import {
 import { ResourceType } from "@/api/model/upload/request"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { nextTick } from "vue"
+import { error } from "@/utils/log"
+
 
 export function useModalType(
     setVisible: (flag?: boolean) => void,
@@ -78,8 +80,8 @@ export function useModalType(
                 id: row.id,
             })
             emit("change")
-        } catch (error) {
-            console.error(error)
+        } catch (err) {
+            error(err as string)
         }
     }
 
@@ -95,8 +97,8 @@ export function useModalType(
             await getApi(params)
             setVisible(false)
             emit("change")
-        } catch (error) {
-            console.error(error)
+        } catch (err) {
+           error(err as string)
         }
     }
 

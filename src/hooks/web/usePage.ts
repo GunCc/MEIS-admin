@@ -1,12 +1,14 @@
 import { PageEnum } from "@/enums/pageEnum"
 import { RouteLocationRaw, Router } from "vue-router"
+import { error } from "@/utils/log"
+
 export type PathAsPageEnum<T> = T extends { path: string }
     ? T & { path: PageEnum }
     : T
 export type RouteLocationRawEx = PathAsPageEnum<RouteLocationRaw>
 
-function handleError(e: Error) {
-    console.error(e)
+function handleError(e: string) {
+    error(e)
 }
 
 // 路由跳转

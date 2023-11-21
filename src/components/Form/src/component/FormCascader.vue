@@ -9,6 +9,7 @@ import { get, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 import { CascaderProps } from "element-plus/es/components/cascader-panel/src/node"
 import { CascaderInstance } from "element-plus"
+import { error } from "@/utils/log"
 
 interface OptionsItem {
     value: string
@@ -97,8 +98,8 @@ export default defineComponent({
                 const res = await api(params)
                 let list = get(res, listField)
                 options.value = list
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
         }
 

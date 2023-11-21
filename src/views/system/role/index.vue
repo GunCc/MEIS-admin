@@ -62,7 +62,7 @@ import { FormItemSchemas } from "@/components/Form"
 import ModalForm from "./ModalForm.vue"
 import RoleBindMenusModalForm from "./ModalBindMenus.vue"
 import { clone } from "lodash"
-
+import { error } from "@/utils/log"
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
@@ -166,8 +166,8 @@ async function handleActionDelete(row) {
     try {
         await removeRole(row)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 
@@ -196,7 +196,7 @@ function handleEditRole(row) {
         title: "编辑角色",
         row,
         schema: getSchema(row),
-        component:markRaw(ModalForm),
+        component: markRaw(ModalForm),
     })
 }
 
@@ -231,8 +231,8 @@ async function handleTableSwitch(bool, row) {
         }
         await updateRole(form)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 

@@ -6,6 +6,8 @@ import {
 import { get, isBoolean, isFunction, merge } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 import { PAGE_SIZE } from "../const"
+import { error } from "@/utils/log"
+
 interface useDataSourceContext {
     getProps: ComputedRef<BasicTableProps>
     emit: EmitType
@@ -122,8 +124,8 @@ export function useDataSource({
                 total: resultTotal,
             })
             return resultItems
-        } catch (error) {
-            console.log(error)
+        } catch (err) {
+            error(err as string)
         } finally {
             setLoading(false)
         }

@@ -16,6 +16,7 @@ import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeOperation } from "@/api/v1/system/operationRecord"
 import { TableColumnAction } from "@c/TableAction"
+import { error } from "@/utils/log"
 const [register, { reload }] = useTable({
     title: "日志列表",
     api: getList,
@@ -93,8 +94,8 @@ async function handleActionDelete(row) {
     try {
         await removeOperation(row)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 </script>

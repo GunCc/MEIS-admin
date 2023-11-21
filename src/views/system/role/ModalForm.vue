@@ -12,6 +12,7 @@ import { flattenArray, repetitionArray } from "@/utils/helper"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
+import { error } from "@/utils/log"
 export default defineComponent({
     name: "RoleModalForm",
     components: { BasicForm },
@@ -30,12 +31,7 @@ export default defineComponent({
 
         const [
             registerForm,
-            {
-                resetFields,
-                setFormSchemas,
-                getFormField,
-                clearValidate,
-            },
+            { resetFields, setFormSchemas, getFormField, clearValidate },
         ] = useForm({
             validateOnSubmit: false,
             labelWidth: "110px",
@@ -57,11 +53,9 @@ export default defineComponent({
                 await api(form)
                 clearForm()
                 emit("success-submit")
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
-
-            console.log("提交", values)
         }
 
         function clearForm() {

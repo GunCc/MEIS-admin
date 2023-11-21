@@ -12,6 +12,8 @@ import { PropType } from "vue"
 import { BasicUploadFile } from "@c/Upload"
 import { clone } from "lodash"
 import { fileBindType } from "@/api/v1/system/upload"
+import { error } from "@/utils/log"
+
 export default defineComponent({
     name: "ManagerModalUpload",
     components: { BasicForm, BasicUploadFile },
@@ -52,11 +54,9 @@ export default defineComponent({
                 await fileBindType(form)
                 clearForm()
                 emit("upload-submit")
-            } catch (error) {
-                console.error(error)
+            } catch (err) {
+                error(err as string)
             }
-
-            console.log("提交", values)
         }
 
         function clearForm() {

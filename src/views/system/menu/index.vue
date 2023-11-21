@@ -56,7 +56,7 @@ import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
 import { clone } from "lodash"
-
+import { error } from "@/utils/log"
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
@@ -199,8 +199,8 @@ async function handleActionDelete(row) {
     try {
         await removeMenu(row)
         reload()
-    } catch (error) {
-        console.error(error)
+    } catch (err) {
+        error(err as string)
     }
 }
 
