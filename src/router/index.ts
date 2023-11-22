@@ -1,19 +1,10 @@
-import { createRouter, createWebHashHistory, RouteRecordRaw } from "vue-router"
+import { createRouter, createWebHashHistory } from "vue-router"
 import type { App } from "vue"
 import { LoginRoute } from "./routes"
-import baseRoutes from './routes/modules/base';
-
-const routes: Array<RouteRecordRaw> = [
-    {
-        path: "/",
-        name: "home",
-        redirect: "/login",
-    },
-]
 
 export const router = createRouter({
     history: createWebHashHistory(),
-    routes: [...routes, ...LoginRoute,...baseRoutes],
+    routes: [...LoginRoute],
 })
 
 function setupRouter(app: App) {

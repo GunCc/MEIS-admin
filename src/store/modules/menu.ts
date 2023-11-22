@@ -8,9 +8,13 @@ import { RouteRecordRaw } from "vue-router"
 import { MENUS_KEY } from "@/enums/cacheEnum"
 import { getAuthCache, setAuthCache } from "@/utils/auth"
 import { Nullable } from "vitest"
+import { MenuItem } from "@/components/Menu/src/types/index"
+import { genLayoutMenus } from "@/router/helper/menuHelper"
+import baseRoutes from "@/router/routes/modules/base"
 
 interface MenuStore {
-    defaultMenus: Nullable<Menu[]>
+    menus: MenuItem[]
+    asyncMenus: Nullable<Menu[]>
     defaultRouter: AppRouteRecordRaw[]
     isDynamicAddedRoute: boolean
 }
@@ -23,6 +27,7 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
                 name: item.name,
                 path: item.path,
                 meta: {
+                    sort: 50,
                     title: "测试",
                 },
                 component: item.component,
@@ -34,28 +39,54 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
     return arr
 }
 
+function mergeBaseRoutes(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
+    return [...routes, ...baseRoutes]
+}
+
+function sortRouter(field) {
+    return function (pre, next) {
+        let preRoute = pre[field]
+        let nextRoute = next[field]
+        return nextRoute.sort - preRoute.sort
+    }
+}
+
 export const menuStore = defineStore({
     id: "menu-store",
     state: (): MenuStore => ({
-        defaultMenus: null,
+        // 菜单
+        menus: [],
+        // 请求获取的数据
+        asyncMenus: null,
         defaultRouter: [],
         // 是否已经动态添加路由
         isDynamicAddedRoute: false,
     }),
     getters: {
-        getDefaultMenus(state) {
-            return state.defaultMenus || getAuthCache(MENUS_KEY) || []
+        getMenus(state) {
+            return state.menus
+        },
+        getAsyncMenus(state) {
+            return state.asyncMenus || getAuthCache(MENUS_KEY) || []
         },
         getDefaultRouter(state) {
-            return state.defaultMenus || []
+            return state.asyncMenus || []
         },
         getDynamicAddedRoute(state) {
             return state.isDynamicAddedRoute
         },
     },
     actions: {
-        // 生成菜单
-        genMenu() {},
+        clearMenuStore() {
+            this.setMenus()
+            this.setDefaultMenu(null)
+            this.setDynamicAddedRoute(false)
+            this.setDefaultRoute()
+        },
+        setMenus(menus: MenuItem[] = []) {
+            console.log(menus)
+            this.menus = menus
+        },
         setDynamicAddedRoute(flag: boolean) {
             this.isDynamicAddedRoute = flag
         },
@@ -65,16 +96,29 @@ export const menuStore = defineStore({
         },
         // 默认路由
         setDefaultMenu(menus: Menu[] | null) {
+            if (!menus) return
             setAuthCache(MENUS_KEY, menus)
-            this.defaultMenus = menus
+            this.asyncMenus = menus
             this.genAysncRoute()
+            this.genMenu()
+        },
+        // 生成菜单
+        async genMenu() {
+            let menus = genLayoutMenus(this.defaultRouter)
+            this.setMenus(menus)
         },
         // 生成动态router
         async genAysncRoute(): Promise<AppRouteRecordRaw[]> {
-            const routes = formatRouter(this.getDefaultMenus)
+            let routes = formatRouter(this.getAsyncMenus)
+            // 引入组件
             asyncImportRoute(routes)
-            this.setDynamicAddedRoute(true);
+            // 映入基本的路由
+            routes = mergeBaseRoutes(routes)
+            // 排序
+            routes && routes.sort(sortRouter("meta"))
+            this.setDynamicAddedRoute(true)
             this.setDefaultRoute(routes)
+            this.genMenu()
             routes.forEach(route => {
                 router.addRoute(route as unknown as RouteRecordRaw)
             })

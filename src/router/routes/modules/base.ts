@@ -1,38 +1,24 @@
-import { RouteRecordRaw } from "vue-router"
 import Layout from "@/layout/default/index.vue"
+import { AppRouteRecordRaw } from "@/router/types"
 
-const baseRoutes: Array<RouteRecordRaw> = [
-    {
-        path: "/register",
-        name: "Register",
-        component: () => import("@/views/login/register.vue"),
-        meta: {
-            title: "选择角色",
-        },
-    },
-    {
-        path: "/forgetPassword",
-        name: "ForgetPassword",
-        component: () => import("@/views/login/forgetPassword.vue"),
-        meta: {
-            title: "选择角色",
-        },
-    },
+const baseRoutes: Array<AppRouteRecordRaw> = [
     {
         path: "/dashboard",
         name: "Dashboard",
         component: Layout,
-        redirect: "/dashboard/analysis",
+        redirect:"/dashboard/analysis",
         meta: {
+            sort: 100,
             title: "面板",
         },
         children: [
             {
-                path: "analysis",
+                path: "/dashboard/analysis",
                 name: "Analysis",
                 component: () => import("@/views/dashboard/analysis/index.vue"),
                 meta: {
-                    title: "Analysis",
+                    sort: 50,
+                    title: "分析表",
                 },
             },
         ],
@@ -41,17 +27,20 @@ const baseRoutes: Array<RouteRecordRaw> = [
         path: "/materialLibrary",
         name: "MaterialLibrary",
         component: Layout,
-        redirect: "/materialLibrary/manager",
+        redirect:"/materialLibrary/manager",
         meta: {
-            title: "面板",
+            sort: 1,
+            title: "素材管理",
         },
         children: [
             {
-                path: "manager",
+                path: "/materialLibrary/manager",
                 name: "Manager",
-                component: () => import("@/views/materialLibrary/manager/index.vue"),
+                component: () =>
+                    import("@/views/materialLibrary/manager/index.vue"),
                 meta: {
-                    title: "Manager",
+                    sort: 50,
+                    title: "图片管理",
                 },
             },
         ],
