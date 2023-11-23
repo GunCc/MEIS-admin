@@ -46,6 +46,7 @@ import { createFormContext } from "./hooks/useFormContext"
 import { FormInstance } from "element-plus"
 import FormActionItem from "./component/FormAction.vue"
 import { basicProps } from "./props"
+import { NEXT_DEFAULT_BYTE, NEXT_FORMAT_DEFAULT_BYTE } from "../const"
 export default defineComponent({
     name: "BasicForm",
     emits: ["register", "reset", "submit"],
@@ -62,6 +63,8 @@ export default defineComponent({
         // 默认时候的表单
         const defaultValueRef = ref<Recordable>({})
 
+        // 获取配置
+
         const getProps = computed(() => {
             return {
                 ...attrs,
@@ -73,7 +76,21 @@ export default defineComponent({
         const formModel = reactive<Recordable>({})
 
         const getSchema = computed(() => {
-            const { schemas = [] } = unref(getProps)
+            let { schemas = [] } = unref(getProps)
+
+            schemas = schemas.map(item => {
+                const {
+                    isNestData,
+                    nestByte = NEXT_DEFAULT_BYTE,
+                    nestReplaceByte = NEXT_FORMAT_DEFAULT_BYTE,
+                } = item
+
+                if (isNestData) {
+                    var reg = new RegExp("\\" + nestByte, "g")
+                    item.field = item.field.replace(reg, nestReplaceByte)
+                }
+                return item
+            })
             return schemas
         })
 

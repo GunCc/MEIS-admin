@@ -1,10 +1,15 @@
-import { FormInstance, FormItemProp } from "element-plus"
+import { FormItemProp } from "element-plus"
 import { Arrayable } from "vitest"
 import { BasicFormProps, FormItemSchemas } from "../types/form"
 import { FormActionType } from "./../types/form"
-import { cloneDeep, isArray, isString, isUndefined } from "lodash"
-import { handleInputNumberValue, tryConstructArray } from "../../helper"
+import { clone, cloneDeep, isString, isUndefined, merge } from "lodash"
+import {
+    handleInputNumberValue,
+    nestFormDataRenew,
+    tryConstructArray,
+} from "../../helper"
 import { tryConstructObject } from "./../../helper"
+import { NEXT_FORMAT_DEFAULT_BYTE } from "../../const"
 
 interface UseFormEventsContext {
     getProps: ComputedRef<BasicFormProps>
@@ -38,7 +43,20 @@ export function useFormEvents(
 
     // 获取表单数据
     function getFormValues(): Recordable {
-        return unref(formModel)
+        let transferField = clone(unref(getSchema)).filter(
+            item => item.isNestData
+        )
+        let resForm = clone(unref(formModel))
+        transferField.forEach(item => {
+            const { nestReplaceByte = NEXT_FORMAT_DEFAULT_BYTE, field } = item
+            let value = resForm[field]
+            const fieldArray = field.split(nestReplaceByte)
+            let resField = nestFormDataRenew(fieldArray, value)
+            console.log(resField)
+            merge(resForm, resField)
+        })
+        console.log(resForm)
+        return resForm
     }
 
     // 获取表单中某个字段的值
@@ -79,7 +97,7 @@ export function useFormEvents(
         if (!formEl) return
         try {
             validateOnSubmit && (await validate())
-            const res = unref(formModel)
+            const res = getFormValues()
             emit("submit", res)
         } catch (error: any) {
             if (error?.outOfDate === false && error?.errorFields) {

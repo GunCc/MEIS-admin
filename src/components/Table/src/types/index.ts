@@ -64,6 +64,10 @@ interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {
     canViald?: boolean
     // 传递给form表单的自定义参数
     columnToForm?: Recordable
+    // 嵌套数据是否要将 '.' 替换其他字符（默认 ‘_’ ) 便于使用插槽
+    isTransitionToDelimiter?: boolean
+    // 字符设置 默认 ‘_’ )
+    delimiterByte?: string
 }
 
 export interface FetchParams {

@@ -84,7 +84,6 @@ export const menuStore = defineStore({
             this.setDefaultRoute()
         },
         setMenus(menus: MenuItem[] = []) {
-            console.log(menus)
             this.menus = menus
         },
         setDynamicAddedRoute(flag: boolean) {

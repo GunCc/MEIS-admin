@@ -63,3 +63,18 @@ export function tryConstructObject(
         }
     }
 }
+
+// 嵌套数据复原
+export function nestFormDataRenew(
+    keys: string[],
+    value: any,
+    obj: Recordable = {}
+) {
+    let firstKey = keys.splice(0, 1)[0] // 获取第一个键值对
+    if (keys.length > 0) {
+        obj[firstKey] = nestFormDataRenew(keys, value, {})
+    } else {
+        obj[firstKey] = value
+    }
+    return obj
+}

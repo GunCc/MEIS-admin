@@ -18,9 +18,12 @@
                     'action-center',
                     'action-after',
                 ]"
-                #[item]
+                #[item]="scope"
             >
-                <slot :name="item"></slot>
+                <slot :name="item" v-bind="scope || {}"></slot>
+            </template>
+            <template #[item]="data" v-for="item in getFormSoltKeys">
+                <slot :name="item" v-bind="data || {}"></slot>
             </template>
         </BasicForm>
 
@@ -37,7 +40,7 @@
             v-loading="getLoading"
         >
             <el-table-column
-                v-for="item in getColumn"
+                v-for="item in getColumnView"
                 :key="item.prop"
                 v-bind="item"
             >
@@ -88,7 +91,7 @@ export default defineComponent({
         tableClass: propTypes.string.def("p-5 m-5 mb-0"),
         rowKey: propTypes.string.def("id"),
     },
-    setup(props, { emit }) {
+    setup(props, { emit, slots }) {
         // 获取 table 对象
         const tableElRef = ref(null)
         const formElRef = ref(null)
@@ -125,7 +128,7 @@ export default defineComponent({
         const [registerTableForm, formActions] = useForm()
 
         // 获取column
-        const { getColumn, getVialdColumn } = useTableColumn({
+        const { getVialdColumn, getColumnView } = useTableColumn({
             getProps,
         })
 
@@ -151,9 +154,15 @@ export default defineComponent({
             setLoading,
         })
         // 表格使用form表单
-        const { getFormSetting, handleSearchInfoChange } = useTableForm({
+        const {
+            getFormSetting,
+            handleSearchInfoChange,
+            getFormSoltKeys,
+            replaceFormSlotKey,
+        } = useTableForm({
             getProps,
             handleFetch,
+            slots,
         })
 
         // 表格滚动和高度
@@ -182,11 +191,13 @@ export default defineComponent({
             getProps,
             getTableProps,
             getPaginationProps,
-            getColumn,
+            getColumnView,
             registerTableForm,
             getFormSetting,
             handlePageChange,
             handleSearchInfoChange,
+            getFormSoltKeys,
+            replaceFormSlotKey,
         }
     },
 })

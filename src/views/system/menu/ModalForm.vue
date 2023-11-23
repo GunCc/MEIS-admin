@@ -1,7 +1,10 @@
 <template>
     <basic-form @register="registerForm" @submit="handleSubmit">
         <template #hidden>
-            <el-switch v-model="enableValue"></el-switch>
+            <el-switch v-model="hiddenSwitchValue"></el-switch>
+        </template>
+        <template #keepAlive>
+            <el-switch v-model="keepAliveSwitchValue"></el-switch>
         </template>
     </basic-form>
 </template>
@@ -26,17 +29,12 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
-        const enableValue = ref<boolean>(true)
+        const keepAliveSwitchValue = ref<boolean>(true)
+        const hiddenSwitchValue = ref<boolean>(true)
 
         const [
             registerForm,
-            {
-                resetFields,
-                setFormSchemas,
-                getFormField,
-                validateField,
-                clearValidate,
-            },
+            { resetFields, setFormSchemas, getFormField, clearValidate },
         ] = useForm({
             validateOnSubmit: false,
             labelWidth: "120px",
@@ -53,24 +51,20 @@ export default defineComponent({
                     ...(isObj && row),
                     ...form,
                 }
-                form.hidden = unref(enableValue)
-                if (
-                    (form.password || form.passwords) &&
-                    form.password != form.passwords
-                ) {
-                    await validateField(["password", "passwords"])
-                }
+                form.hidden = unref(hiddenSwitchValue)
+                form.meta.keepAlive = unref(keepAliveSwitchValue)
+
                 await api(form)
                 clearForm()
                 emit("success-submit")
             } catch (err) {
-              error(err as string)
+                error(err as string)
             }
-
         }
 
         function clearForm() {
-            enableValue.value = true
+            hiddenSwitchValue.value = true
+            keepAliveSwitchValue.value = true
             resetFields()
         }
 
@@ -78,8 +72,11 @@ export default defineComponent({
             clearValidate()
             setFormSchemas(props.schemaSetting)
             await nextTick()
-            let enable = await getFormField("hidden")
-            enableValue.value = props.row != "create" ? enable : true
+            let hiddenValue = await getFormField("hidden")
+            let keepAliveValue = await getFormField("meta.keepAlive")
+            hiddenSwitchValue.value = props.row != "create" ? hiddenValue : true
+            keepAliveSwitchValue.value =
+                props.row != "create" ? keepAliveValue : true
         }
 
         watch(
@@ -95,7 +92,12 @@ export default defineComponent({
             }
         )
 
-        return { registerForm, handleSubmit, enableValue }
+        return {
+            registerForm,
+            handleSubmit,
+            keepAliveSwitchValue,
+            hiddenSwitchValue,
+        }
     },
 })
 </script>

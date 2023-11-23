@@ -1,5 +1,5 @@
 import { PROJ_CFG_KEY } from "@/enums/cacheEnum"
-import { TransitionSetting, ProjectSetting } from "@/types/config"
+import { TransitionSetting, ProjectSetting, FormSetting } from "@/types/config"
 import { deepMerge } from "@/utils"
 import { Persistent } from "@/utils/cache/persistent"
 import { defineStore } from "pinia"
@@ -9,24 +9,27 @@ type themeType = "dark" | "light"
 
 interface AppState {
     theme: themeType
-    ProjectSetting: ProjectSetting | null | undefined
+    projectSetting: ProjectSetting | null | undefined
 }
 
 export const useAppStore = defineStore({
     id: "app-store",
     state: (): AppState => ({
         theme: "light",
-        ProjectSetting: Persistent.getLocal(PROJ_CFG_KEY),
+        projectSetting: Persistent.getLocal(PROJ_CFG_KEY),
     }),
     getters: {
         getTheme(state: AppState): themeType {
             return state.theme
         },
         getProjectConfig(state): ProjectSetting {
-            return state.ProjectSetting || ({} as ProjectSetting)
+            return state.projectSetting || ({} as ProjectSetting)
         },
         getTransitionSetting(): TransitionSetting {
             return this.getProjectConfig.transitionSetting
+        },
+        getFormSetting(): FormSetting {
+            return this.getProjectConfig.formSetting
         },
     },
     actions: {
@@ -40,8 +43,8 @@ export const useAppStore = defineStore({
             }
         },
         setProjectConfig(config: DeepPartial<ProjectSetting>) {
-            this.ProjectSetting = deepMerge(this.ProjectSetting || {}, config)
-            Persistent.setLocal(PROJ_CFG_KEY, this.ProjectSetting)
+            this.projectSetting = deepMerge(this.projectSetting || {}, config)
+            Persistent.setLocal(PROJ_CFG_KEY, this.projectSetting)
         },
     },
 })

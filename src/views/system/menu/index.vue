@@ -7,8 +7,12 @@
                 </el-button>
             </template>
 
+            <template #meta_keepAlive="{ row }">
+                {{ row.keepAlive ? "是" : "否" }}
+            </template>
+
             <template #p_id="{ row }">
-                {{ row.p_id == 0? "一级" : row.name }}
+                {{ row.p_id == 0 ? "一级" : row.name }}
             </template>
 
             <template #hidden="{ row }">
@@ -50,10 +54,9 @@ import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeMenu, updateMenu } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
-import { cloneDeep, keys, pick } from "lodash"
+import { cloneDeep, isFunction, keys, pick } from "lodash"
 import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
-
 import ModalForm from "./ModalForm.vue"
 import { clone } from "lodash"
 import { error } from "@/utils/log"
@@ -70,6 +73,8 @@ const modalProps = ref<ModalProps>({
     schema: [],
     row: "create",
 })
+
+const formModel = reactive<Recordable>({})
 
 const getModalProps = computed(() => {
     return unref(modalProps)
@@ -88,7 +93,7 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
     title: "菜单管理",
     api: getList,
     immediate: true,
-    defaultExpandAll:true,
+    defaultExpandAll: true,
     formSettings: {
         schemas: [
             {
@@ -142,20 +147,62 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
             width: 200,
         },
         {
-            prop: "sort",
-            label: "排序",
-            canViald: true,
-            width: 200,
-            columnToForm: {
-                defaultValue: "50",
-            },
-        },
-        {
             prop: "hidden",
             label: "是否显示",
             canViald: true,
             columnToForm: {
                 slot: "hidden",
+            },
+        },
+        {
+            prop: "meta.sort",
+            label: "排序",
+            canViald: true,
+            width: 80,
+            columnToForm: {
+                isNestData: true,
+                defaultValue: "50",
+                value: row => {
+                    return row.meta.sort
+                },
+            },
+        },
+        {
+            prop: "meta.title",
+            label: "标题",
+            canViald: true,
+            width: 80,
+            columnToForm: {
+                isNestData: true,
+                value: row => {
+                    return row.meta.title
+                },
+            },
+        },
+        {
+            prop: "meta.keepAlive",
+            label: "缓存",
+            canViald: true,
+            width: 80,
+            isTransitionToDelimiter: true,
+            columnToForm: {
+                slot:"keepAlive",
+                isNestData: true,
+                value: row => {
+                    return row.meta.keepAlive
+                },
+            },
+        },
+        {
+            prop: "meta.icon",
+            label: "图标",
+            canViald: true,
+            width: 80,
+            columnToForm: {
+                isNestData: true,
+                value: row => {
+                    return row.meta.icon
+                },
             },
         },
         {
@@ -213,12 +260,18 @@ function passwordVaild(rule: any, value: any, callback: any) {
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {
         let key = item.prop
-        const defaultValue = item.defaultValue || ""
+        let { defaultValue = "", value, isNestData } = item
+        let nValue = (row && isFunction(value) && value(row)) ?? value
+
+        if (row && !isNestData) defaultValue = row[key]
+
+        if (row && nValue) defaultValue = nValue
+
         return {
             ...item,
             label: item.label,
             field: item.prop,
-            defaultValue: row ? row[key] : defaultValue,
+            defaultValue,
         }
     }) as FormItemSchemas[]
     return schemas

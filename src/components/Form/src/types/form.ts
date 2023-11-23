@@ -80,4 +80,11 @@ export interface FormItemSchemas extends Partial<FormItemProps> {
     renderColContent?: (
         renderCallbackParams: RenderCallbackParams
     ) => VNode | VNode[] | string
+
+    // 是否为嵌套数据
+    isNestData?: boolean
+    // 嵌套分隔符 默认 '.'
+    nestByte?: string
+    // 修改分隔符 默认 '%'
+    nestReplaceByte?: string
 }
