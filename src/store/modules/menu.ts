@@ -28,7 +28,7 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
                 path: item.path,
                 meta: {
                     sort: 50,
-                    title: "测试",
+                    title: item.meta.title,
                 },
                 component: item.component,
             }
@@ -70,7 +70,7 @@ export const menuStore = defineStore({
             return state.asyncMenus || getAuthCache(MENUS_KEY) || []
         },
         getDefaultRouter(state) {
-            return state.asyncMenus || []
+            return state.defaultRouter || []
         },
         getDynamicAddedRoute(state) {
             return state.isDynamicAddedRoute
@@ -84,6 +84,7 @@ export const menuStore = defineStore({
             this.setDefaultRoute()
         },
         setMenus(menus: MenuItem[] = []) {
+            console.log(menus)
             this.menus = menus
         },
         setDynamicAddedRoute(flag: boolean) {
@@ -94,12 +95,13 @@ export const menuStore = defineStore({
             this.defaultRouter = routes
         },
         // 默认路由
-        setDefaultMenu(menus: Menu[] | null) {
-            if (!menus) return
+        async setDefaultMenu(menus: Menu[] | null) {
+            console.log("获取到的menus", menus)
             setAuthCache(MENUS_KEY, menus)
             this.asyncMenus = menus
-            this.genAysncRoute()
-            this.genMenu()
+            if (!menus) return
+            await this.genAysncRoute()
+            await this.genMenu()
         },
         // 生成菜单
         async genMenu() {
@@ -108,6 +110,7 @@ export const menuStore = defineStore({
         },
         // 生成动态router
         async genAysncRoute(): Promise<AppRouteRecordRaw[]> {
+            console.log("动态生成的", this.getAsyncMenus)
             let routes = formatRouter(this.getAsyncMenus)
             // 引入组件
             asyncImportRoute(routes)

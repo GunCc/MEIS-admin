@@ -13,12 +13,16 @@ export async function createPermissionGuard(router: Router) {
 
     router.beforeEach(async (to, from, next) => {
         const token = userStore.getToken
-
+        console.log(
+            "to.path",
+            to.path,
+            whitePathList.includes(to.path as PageEnum)
+        )
         // 设置白名单
         if (whitePathList.includes(to.path as PageEnum)) {
             if (to.path === LOGIN_PATH && token) {
                 try {
-                    await userStore.handleLoginAfter()
+                    await userStore.logout()
                 } catch {}
             }
             next()

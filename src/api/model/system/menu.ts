@@ -1,3 +1,4 @@
+import { RouteMeta } from "vue-router"
 import { GlobalModal } from "../commen/response"
 
 export interface Menu extends GlobalModal {
@@ -8,6 +9,5 @@ export interface Menu extends GlobalModal {
     hidden: boolean
     p_id: string
     children: Menu[]
+    meta: RouteMeta
 }
-
-

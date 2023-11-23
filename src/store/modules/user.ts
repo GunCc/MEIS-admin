@@ -44,27 +44,29 @@ export const userStore = defineStore({
                 const { token } = res
                 this.setToken(token)
 
-                await this.handleLoginAfter()
+                await this.handleLoginAfter(true)
             } catch (error) {
                 console.error(error)
             }
         },
-        async handleLoginAfter() {
+        async handleLoginAfter(goHome?: boolean) {
             if (!this.getToken) return
 
-            const userMenuStore = menuStore()
+            const useMenuStore = menuStore()
             const res = await getUserInfo()
             const { user, menus } = res
             this.setUserInfo(user)
-            userMenuStore.setDefaultMenu(menus)
+            useMenuStore.setDefaultMenu(menus)
             const { redirect = PageEnum.BASE_HOME } = this.getUserInfo || {}
-            await router.replace(redirect || PageEnum.BASE_HOME)
+            goHome && (await router.replace(redirect || PageEnum.BASE_HOME))
         },
         // 登出操作
         async logout() {
+            const useMenuStore = menuStore()
             this.setUserInfo(null)
             this.setToken(undefined)
-            await router.push(PageEnum.BASE_ADMIN_LOGIN)
+            useMenuStore.clearMenuStore()
+            await router.replace(PageEnum.BASE_ADMIN_LOGIN)
         },
     },
 })
