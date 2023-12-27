@@ -21,12 +21,12 @@
 import { propTypes } from "@/utils/propTypes"
 import { Plus } from "@element-plus/icons-vue"
 import { UploadInstance } from "element-plus"
-import { Awaitable } from "element-plus/es/utils"
 import { PropType } from "vue"
 import { MEIS_http } from "@/utils/http"
 import { BasicImage } from "@c/Image/index"
 import { ColEx } from "@/components/Form/src/types"
 import { error} from "@/utils/log"
+import { Awaitable } from "vitest"
 
 const { VITE_HTTP_URL } = import.meta.env
 export default defineComponent({

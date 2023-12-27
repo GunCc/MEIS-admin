@@ -22,7 +22,8 @@ export default defineComponent({
             default: null,
         },
     },
-    setup(props, { slots }) {
+    emits: ["enter-press"],
+    setup(props, { slots, emit }) {
         const getSchema = computed(() => {
             return {
                 class: "w-full",
@@ -89,6 +90,17 @@ export default defineComponent({
                     const target = e ? e.target : null
                     const value = target ? target.value : e
                     props.setFormModel(field, value)
+                },
+                onkeydown: (...args: Nullable<Recordable>[]) => {
+                    const [e] = args
+                    const target = e ? e.target : null
+                    const keyCode = e ? e.keyCode : null
+                    const value = target ? target.value : e
+                    if (keyCode == 13)
+                        emit("enter-press", {
+                            field,
+                            value,
+                        })
                 },
             }
 

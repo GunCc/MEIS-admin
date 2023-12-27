@@ -6,6 +6,7 @@
                     :schema="schema"
                     :form-modal="formModel"
                     :set-form-model="setFormModelField"
+                    @enter-press="handleFormItemEnterPress"
                 >
                     <template
                         #[item]="data"
@@ -49,7 +50,7 @@ import { basicProps } from "./props"
 import { NEXT_DEFAULT_BYTE, NEXT_FORMAT_DEFAULT_BYTE } from "../const"
 export default defineComponent({
     name: "BasicForm",
-    emits: ["register", "reset", "submit"],
+    emits: ["register", "reset", "submit","enter-press"],
     components: {
         FormItem,
         FormActionItem,
@@ -134,6 +135,11 @@ export default defineComponent({
             formModel[key] = value
         }
 
+        // input回车事件
+        function handleFormItemEnterPress(key: string, value: any) {
+            emit("enter-press", { key, value })
+        }
+
         // 获取 action 配置
         const { getActionProps } = useActionEvents({
             getProps,
@@ -169,6 +175,7 @@ export default defineComponent({
             formModel,
             setFormModelField,
             getActionProps,
+            handleFormItemEnterPress,
         }
     },
 })

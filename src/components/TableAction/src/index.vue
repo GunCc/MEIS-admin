@@ -22,9 +22,9 @@ import { useWarnMessage } from "@c/Modal/index"
 import { isArray, isFunction } from "lodash"
 import { TableActionInstance } from "./types"
 interface ActionButtonSetting extends Partial<ButtonProps> {
-    title: string | ((...args: any) => string)
-    context: string | ((...args: any) => string)
-    handle: (...args) => void
+    title?: string | ((...args: any) => string)
+    context?: string | ((...args: any) => string)
+    handle?: (...args) => void
 }
 export default defineComponent({
     name: "TableColumnAction",

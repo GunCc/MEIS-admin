@@ -52,13 +52,11 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import { getList, removeMenu, updateMenu } from "@/api/v1/system/menu"
+import { getList, removeMenu } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
 import { cloneDeep, isFunction, keys, pick } from "lodash"
-import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
 import ModalForm from "./ModalForm.vue"
-import { clone } from "lodash"
 import { error } from "@/utils/log"
 interface ModalProps {
     title: string
@@ -74,7 +72,7 @@ const modalProps = ref<ModalProps>({
     row: "create",
 })
 
-const formModel = reactive<Recordable>({})
+// const formModel = reactive<Recordable>({})
 
 const getModalProps = computed(() => {
     return unref(modalProps)
@@ -223,7 +221,7 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
         },
     ],
 })
-let schemasSetting = ref<Recordable[]>([])
+// let schemasSetting = ref<Recordable[]>([])
 
 const actionRemoveSetting = computed(() => {
     return {
@@ -251,11 +249,11 @@ async function handleActionDelete(row) {
     }
 }
 
-function passwordVaild(rule: any, value: any, callback: any) {
-    setTimeout(() => {
-        callback(new Error("Please input digits"))
-    }, 100)
-}
+// function passwordVaild(rule: any, value: any, callback: any) {
+//     setTimeout(() => {
+//         callback(new Error("Please input digits"))
+//     }, 100)
+// }
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {

@@ -9,7 +9,10 @@
                 <LoginHeader />
                 <div class="bg-white">
                     <div class="form-wrap p-10">
-                        <BasicForm @register="regitserForm"></BasicForm>
+                        <BasicForm
+                            @register="regitserForm"
+                            @enter-press="handleSubmit"
+                        ></BasicForm>
                         <div
                             class="rounded-full w-14 h-14 bg-blue-500 mx-auto flex items-center justify-center"
                             @click="handleSubmit"
@@ -34,7 +37,7 @@ import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import LoginHeader from "./components/LoginHeader.vue"
 import LoginWrapHeader from "./components/LoginWrapHeader.vue"
-import { getCaptcha, login } from "@/api/v1/system/base"
+import { getCaptcha } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
 import { Nullable } from "vitest"
 import { Login } from "@/api/model/base/request"
@@ -94,6 +97,7 @@ async function handleSubmit() {
         params.captcha_id = unref(captcha)?.captcha_id || ""
         await useUserStore.handleLogin(params)
     } catch (err) {
+        console.log("失败", err)
         // 失败后要重新获取image
         await getCaptchaImage()
         error(err as string)

@@ -21,7 +21,6 @@
 import { propTypes } from "@/utils/propTypes"
 import { Plus } from "@element-plus/icons-vue"
 import { UploadInstance } from "element-plus"
-import { Awaitable } from "element-plus/es/utils"
 import { PropType } from "vue"
 const { VITE_HTTP_URL } = import.meta.env
 import { MEIS_http } from "@/utils/http"

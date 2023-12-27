@@ -89,9 +89,9 @@ export class CustomAxios {
     }
 
     // 上传文件
-    async uploadFile(res: Result, options?: AxiosOtherConfig) {
+    async uploadFile(res: AxiosResponse<Result>, options?: AxiosOtherConfig) {
         const { afterResponse } = this.getTransform() || {}
-        isFunction(afterResponse) && afterResponse(res, options)
+        isFunction(afterResponse) && afterResponse(res, options || {})
     }
 
     // 请求
@@ -117,7 +117,7 @@ export class CustomAxios {
                     if (afterResponse && isFunction(afterResponse)) {
                         try {
                             const ret = afterResponse(res, opt)
-                            resolve(ret)
+                            resolve(ret as unknown as Promise<T>)
                         } catch (error) {
                             reject(error || new Error("request error!"))
                         }

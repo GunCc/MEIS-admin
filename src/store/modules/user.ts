@@ -43,10 +43,9 @@ export const userStore = defineStore({
                 const res = await login(params)
                 const { token } = res
                 this.setToken(token)
-
                 await this.handleLoginAfter(true)
             } catch (error) {
-                console.error(error)
+                throw new Error(error as string)
             }
         },
         async handleLoginAfter(goHome?: boolean) {

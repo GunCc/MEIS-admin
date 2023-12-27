@@ -13,7 +13,7 @@ export function useActionEvents({ getProps }: useActionEventsContext) {
             buttonClass: "ml-auto",
             size: "default",
             actionColOptions,
-        }
+        } as Recordable
     })
     return {
         getActionProps,

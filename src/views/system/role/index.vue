@@ -56,7 +56,6 @@ import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeRole, updateRole } from "@/api/v1/system/role"
 import { TableColumnAction } from "@c/TableAction"
 import { keys, pick } from "lodash"
-import { keysOf } from "element-plus/es/utils"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
