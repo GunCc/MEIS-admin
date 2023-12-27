@@ -31,9 +31,9 @@
                 </div>
                 <template #dropdown>
                     <el-dropdown-menu>
-                        <el-dropdown-item @click="handleLogout"
-                            >登出</el-dropdown-item
-                        >
+                        <el-dropdown-item @click="handleLogout">
+                            登出
+                        </el-dropdown-item>
                     </el-dropdown-menu>
                 </template>
             </el-dropdown>
@@ -69,7 +69,9 @@ export default defineComponent({
 })
 </script>
 <style lang="scss">
-.layout-header-dropdown:focus-visible {
-    outline: none;
+.layout-header-dropdown {
+    .el-tooltip__trigger:focus-visible {
+        outline: none;
+    }
 }
 </style>
