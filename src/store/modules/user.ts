@@ -35,8 +35,8 @@ export const userStore = defineStore({
             this.userInfo = userInfo
         },
         setToken(token: string | undefined) {
-            this.token = token
-            setAuthCache(TOKEN_KEY, token)
+            this.token = token ? token : ''; // for null or undefined value
+            setAuthCache(TOKEN_KEY, token);
         },
         async handleLogin(params: Login) {
             try {
@@ -65,7 +65,7 @@ export const userStore = defineStore({
             this.setUserInfo(null)
             this.setToken(undefined)
             useMenuStore.clearMenuStore()
-            await router.replace(PageEnum.BASE_ADMIN_LOGIN)
+            router.replace(PageEnum.BASE_ADMIN_LOGIN)
         },
     },
 })
