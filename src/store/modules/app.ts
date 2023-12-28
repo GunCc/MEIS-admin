@@ -4,12 +4,20 @@ import { deepMerge } from "@/utils"
 import { Persistent } from "@/utils/cache/persistent"
 import { defineStore } from "pinia"
 import { store } from ".."
+import { checkDB, initDB } from "@/api/v1/system/init"
+import { InitDB } from "@/api/model/system/init"
+import { useGo } from "@/hooks/web/usePage"
+import { router } from "@/router"
 
 type themeType = "dark" | "light"
 
 interface AppState {
     theme: themeType
     projectSetting: ProjectSetting | null | undefined
+    // 是否需要初始化数据库
+    needInitDB: boolean
+    // 是否已经动态获取
+    isDyamicDB: boolean
 }
 
 export const useAppStore = defineStore({
@@ -17,6 +25,8 @@ export const useAppStore = defineStore({
     state: (): AppState => ({
         theme: "light",
         projectSetting: Persistent.getLocal(PROJ_CFG_KEY),
+        needInitDB: false,
+        isDyamicDB: false,
     }),
     getters: {
         getTheme(state: AppState): themeType {
@@ -31,6 +41,12 @@ export const useAppStore = defineStore({
         getFormSetting(): FormSetting {
             return this.getProjectConfig.formSetting
         },
+        getNeedInitDB(state: AppState): boolean {
+            return state.needInitDB
+        },
+        getIsDyamicDB(state: AppState): boolean {
+            return state.isDyamicDB
+        },
     },
     actions: {
         setTheme(theme: boolean) {
@@ -43,8 +59,36 @@ export const useAppStore = defineStore({
             }
         },
         setProjectConfig(config: DeepPartial<ProjectSetting>) {
-            this.projectSetting = deepMerge(this.projectSetting || {}, config)
+            this.projectSetting = deepMerge(
+                this.projectSetting || {},
+                config
+            ) as ProjectSetting
             Persistent.setLocal(PROJ_CFG_KEY, this.projectSetting)
+        },
+        setIsDyamicDB(flag: boolean) {
+            this.isDyamicDB = flag
+        },
+        setNeedInitDB(flag: boolean) {
+            this.needInitDB = flag
+        },
+        async getNeedInitDBStatus() {
+            try {
+                const res = await checkDB()
+                this.setNeedInitDB(res.needInit)
+            } catch (e) {
+                throw new Error(e as string)
+            } finally {
+                this.setIsDyamicDB(true)
+            }
+        },
+        async handleInitDB(params: InitDB) {
+            try {
+                const res = await initDB(params)
+                this.setNeedInitDB(res.needInit)
+                await router.replace("/login-admin")
+            } catch (e) {
+                throw new Error(e as string)
+            }
         },
     },
 })

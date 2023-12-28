@@ -2,6 +2,9 @@ import type { AxiosRequestConfig, AxiosResponse } from "axios"
 // 异常处理模式
 export type ErrorMessageMode = "none" | "modal" | "message" | undefined
 export type SuccessMessageMode = ErrorMessageMode
+
+// 异常情况
+export const NETWORK_ERROR = "ERR_NETWORK"
 // 创建axios需要的配置
 export interface CreateAxiosConfig extends AxiosRequestConfig {
     authenticationScheme?: string
@@ -45,4 +48,5 @@ export interface AxiosTranstion {
 export interface AxiosOtherConfig {
     baseURL?: string
     messageModal?: SuccessMessageMode
+    
 }

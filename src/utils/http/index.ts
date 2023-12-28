@@ -1,7 +1,7 @@
 // 创建axios实例
 import { CustomAxios } from "./axios"
 import { deepMerge } from "./../index"
-import { AxiosTranstion, CreateAxiosConfig } from "./type"
+import { AxiosTranstion, CreateAxiosConfig, NETWORK_ERROR } from "./type"
 import { clone, isEmpty, isNull, isString, isUndefined } from "lodash"
 import { AxiosResponse } from "axios"
 import { AxiosOtherConfig } from "./type"
@@ -10,7 +10,6 @@ import { useMessage } from "./../../hooks/web/useMessage"
 import { RequestEnum } from "@/enums/requestEnum"
 import { userStoreOutset } from "@/store/modules/user"
 import { getToken } from "../auth"
-
 // axios 拦截器数据 ---- 处理数据
 const transform: AxiosTranstion = {
     beforeRequest(config, otherConfig) {
@@ -78,7 +77,7 @@ const transform: AxiosTranstion = {
                 successMsg = "操作成功"
             }
 
-            createMessage.success(successMsg)
+            if (messageModal == "modal") createMessage.success(successMsg)
             return value
         }
         const useUserStore = userStoreOutset()
@@ -97,6 +96,18 @@ const transform: AxiosTranstion = {
         }
         createMessage.error(errorMsg)
         throw new Error(errorMsg || "api请求报错")
+    },
+    afterRequestCatch(error: Recordable, otherConfig: AxiosOtherConfig) {
+        const { code } = error
+        const { createMessage } = useMessage()
+
+        let errorMsg = "请求错误"
+        switch (code) {
+            case NETWORK_ERROR:
+                errorMsg = "服务器错误"
+        }
+        createMessage.error(errorMsg)
+        throw new Error(errorMsg)
     },
 }
 

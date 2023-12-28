@@ -1,4 +1,5 @@
 import { RouteRecordRaw } from "vue-router"
+import { AppRouteRecordRaw } from "../types"
 
 const modules = import.meta.glob("./modules/**/*.ts", { eager: true })
 
@@ -13,7 +14,7 @@ Object.keys(modules).forEach(key => {
 // 异步路由
 const asyncRoute = [...routeModuleList]
 
-const LoginRoute: RouteRecordRaw[] = [
+const LoginRoute: Array<AppRouteRecordRaw> = [
     {
         path: "/login",
         name: "Login",
@@ -27,13 +28,16 @@ const LoginRoute: RouteRecordRaw[] = [
         name: "LoginAdmin",
         component: () => import("@/views/login/login-admin.vue"),
         meta: {
-            title: "登录",
+            title: "管理员登录",
         },
     },
     {
         path: "/",
         name: "home",
         redirect: "/login",
+        meta: {
+            title: "登录",
+        },
     },
     {
         path: "/register",
@@ -41,6 +45,14 @@ const LoginRoute: RouteRecordRaw[] = [
         component: () => import("@/views/login/register.vue"),
         meta: {
             title: "选择角色",
+        },
+    },
+    {
+        path: "/initDB",
+        name: "InitDB",
+        component: () => import("@/views/system/init/db.vue"),
+        meta: {
+            title: "初始化数据库",
         },
     },
     {

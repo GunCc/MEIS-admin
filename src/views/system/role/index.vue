@@ -151,7 +151,6 @@ const [register, { getVialdColumn, reload }] = useTable({
         },
     ],
 })
-let schemasSetting = ref<Recordable[]>([])
 
 const actionRemoveSetting = computed(() => {
     return {
@@ -168,12 +167,6 @@ async function handleActionDelete(row) {
     } catch (err) {
         error(err as string)
     }
-}
-
-function passwordVaild(rule: any, value: any, callback: any) {
-    setTimeout(() => {
-        callback(new Error("Please input digits"))
-    }, 100)
 }
 
 function getSchema(row?: Recordable): FormItemSchemas[] {

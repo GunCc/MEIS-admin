@@ -4,8 +4,9 @@ import { userStoreOutset } from "@/store/modules/user"
 import { PageEnum } from "@/enums/pageEnum"
 
 const LOGIN_PATH = PageEnum.BASE_ADMIN_LOGIN
+const INIT_DB_PATH = PageEnum.INIT_DB_PAGE
 
-const whitePathList: PageEnum[] = [LOGIN_PATH]
+const whitePathList: PageEnum[] = [LOGIN_PATH, INIT_DB_PATH]
 
 export async function createPermissionGuard(router: Router) {
     const menuStore = menuStoreOutset()

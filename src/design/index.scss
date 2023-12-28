@@ -3,4 +3,7 @@
 @use "./default.scss";
 
 // import var style
-@use "./var/index.scss"
+@use "./var/index.scss";
+.cursor-pointer {
+    cursor: pointer;
+}

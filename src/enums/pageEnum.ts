@@ -9,5 +9,6 @@ export enum PageEnum {
     ERROR_PAGE = "/exception",
     // error log page path
     ERROR_LOG_PAGE = "/error-log/list",
-    
+    // init db path
+    INIT_DB_PAGE = "/initDB"
 }

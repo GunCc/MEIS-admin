@@ -80,7 +80,6 @@ const [register, { reload }] = useTable({
         },
     ],
 })
-let schemasSetting = ref<Recordable[]>([])
 
 const actionRemoveSetting = computed(() => {
     return {
