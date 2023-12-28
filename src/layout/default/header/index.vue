@@ -1,5 +1,7 @@
 <template>
-    <HeaderWrap class="flex items-center justify-end dark:bg-gray-900">
+    <HeaderWrap class="flex items-center justify-between dark:bg-gray-900">
+        <div> <AppLogo /> </div>
+
         <div class="px-4 flex items-center divide-x">
             <el-switch
                 v-model="theme"
@@ -44,11 +46,14 @@
 import { Sunny, Moon } from "@element-plus/icons-vue"
 import { HeaderWrap } from "@c/HeaderWrap"
 import { SvgImage } from "@c/SvgImage"
+import { AppLogo } from "@c/Logo"
 import { useAppStore } from "@/store/modules/app"
 import { userStore } from "@/store/modules/user"
+
 export default defineComponent({
     name: "LayoutHeader",
     components: {
+        AppLogo, 
         HeaderWrap,
         SvgImage,
     },

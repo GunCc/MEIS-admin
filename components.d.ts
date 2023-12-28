@@ -46,6 +46,7 @@ declare module 'vue' {
     FormSelect: typeof import('./src/components/Form/src/component/FormSelect.vue')['default']
     FormTree: typeof import('./src/components/Form/src/component/FormTree.vue')['default']
     FormUpload: typeof import('./src/components/Form/src/component/FormUpload.vue')['default']
+    Logo: typeof import('./src/components/Logo/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Src: typeof import('./src/components/Dropdown/src/index.vue')['default']

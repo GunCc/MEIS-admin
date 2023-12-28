@@ -2,29 +2,30 @@
     <div class="h-100vh flex flex-col">
         <LoginWrapHeader />
 
-        <div class="w-full flex-1 flex items-center">
+        <div class="w-full flex items-center flex-1 justify-center">
             <div
-                class="container mx-auto max-w-xl rounded-xl overflow-hidden shadow"
+                class="flex justify-center shadow rounded-xl bg-white "
             >
-                <LoginHeader />
-                <div class="bg-white">
-                    <div class="form-wrap p-10">
-                        <BasicForm
-                            @register="regitserForm"
-                            @enter-press="handleSubmit"
-                        ></BasicForm>
-                        <div
-                            class="rounded-full w-14 h-14 bg-blue-500 mx-auto flex items-center justify-center"
-                            @click="handleSubmit"
+                <div class="lg:block hidden border-solid border-gray-200 border-right">
+                    <img src="@/assets/logo.png" alt="" class="2xl:w-700px 2xl:h-700px w-500px h-500px"  />
+                </div>
+                <div class="p-10  flex justify-center flex-col 2xl:w-700px  2xl:h-700px w-500px h-500px">
+                    <h1 class="mb-10 text-2xl font-bold">管理员登陆</h1>
+                    <BasicForm
+                        @register="regitserForm"
+                        @enter-press="handleSubmit"
+                    ></BasicForm>
+                    <div
+                        class="rounded-full w-14 h-14 bg-blue-500 mx-auto flex items-center justify-center mt-10"
+                        @click="handleSubmit"
+                    >
+                        <svg
+                            aria-hidden="true"
+                            class="w-6 h-6 mx-2 dark:fill-slate-80 fill-white"
+                            style="cursor: pointer"
                         >
-                            <svg
-                                aria-hidden="true"
-                                class="w-6 h-6 mx-2 dark:fill-slate-80 fill-white"
-                                style="cursor: pointer"
-                            >
-                                <use xlink:href="#icon-jinrujiantou"></use>
-                            </svg>
-                        </div>
+                            <use xlink:href="#icon-jinrujiantou"></use>
+                        </svg>
                     </div>
                 </div>
             </div>
