@@ -10,4 +10,5 @@ export interface Menu extends GlobalModal {
     p_id: string
     children: Menu[]
     meta: RouteMeta
+    redirect?: string
 }

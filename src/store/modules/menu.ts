@@ -26,6 +26,7 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
             let route: AppRouteRecordRaw = {
                 name: item.name,
                 path: item.path,
+                redirect: item.redirect,
                 meta: {
                     sort: 50,
                     title: item.meta.title,
@@ -40,7 +41,7 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
 }
 
 function mergeBaseRoutes(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
-    return [...routes, ...baseRoutes]
+    return [...routes]
 }
 
 function sortRouter(field) {
@@ -115,13 +116,14 @@ export const menuStore = defineStore({
             // 引入组件
             asyncImportRoute(routes)
             // 映入基本的路由
-            routes = mergeBaseRoutes(routes)
+            // routes = mergeBaseRoutes(routes)
             // 排序
             routes && routes.sort(sortRouter("meta"))
             this.setDynamicAddedRoute(true)
             this.setDefaultRoute(routes)
             this.genMenu()
             routes.forEach(route => {
+                console.log("路由数据", route)
                 router.addRoute(route as unknown as RouteRecordRaw)
             })
             return routes
