@@ -85,7 +85,6 @@ export const menuStore = defineStore({
             this.setDefaultRoute()
         },
         setMenus(menus: MenuItem[] = []) {
-            console.log(menus)
             this.menus = menus
         },
         setDynamicAddedRoute(flag: boolean) {
@@ -97,7 +96,6 @@ export const menuStore = defineStore({
         },
         // 默认路由
         async setDefaultMenu(menus: Menu[] | null) {
-            console.log("获取到的menus", menus)
             setAuthCache(MENUS_KEY, menus)
             this.asyncMenus = menus
             if (!menus) return
@@ -111,7 +109,6 @@ export const menuStore = defineStore({
         },
         // 生成动态router
         async genAysncRoute(): Promise<AppRouteRecordRaw[]> {
-            console.log("动态生成的", this.getAsyncMenus)
             let routes = formatRouter(this.getAsyncMenus)
             // 引入组件
             asyncImportRoute(routes)
@@ -123,7 +120,6 @@ export const menuStore = defineStore({
             this.setDefaultRoute(routes)
             this.genMenu()
             routes.forEach(route => {
-                console.log("路由数据", route)
                 router.addRoute(route as unknown as RouteRecordRaw)
             })
             return routes

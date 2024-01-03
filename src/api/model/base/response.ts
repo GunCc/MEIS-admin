@@ -15,4 +15,5 @@ export interface UserInfo {
     enable: number
     role: Recordable
     redirect: PageEnum
+    defaultRoute: string
 }

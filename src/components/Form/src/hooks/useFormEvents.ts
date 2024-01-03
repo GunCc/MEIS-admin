@@ -52,10 +52,8 @@ export function useFormEvents(
             let value = resForm[field]
             const fieldArray = field.split(nestReplaceByte)
             let resField = nestFormDataRenew(fieldArray, value)
-            console.log(resField)
             merge(resForm, resField)
         })
-        console.log(resForm)
         return resForm
     }
 

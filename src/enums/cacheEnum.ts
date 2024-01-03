@@ -20,6 +20,9 @@ export const USER_INFO_KEY = "USER__INFO__"
 // 项目配置信息
 export const PROJ_CFG_KEY = "PROJ__CFG__"
 
+// Tabs缓存
+export const MULTIPLE_TABS_KEY = 'MULTIPLE_TABS__KEY__';
+
 // 缓存类型
 export enum CacheTypeEnum {
     SESSION,

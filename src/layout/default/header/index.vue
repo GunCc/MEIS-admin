@@ -10,20 +10,10 @@
                 active-color="#000000"
                 @change="handleTheme"
             />
-
             <svg-image
                 name="zhongyingwenyingwen"
                 style-class="w-5 h-5 fill-gray-500 dark:fill-gray-100 mr-8 ml-4"
             />
-            <!-- <div
-                class="flex w-18 h-8 bg-green-700 items-center justify-center text-white rounded rounded-3xl text-sm mx-4"
-            >
-                <svg-image
-                    name="jiahao2"
-                    style-class="w-5 h-5 mr-1 fill-gray-500"
-                />
-                <div>发布</div>
-            </div> -->
             <el-dropdown class="layout-header-dropdown">
                 <div>
                     <el-avatar

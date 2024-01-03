@@ -11,7 +11,7 @@ const createOptions = (storage: Storage, options: Options = {}): Options => {
         // No encryption in debug mode
         hasEncrypt: enableStorageEncryption,
         storage,
-        prefixKey: "meis",
+        prefixKey: "meis_",
         ...options,
     }
 }

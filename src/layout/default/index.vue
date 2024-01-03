@@ -2,13 +2,17 @@
     <LayoutHeader />
     <div class="flex">
         <LayoutSider />
-        <div class="flex-1">
+        <div class="flex-1 layout--default-content" >
+            <LayoutMutipleHeader />
             <LayoutContent />
         </div>
     </div>
 </template>
 <script lang="ts">
 import LayoutHeader from "./header/index.vue"
+import LayoutMutipleHeader from "./header/MutipleHeader.vue"
+
+
 import LayoutSider from "./sider/index.vue"
 import LayoutContent from "./content/index.vue"
 export default defineComponent({
@@ -17,7 +21,12 @@ export default defineComponent({
         LayoutHeader,
         LayoutSider,
         LayoutContent,
+        LayoutMutipleHeader
     },
 })
 </script>
-<style lang="less" scoped></style>
+<style lang="scss" scoped>
+.layout--default-content{
+    width: calc(100% - 220px);
+}
+</style>

@@ -2,7 +2,7 @@ import { RouterTransitionEnum } from "@/enums/appEnum"
 import { CacheTypeEnum } from "@/enums/cacheEnum"
 import { ProjectSetting } from "@/types/config.d"
 const setting: ProjectSetting = {
-    permissionCacheType: CacheTypeEnum,
+    permissionCacheType: CacheTypeEnum.LOCAL,
     formSetting: {
         nestDefaultByte: ".",
         nestFormatDefaultByte: "%",

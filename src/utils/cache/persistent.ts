@@ -5,6 +5,7 @@ import {
     TOKEN_KEY,
     MENUS_KEY,
     PROJ_CFG_KEY,
+    MULTIPLE_TABS_KEY,
 } from "@/enums/cacheEnum"
 import { DEFAULT_CACHE_TIME } from "@/settings/encryptionSetting"
 import { omit, pick } from "lodash"
@@ -13,11 +14,13 @@ import { createLocalStorage, createSessionStorage } from "."
 import { Memory } from "./memory"
 import { ProjectSetting } from "@/types/config.d"
 import { AppRouteRecordRaw } from "@/router/types"
+import { RouteLocationNormalized } from "vue-router"
 
 interface BasicStore {
     [TOKEN_KEY]: string | number | null | undefined
     [MENUS_KEY]: AppRouteRecordRaw[]
     [PROJ_CFG_KEY]: ProjectSetting
+    [MULTIPLE_TABS_KEY]: RouteLocationNormalized[]
 }
 
 type LocalStore = BasicStore

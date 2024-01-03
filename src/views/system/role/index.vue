@@ -109,7 +109,7 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "id",
+            prop: "role_id",
             label: "id",
             width: 80,
         },
