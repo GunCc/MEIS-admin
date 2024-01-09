@@ -57,7 +57,11 @@ export default defineComponent({
                     ...(isObj && row),
                     ...form,
                 }
-                form.p_id = form.p_id[form.p_id.length - 1]
+                debugger
+                form.p_id =
+                    typeof form.p_id == "number"
+                        ? form.p_id
+                        : form.p_id[form.p_id.length - 1]
                 form.hidden = unref(hiddenSwitchValue)
                 form.meta.keepAlive = unref(keepAliveSwitchValue)
                 form.meta.affix = unref(affixSwitchValue)

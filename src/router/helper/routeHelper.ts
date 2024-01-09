@@ -1,6 +1,6 @@
 import { AppRouteRecordRaw } from "@/router/types"
 import { warn } from "@/utils/log"
-import { EXCEPTION_COMPONENT, LAYOUT } from "../const"
+import { EXCEPTION_COMPONENT, LAYOUT, getParentLayout } from "../const"
 
 const LayoutMap = new Map<string, () => Promise<typeof import("*.vue")>>()
 LayoutMap.set("LAYOUT", LAYOUT)
@@ -13,7 +13,7 @@ export function asyncImportRoute(routes: AppRouteRecordRaw[] = []) {
         dynamicViewsModules || import.meta.glob("../../views/**/*.{vue,tsx}")
     if (routes.length == 0) return
     routes.forEach(item => {
-        const { component, children } = item
+        const { component, children, name } = item
         if (component) {
             const layoutFound = LayoutMap.get(component.toUpperCase())
             if (layoutFound) {
@@ -24,6 +24,8 @@ export function asyncImportRoute(routes: AppRouteRecordRaw[] = []) {
                     component as string
                 )
             }
+        } else if (name) {
+            item.component = getParentLayout()
         }
         children && asyncImportRoute(children)
     })

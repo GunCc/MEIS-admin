@@ -31,19 +31,22 @@ import { AppRouteRecordRaw } from "@/router/types"
 // ]
 
 export const PAGE_NOT_FOUND_ROUTE: AppRouteRecordRaw = {
-    path: "/:pathMatch(.*)",
+    path: "/:path(.*)*",
     name: PAGE_NOT_FOUND_NAME,
     component: LAYOUT,
     meta: {
-        title: "ErrorPage",
+        hideTab: true,
+        title: "错误页面",
     },
     children: [
         {
-            path: "/:pathMatch(.*)*",
+            path: "/:path(.*)*",
             name: PAGE_NOT_FOUND_NAME,
             component: EXCEPTION_COMPONENT,
             meta: {
-                title: "ErrorPage",
+                hideTab: true,
+
+                title: "错误页面",
             },
         },
     ],
@@ -54,6 +57,7 @@ export const REDIRECT_ROUTE: AppRouteRecordRaw = {
     component: LAYOUT,
     name: "RedirectTo",
     meta: {
+        hideTab: true,
         title: REDIRECT_NAME,
     },
     children: [
@@ -62,6 +66,7 @@ export const REDIRECT_ROUTE: AppRouteRecordRaw = {
             name: REDIRECT_NAME,
             component: () => import("@/views/redirect/index.vue"),
             meta: {
+                hideTab: true,
                 title: REDIRECT_NAME,
             },
         },

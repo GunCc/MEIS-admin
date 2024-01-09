@@ -25,6 +25,7 @@ import { listenerRouteChange } from "@/logic/mitt/routeChange"
 import { mutipleStore } from "@/store/modules/mutipleTab"
 import { userStore } from "@/store/modules/user"
 import { TabPaneName, TabsPaneContext } from "element-plus"
+import { RouteMeta } from "vue-router"
 
 // 标签栏
 export default defineComponent({
@@ -43,17 +44,21 @@ export default defineComponent({
         const getTabState = computed(() => {
             return useMutipleStore.getTabList
         })
-       
+
         // 监听事件
         listenerRouteChange(route => {
             // 如果没有Token 没有路由直接不执行
             if (!route || !useUserStore.getToken) {
                 return
             }
-            const { path } = route
-            currentTab.value = path
+            const { path, fullPath, meta = {} } = route
+            const { hideTab } = meta as RouteMeta
 
-            useMutipleStore.addTab(unref(route))
+            const p = hideTab || fullPath || path
+            if (currentTab.value !== p) {
+                currentTab.value = p as string
+            }
+            if (!hideTab) useMutipleStore.addTab(unref(route))
         })
 
         // tabs点击事件

@@ -7,7 +7,6 @@ import { userStore } from "./user"
 import { PageEnum } from "@/enums/pageEnum"
 import { Persistent } from "@/utils/cache/persistent"
 import { MULTIPLE_TABS_KEY } from "@/enums/cacheEnum"
-import { useRedo } from "@/hooks/web/useRedo"
 
 export interface MutipleState {
     // 缓存的标签
@@ -55,6 +54,8 @@ export const mutipleStore = defineStore({
         },
         // 添加操作
         addTab(route: RouteLocationNormalized) {
+
+            
             const {
                 meta = {},
                 fullPath,
@@ -62,12 +63,7 @@ export const mutipleStore = defineStore({
                 params,
                 query,
             } = getRawRoute(route)
-            console.log(
-                "aadTAb",
-                path === PageEnum.ERROR_PAGE,
-                path,
-                PageEnum.ERROR_PAGE
-            )
+          
             if (path === PageEnum.ERROR_PAGE) {
                 return
             }

@@ -10,6 +10,7 @@ import { getAuthCache, setAuthCache } from "@/utils/auth"
 import { Nullable } from "vitest"
 import { MenuItem } from "@/components/Menu/src/types/index"
 import { genLayoutMenus } from "@/router/helper/menuHelper"
+import { PAGE_NOT_FOUND_ROUTE } from "@/router/routes/base"
 
 interface MenuStore {
     menus: MenuItem[]
@@ -123,6 +124,8 @@ export const menuStore = defineStore({
             routes.forEach(route => {
                 router.addRoute(route as unknown as RouteRecordRaw)
             })
+            router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
+
             return routes
         },
     },

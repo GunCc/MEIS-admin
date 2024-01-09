@@ -6,5 +6,6 @@ declare module "vue-router" {
         title: string
         icon?: string
         sort?: number
+        hideTab?: boolean
     }
 }

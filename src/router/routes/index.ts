@@ -1,6 +1,7 @@
 import { RouteRecordRaw } from "vue-router"
 import { AppRouteRecordRaw } from "../types"
 import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from "./base"
+import { PageEnum } from "@/enums/pageEnum"
 
 // const modules = import.meta.glob("./modules/**/*.ts", { eager: true })
 
@@ -13,7 +14,7 @@ const routeModuleList: RouteRecordRaw[] = []
 // })
 
 // 异步路由
-const asyncRoute = [...routeModuleList]
+export const asyncRoute = [...routeModuleList]
 
 const LoginRoute: Array<AppRouteRecordRaw> = [
     {
@@ -32,14 +33,7 @@ const LoginRoute: Array<AppRouteRecordRaw> = [
             title: "管理员登录",
         },
     },
-    {
-        path: "/",
-        name: "home",
-        redirect: "/login",
-        meta: {
-            title: "登录",
-        },
-    },
+
     {
         path: "/register",
         name: "Register",
@@ -66,9 +60,18 @@ const LoginRoute: Array<AppRouteRecordRaw> = [
     },
 ]
 
-export { asyncRoute, LoginRoute }
+const RootRoute: AppRouteRecordRaw = {
+    path: "/",
+    name: "Root",
+    redirect: PageEnum.BASE_HOME,
+    meta: {
+        title: "Root",
+    },
+}
+// export { asyncRoute, LoginRoute,RootRoute }
 
 export const basicRoutes = [
+    RootRoute,
     LoginRoute,
     REDIRECT_ROUTE,
     PAGE_NOT_FOUND_ROUTE,
