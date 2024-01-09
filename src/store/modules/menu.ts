@@ -2,7 +2,11 @@ import { defineStore } from "pinia"
 import { store } from ".."
 import { Menu } from "@/api/model/system/menu"
 import { AppRouteRecordRaw } from "@/router/types"
-import { asyncImportRoute } from "@/router/helper/routeHelper"
+import {
+    asyncImportRoute,
+    flatMultiLevelRoutes,
+    transformObjToRoute,
+} from "@/router/helper/routeHelper"
 import { router } from "@/router"
 import { RouteRecordRaw } from "vue-router"
 import { MENUS_KEY } from "@/enums/cacheEnum"
@@ -111,7 +115,7 @@ export const menuStore = defineStore({
         // 生成动态router
         async genAysncRoute(): Promise<AppRouteRecordRaw[]> {
             let routes = formatRouter(this.getAsyncMenus)
-            // 引入组件
+            // 生成动态路由
             asyncImportRoute(routes)
             // 映入基本的路由
             // routes = mergeBaseRoutes(routes)
@@ -120,7 +124,8 @@ export const menuStore = defineStore({
             this.setDynamicAddedRoute(true)
             this.setDefaultRoute(routes)
             this.genMenu()
-            console.log(routes)
+            // 将多级路由转换为二级路由
+            routes = flatMultiLevelRoutes(routes)
             routes.forEach(route => {
                 router.addRoute(route as unknown as RouteRecordRaw)
             })

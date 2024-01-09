@@ -14,3 +14,5 @@ export interface AppRouteRecordRaw
     children?: AppRouteRecordRaw[]
     props?: Recordable
 }
+
+export type AppRouteModule = AppRouteRecordRaw;
