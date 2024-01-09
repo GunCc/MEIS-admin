@@ -4,7 +4,6 @@
             v-model="currentTab"
             type="card"
             class="meis--mutiple-tabs"
-            closable
             size="small"
             @tab-click="handleTabClick"
             @tab-remove="handleTabRemove"
@@ -14,6 +13,7 @@
                 :key="item.path"
                 :label="item.meta.title || item.name"
                 :name="item.path"
+                :closable="!item.meta.affix"
             >
             </el-tab-pane>
         </el-tabs>
@@ -50,6 +50,7 @@ export default defineComponent({
             if (!route || !useUserStore.getToken) {
                 return
             }
+            console.log("监听",route)
             const { path } = route
             currentTab.value = path
 

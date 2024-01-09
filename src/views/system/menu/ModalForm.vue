@@ -6,6 +6,9 @@
         <template #keepAlive>
             <el-switch v-model="keepAliveSwitchValue"></el-switch>
         </template>
+        <template #affix>
+            <el-switch v-model="affixSwitchValue"></el-switch>
+        </template>
     </basic-form>
 </template>
 <script lang="ts">
@@ -15,6 +18,7 @@ import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
 import { error } from "@/utils/log"
+import { userStore } from "@/store/modules/user"
 export default defineComponent({
     name: "MenuModalForm",
     components: { BasicForm },
@@ -31,6 +35,8 @@ export default defineComponent({
     setup(props, { emit }) {
         const keepAliveSwitchValue = ref<boolean>(true)
         const hiddenSwitchValue = ref<boolean>(true)
+        const affixSwitchValue = ref<boolean>(false)
+        const useUserApp = userStore()
 
         const [
             registerForm,
@@ -53,8 +59,10 @@ export default defineComponent({
                 }
                 form.hidden = unref(hiddenSwitchValue)
                 form.meta.keepAlive = unref(keepAliveSwitchValue)
-
+                form.meta.affix = unref(affixSwitchValue)
                 await api(form)
+                // 操作完要更新路由信息
+                await useUserApp.handleLoginAfter(false)
                 clearForm()
                 emit("success-submit")
             } catch (err) {
@@ -65,6 +73,7 @@ export default defineComponent({
         function clearForm() {
             hiddenSwitchValue.value = true
             keepAliveSwitchValue.value = true
+            affixSwitchValue.value = false
             resetFields()
         }
 
@@ -73,8 +82,12 @@ export default defineComponent({
             setFormSchemas(props.schemaSetting)
             await nextTick()
             let hiddenValue = await getFormField("hidden")
-            let keepAliveValue = await getFormField("meta.keepAlive")
+            let keepAliveValue = await getFormField("meta%keepAlive")
+            let affixValue = await getFormField("meta%affix")
+
             hiddenSwitchValue.value = props.row != "create" ? hiddenValue : true
+            affixSwitchValue.value =
+                props.row != "create" ? affixValue : false
             keepAliveSwitchValue.value =
                 props.row != "create" ? keepAliveValue : true
         }
@@ -97,6 +110,7 @@ export default defineComponent({
             handleSubmit,
             keepAliveSwitchValue,
             hiddenSwitchValue,
+            affixSwitchValue,
         }
     },
 })

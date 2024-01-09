@@ -8,7 +8,10 @@
             </template>
 
             <template #meta_keepAlive="{ row }">
-                {{ row.keepAlive ? "是" : "否" }}
+                {{ row.meta.keepAlive ? "是" : "否" }}
+            </template>
+            <template #meta_affix="{ row }">
+                {{ row.meta.affix ? "是" : "否" }}
             </template>
 
             <template #p_id="{ row }">
@@ -184,10 +187,24 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
             width: 80,
             isTransitionToDelimiter: true,
             columnToForm: {
-                slot:"keepAlive",
+                slot: "keepAlive",
                 isNestData: true,
                 value: row => {
                     return row.meta.keepAlive
+                },
+            },
+        },
+        {
+            prop: "meta.affix",
+            label: "tabs存活",
+            canViald: true,
+            width: 200,
+            isTransitionToDelimiter: true,
+            columnToForm: {
+                slot: "affix",
+                isNestData: true,
+                value: row => {
+                    return row.meta.affix
                 },
             },
         },
@@ -221,8 +238,6 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
         },
     ],
 })
-// let schemasSetting = ref<Recordable[]>([])
-
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
@@ -248,12 +263,6 @@ async function handleActionDelete(row) {
         error(err as string)
     }
 }
-
-// function passwordVaild(rule: any, value: any, callback: any) {
-//     setTimeout(() => {
-//         callback(new Error("Please input digits"))
-//     }, 100)
-// }
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {

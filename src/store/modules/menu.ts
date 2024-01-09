@@ -28,6 +28,7 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
                 path: item.path,
                 redirect: item.redirect,
                 meta: {
+                    ...(item.meta || {}),
                     sort: 50,
                     title: item.meta.title,
                 },
@@ -119,6 +120,7 @@ export const menuStore = defineStore({
             this.setDynamicAddedRoute(true)
             this.setDefaultRoute(routes)
             this.genMenu()
+            console.log(routes)
             routes.forEach(route => {
                 router.addRoute(route as unknown as RouteRecordRaw)
             })

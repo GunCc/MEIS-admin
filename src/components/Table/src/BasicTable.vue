@@ -46,7 +46,7 @@
             >
                 <template
                     #default="scope"
-                    v-if="Object.keys($slots).includes(item.prop)"
+                    v-if="Object.keys($slots).includes(item.prop as string)"
                 >
                     <slot :name="item.prop" v-bind="scope || {}"></slot>
                 </template>
