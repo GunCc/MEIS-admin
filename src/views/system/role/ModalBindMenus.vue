@@ -51,7 +51,7 @@ export default defineComponent({
             const { row = {} } = props
             try {
                 let form = clone(values)
-                form.role_id = row.id
+                form.role_id = row.role_id
                 await bindRoleMenus(form)
                 emit("success-submit")
             } catch (err) {

@@ -1,15 +1,16 @@
 import { RouteRecordRaw } from "vue-router"
 import { AppRouteRecordRaw } from "../types"
+import { PAGE_NOT_FOUND_ROUTE, REDIRECT_ROUTE } from "./base"
 
-const modules = import.meta.glob("./modules/**/*.ts", { eager: true })
+// const modules = import.meta.glob("./modules/**/*.ts", { eager: true })
 
 const routeModuleList: RouteRecordRaw[] = []
-Object.keys(modules).forEach(key => {
-    // @ts-ignore
-    const mod = modules[key].default || {}
-    const modList = Array.isArray(mod) ? [...mod] : [mod]
-    routeModuleList.push(...modList)
-})
+// Object.keys(modules).forEach(key => {
+//     // @ts-ignore
+//     const mod = modules[key].default || {}
+//     const modList = Array.isArray(mod) ? [...mod] : [mod]
+//     routeModuleList.push(...modList)
+// })
 
 // 异步路由
 const asyncRoute = [...routeModuleList]
@@ -66,3 +67,9 @@ const LoginRoute: Array<AppRouteRecordRaw> = [
 ]
 
 export { asyncRoute, LoginRoute }
+
+export const basicRoutes = [
+    LoginRoute,
+    REDIRECT_ROUTE,
+    PAGE_NOT_FOUND_ROUTE,
+]

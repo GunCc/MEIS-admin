@@ -15,7 +15,7 @@
             </template>
 
             <template #p_id="{ row }">
-                {{ row.p_id == 0 ? "一级" : row.name }}
+                {{ row.meta.title || row.name }}
             </template>
 
             <template #hidden="{ row }">
@@ -114,27 +114,37 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
             canViald: true,
             width: 200,
             columnToForm: {
-                component: "Select",
+                component: "Cascader",
                 componentProps: {
                     alwaysLoad: true,
                     dataSource: handleGetSource,
                     labelField: "name",
                     valueField: "id",
+                    cascaderProps: {
+                        checkStrictly: true,
+                    },
                 },
             },
         },
         {
             prop: "id",
             label: "id",
+            width: 40,
+        },
+        {
+            prop: "meta.title",
+            label: "标题",
+            canViald: true,
+            noShowInTable: true,
             width: 80,
+            columnToForm: {
+                isNestData: true,
+                value: row => {
+                    return row.meta.title
+                },
+            },
         },
 
-        {
-            prop: "name",
-            label: "菜单名",
-            canViald: true,
-            width: 100,
-        },
         {
             prop: "path",
             label: "路径",
@@ -144,6 +154,13 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
         {
             prop: "component",
             label: "路由映射组件",
+            canViald: true,
+            width: 200,
+        },
+
+        {
+            prop: "redirect",
+            label: "重定向",
             canViald: true,
             width: 200,
         },
@@ -168,17 +185,14 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
                 },
             },
         },
+
         {
-            prop: "meta.title",
-            label: "标题",
+            prop: "name",
+            label: "菜单名",
             canViald: true,
-            width: 80,
-            columnToForm: {
-                isNestData: true,
-                value: row => {
-                    return row.meta.title
-                },
-            },
+            width: 150,
+            noShowInTable: true,
+
         },
         {
             prop: "meta.keepAlive",

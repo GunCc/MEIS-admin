@@ -10,7 +10,6 @@ import { getAuthCache, setAuthCache } from "@/utils/auth"
 import { Nullable } from "vitest"
 import { MenuItem } from "@/components/Menu/src/types/index"
 import { genLayoutMenus } from "@/router/helper/menuHelper"
-import baseRoutes from "@/router/routes/modules/base"
 
 interface MenuStore {
     menus: MenuItem[]
@@ -41,9 +40,9 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
     return arr
 }
 
-function mergeBaseRoutes(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
-    return [...routes]
-}
+// function mergeBaseRoutes(routes: AppRouteRecordRaw[]): AppRouteRecordRaw[] {
+//     return [...routes]
+// }
 
 function sortRouter(field) {
     return function (pre, next) {

@@ -6,29 +6,12 @@
             @close="handleClose"
             @select="handleSelect"
         >
-            <template v-for="item in getProps.items" :key="item.key">
-                <el-sub-menu
-                    :index="item.key"
-                    v-if="item.children && item.children.length != 0"
-                >
-                    <template #title>
-                        <span>{{ item.title }}</span>
-                    </template>
-
-                    <template
-                        v-for="child in item.children"
-                        :key="child.key"
-                    >
-                        <el-menu-item :index="child.key">
-                            <span>{{ child.title }}</span>
-                        </el-menu-item>
-                    </template>
-                </el-sub-menu>
-                <el-menu-item :index="item.key" v-else>
-                    <template #title>
-                        <span>{{ item.title }}</span>
-                    </template>
-                </el-menu-item>
+            <template v-for="item in getProps.items" :key="item.path">
+                <BasicMenuItem
+                    :path="item.path"
+                    :children="item.children || []"
+                    :title="item.title"
+                ></BasicMenuItem>
             </template>
         </el-menu>
     </div>
@@ -37,17 +20,20 @@
 import { ref, computed } from "vue"
 import { useMenuEvents } from "./hooks/menuEvents"
 import { basicProps } from "./props"
+import BasicMenuItem from "./components/BasicMenuItem.vue"
+
 export default defineComponent({
     name: "BasicMenu",
     emit: ["menuHandleOpen", "menuHandleClose"],
     props: basicProps,
+    components: { BasicMenuItem },
     setup(props, { emit }) {
         const isCollapse = ref(false)
         const { handleOpen, handleClose, handleSelect } = useMenuEvents({
             emit,
         })
 
-        const route = useRoute();
+        const route = useRoute()
 
         const getProps = computed(() => {
             return {

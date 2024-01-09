@@ -1,5 +1,5 @@
 <template>
-    <el-cascader v-bind="getCascaderOptions" v-model="state"> </el-cascader>
+    <el-cascader v-bind="getCascaderOptions" v-model="state" @change="handleChange"> </el-cascader>
 </template>
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
@@ -8,7 +8,7 @@ import { PropType } from "vue"
 import { get, isFunction } from "lodash"
 import { useTimeoutFn } from "@/hooks/core/useTimeout"
 import { CascaderProps } from "element-plus/es/components/cascader-panel/src/node"
-import { CascaderInstance } from "element-plus"
+import { CascaderInstance, CascaderValue } from "element-plus"
 import { error } from "@/utils/log"
 
 interface OptionsItem {
@@ -54,15 +54,17 @@ export default defineComponent({
         childField: propTypes.string.def("children"),
         // 如果不是请求 -- 数据源
         dataSource: {
-            type: Array as PropType<Recordable[]>,
+            type: [Array, Function] as PropType<
+                Recordable[] | (() => Recordable[])
+            >,
             default: () => [],
         },
     },
     setup(props) {
         const options = ref<Recordable[]>([])
-        // const emitData = ref<any[]>([])
+        const emitData = ref<any[]>([])
 
-        const [state] = useFormItem(props)
+        const [state] = useFormItem(props,"value","change",emitData)
 
         // 获取options数据
         const getOptions = computed(() => {
@@ -92,6 +94,11 @@ export default defineComponent({
             }) as OptionsItem[]
         }
 
+        // 联级选择器
+        function handleChange(value: CascaderValue){
+            console.log(value)
+        }
+
         async function fetch() {
             const { api, params, listField } = props
             try {
@@ -106,7 +113,11 @@ export default defineComponent({
         watch(
             () => props.dataSource,
             () => {
-                !isFunction(props.api) && (options.value = props.dataSource)
+                const { dataSource, api } = props
+                if (isFunction(api)) return
+                options.value = isFunction(dataSource)
+                    ? dataSource()
+                    : dataSource
             },
             {
                 immediate: true,
@@ -123,6 +134,7 @@ export default defineComponent({
 
         return {
             state,
+            handleChange,
             getOptions,
             getCascaderOptions,
         }

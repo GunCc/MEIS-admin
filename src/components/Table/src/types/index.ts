@@ -68,6 +68,8 @@ interface ColumnProps extends Partial<TableColumnCtx<Recordable>> {
     isTransitionToDelimiter?: boolean
     // 字符设置 默认 ‘_’ )
     delimiterByte?: string
+    // 表格中是否显示
+    noShowInTable?: boolean
 }
 
 export interface FetchParams {

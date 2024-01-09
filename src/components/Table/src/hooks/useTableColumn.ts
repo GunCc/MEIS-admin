@@ -19,16 +19,24 @@ export function useTableColumn({ getProps }: useTableColumnContext) {
     const getColumnView = computed(() => {
         const { column = [] } = unref(getProps)
         const columnView = cloneDeep(column)
-        return columnView.map(item => {
-            // 处理嵌套字符
-            if (item.prop?.indexOf(".") != -1 && item.isTransitionToDelimiter) {
-                let delimiter = item.delimiterByte ?? "_"
-                item.prop = item.prop?.replace(/\./g, delimiter)
-            }
-            return {
-                ...item,
-            }
-        })
+        return columnView
+            .map(item => {
+                // 处理嵌套字符
+                if (
+                    item.prop?.indexOf(".") != -1 &&
+                    item.isTransitionToDelimiter
+                ) {
+                    let delimiter = item.delimiterByte ?? "_"
+                    item.prop = item.prop?.replace(/\./g, delimiter)
+                }
+                return {
+                    ...item,
+                }
+            })
+            .filter(item => {
+                const { noShowInTable } = item
+                return !noShowInTable
+            })
     })
 
     function getVialdColumn(): Recordable[] {

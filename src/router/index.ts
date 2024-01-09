@@ -1,10 +1,10 @@
-import { createRouter, createWebHashHistory } from "vue-router"
+import { RouteRecordRaw, createRouter, createWebHashHistory } from "vue-router"
 import type { App } from "vue"
-import { LoginRoute } from "./routes"
+import { basicRoutes } from "./routes"
 
 export const router = createRouter({
     history: createWebHashHistory(),
-    routes: [...LoginRoute],
+    routes: basicRoutes as unknown as RouteRecordRaw[],
 })
 
 function setupRouter(app: App) {

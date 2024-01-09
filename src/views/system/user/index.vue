@@ -144,13 +144,13 @@ const [register, { getVialdColumn, reload }] = useTable({
 
                 formatDefault: row => {
                     if (!row) return []
-                    return row.roles.map(item => item.id)
+                    return row.roles.map(item => item.role_id)
                 },
                 componentProps: {
                     api: getAllList,
                     immediate: true,
                     labelField: "name",
-                    valueField: "id",
+                    valueField: "role_id",
                     selectOptions: {
                         multiple: true,
                     },

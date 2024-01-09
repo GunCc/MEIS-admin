@@ -9,6 +9,7 @@ declare module 'vue' {
   export interface GlobalComponents {
     BasicForm: typeof import('./src/components/Form/src/BasicForm.vue')['default']
     BasicMenu: typeof import('./src/components/Menu/src/BasicMenu.vue')['default']
+    BasicMenuItem: typeof import('./src/components/Menu/src/components/BasicMenuItem.vue')['default']
     BasicModal: typeof import('./src/components/Modal/src/BasicModal.vue')['default']
     BasicTable: typeof import('./src/components/Table/src/BasicTable.vue')['default']
     CustomTabs: typeof import('./src/components/Tabs/src/CustomTabs.vue')['default']
@@ -23,6 +24,7 @@ declare module 'vue' {
     ElDropdown: typeof import('element-plus/es')['ElDropdown']
     ElDropdownItem: typeof import('element-plus/es')['ElDropdownItem']
     ElDropdownMenu: typeof import('element-plus/es')['ElDropdownMenu']
+    ElEmpty: typeof import('element-plus/es')['ElEmpty']
     ElForm: typeof import('element-plus/es')['ElForm']
     ElFormItem: typeof import('element-plus/es')['ElFormItem']
     ElIcon: typeof import('element-plus/es')['ElIcon']
@@ -49,6 +51,7 @@ declare module 'vue' {
     FormTree: typeof import('./src/components/Form/src/component/FormTree.vue')['default']
     FormUpload: typeof import('./src/components/Form/src/component/FormUpload.vue')['default']
     Logo: typeof import('./src/components/Logo/index.vue')['default']
+    Map: typeof import('./src/components/Map/index.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     Src: typeof import('./src/components/Dropdown/src/index.vue')['default']

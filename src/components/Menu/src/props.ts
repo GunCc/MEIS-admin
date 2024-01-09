@@ -24,36 +24,6 @@ export const basicProps = {
     },
     items: {
         type: Array as PropType<MenuItem[]>,
-        default: () =>
-            [
-                {
-                    title: "测试",
-                    key: "1",
-                    children: [
-                        {
-                            title: "测试11",
-                            key: "11",
-                        },
-                        {
-                            title: "测试12",
-                            key: "12",
-                        },
-                    ],
-                },
-                {
-                    title: "测试2",
-                    key: "2",
-                    children: [
-                        {
-                            title: "测试21",
-                            key: "13",
-                        },
-                    ],
-                },
-                {
-                    title: "测试3",
-                    key: "3",
-                },
-            ] as MenuItem[],
+        default: () => [] as MenuItem[],
     },
 }

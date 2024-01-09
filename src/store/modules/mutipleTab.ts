@@ -62,6 +62,15 @@ export const mutipleStore = defineStore({
                 params,
                 query,
             } = getRawRoute(route)
+            console.log(
+                "aadTAb",
+                path === PageEnum.ERROR_PAGE,
+                path,
+                PageEnum.ERROR_PAGE
+            )
+            if (path === PageEnum.ERROR_PAGE) {
+                return
+            }
 
             let updateIndex = -1
 
@@ -144,7 +153,6 @@ export const mutipleStore = defineStore({
 
             await replace(toTagret)
         },
-      
     },
 })
 
