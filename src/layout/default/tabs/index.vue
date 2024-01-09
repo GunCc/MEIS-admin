@@ -11,7 +11,7 @@
             <el-tab-pane
                 v-for="item in getTabState"
                 :key="item.path"
-                :label="item.meta.title || item.name"
+                :label="item.meta.title"
                 :name="item.path"
                 :closable="!item.meta.affix"
             >
@@ -43,14 +43,13 @@ export default defineComponent({
         const getTabState = computed(() => {
             return useMutipleStore.getTabList
         })
-
+       
         // 监听事件
         listenerRouteChange(route => {
             // 如果没有Token 没有路由直接不执行
             if (!route || !useUserStore.getToken) {
                 return
             }
-            console.log("监听",route)
             const { path } = route
             currentTab.value = path
 

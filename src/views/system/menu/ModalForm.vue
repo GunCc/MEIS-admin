@@ -19,6 +19,8 @@ import { clone, isObject } from "lodash"
 import { PropType } from "vue"
 import { error } from "@/utils/log"
 import { userStore } from "@/store/modules/user"
+import { mutipleStore } from "@/store/modules/mutipleTab"
+import { router } from "@/router"
 export default defineComponent({
     name: "MenuModalForm",
     components: { BasicForm },
@@ -84,10 +86,10 @@ export default defineComponent({
             let hiddenValue = await getFormField("hidden")
             let keepAliveValue = await getFormField("meta%keepAlive")
             let affixValue = await getFormField("meta%affix")
-
+            console.log("affixValue",affixValue)
             hiddenSwitchValue.value = props.row != "create" ? hiddenValue : true
             affixSwitchValue.value =
-                props.row != "create" ? affixValue : false
+                props.row != "create" ? !!affixValue : false
             keepAliveSwitchValue.value =
                 props.row != "create" ? keepAliveValue : true
         }

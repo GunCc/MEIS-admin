@@ -7,6 +7,7 @@ import { userStore } from "./user"
 import { PageEnum } from "@/enums/pageEnum"
 import { Persistent } from "@/utils/cache/persistent"
 import { MULTIPLE_TABS_KEY } from "@/enums/cacheEnum"
+import { useRedo } from "@/hooks/web/useRedo"
 
 export interface MutipleState {
     // 缓存的标签
@@ -78,11 +79,13 @@ export const mutipleStore = defineStore({
                 currentTab.params = params || currentTab.params
                 currentTab.query = query || currentTab.query
                 currentTab.fullPath = fullPath || currentTab.fullPath
+                // @ts-ignore
+                currentTab.meta = meta || currentTab.meta
+
                 this.tabList.splice(updateIndex, 1, currentTab)
             } else {
                 this.tabList.push(route)
             }
-            console.log(this.tabList)
             Persistent.setLocal(MULTIPLE_TABS_KEY, this.tabList, true)
         },
         // 根据key删除
@@ -141,6 +144,7 @@ export const mutipleStore = defineStore({
 
             await replace(toTagret)
         },
+      
     },
 })
 
