@@ -35,8 +35,8 @@ export const userStore = defineStore({
             this.userInfo = userInfo
         },
         setToken(token: string | undefined) {
-            this.token = token ? token : ''; // for null or undefined value
-            setAuthCache(TOKEN_KEY, token);
+            this.token = token ? token : "" // for null or undefined value
+            setAuthCache(TOKEN_KEY, token)
         },
         async handleLogin(params: Login) {
             try {
@@ -59,12 +59,13 @@ export const userStore = defineStore({
             const { redirect = PageEnum.BASE_HOME } = this.getUserInfo || {}
             goHome && (await router.replace(redirect || PageEnum.BASE_HOME))
         },
-        // 登出操作
-        async logout() {
-            const useMenuStore = menuStore()
+        clearUser() {
             this.setUserInfo(null)
             this.setToken(undefined)
-            useMenuStore.clearMenuStore()
+        },
+        // 登出操作
+        async logout() {
+            this.clearUser()
             router.replace(PageEnum.BASE_ADMIN_LOGIN)
         },
     },

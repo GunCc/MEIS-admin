@@ -4,9 +4,11 @@ import { userStoreOutset } from "@/store/modules/user"
 import { PageEnum } from "@/enums/pageEnum"
 import { PAGE_NOT_FOUND_ROUTE } from "../routes/base"
 import { PAGE_NOT_FOUND_NAME } from "../const"
+import { RootRoute } from "../routes"
 
 const LOGIN_PATH = PageEnum.BASE_ADMIN_LOGIN
 const INIT_DB_PATH = PageEnum.INIT_DB_PAGE
+const ROOT_PATH = RootRoute.path
 
 const whitePathList: PageEnum[] = [LOGIN_PATH, INIT_DB_PATH]
 
@@ -16,6 +18,7 @@ export async function createPermissionGuard(router: Router) {
 
     router.beforeEach(async (to, from, next) => {
         const token = userStore.getToken
+        debugger
 
         // 设置白名单
         if (whitePathList.includes(to.path as PageEnum)) {
@@ -48,6 +51,10 @@ export async function createPermissionGuard(router: Router) {
             }
             next(redirectData)
             return
+        }
+
+        // 如果还没有登录，不可进入404页面
+        if (from.path === LOGIN_PATH && to.name === PAGE_NOT_FOUND_ROUTE.name) {
         }
 
         if (menuStore.getDynamicAddedRoute) {

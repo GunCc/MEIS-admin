@@ -60,7 +60,7 @@ const LoginRoute: Array<AppRouteRecordRaw> = [
     },
 ]
 
-const RootRoute: AppRouteRecordRaw = {
+export const RootRoute: AppRouteRecordRaw = {
     path: "/",
     name: "Root",
     redirect: PageEnum.BASE_HOME,
@@ -72,7 +72,7 @@ const RootRoute: AppRouteRecordRaw = {
 
 export const basicRoutes = [
     RootRoute,
-    LoginRoute,
+    ...LoginRoute,
     REDIRECT_ROUTE,
     PAGE_NOT_FOUND_ROUTE,
 ]

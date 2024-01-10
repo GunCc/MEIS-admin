@@ -54,8 +54,6 @@ export const mutipleStore = defineStore({
         },
         // 添加操作
         addTab(route: RouteLocationNormalized) {
-
-            
             const {
                 meta = {},
                 fullPath,
@@ -63,7 +61,7 @@ export const mutipleStore = defineStore({
                 params,
                 query,
             } = getRawRoute(route)
-          
+
             if (path === PageEnum.ERROR_PAGE) {
                 return
             }
@@ -92,6 +90,11 @@ export const mutipleStore = defineStore({
                 this.tabList.push(route)
             }
             Persistent.setLocal(MULTIPLE_TABS_KEY, this.tabList, true)
+        },
+        // 清除所有操作
+        clearTab() {
+            this.cacheTabList = new Set()
+            this.tabList = []
         },
         // 根据key删除
         async removeTabByKey(path: string, router: Router) {

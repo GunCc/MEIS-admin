@@ -36,7 +36,6 @@
 import { ref, onMounted } from "vue"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
-import LoginHeader from "./components/LoginHeader.vue"
 import LoginWrapHeader from "./components/LoginWrapHeader.vue"
 import { getCaptcha } from "@/api/v1/system/base"
 import { CaptchaValue } from "@/api/model/base/response"
