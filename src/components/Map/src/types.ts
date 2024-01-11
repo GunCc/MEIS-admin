@@ -1,12 +1,11 @@
 import { useScript, useScriptContext } from "@/hooks/web/useScript"
-import { BaiduMap, GaodeMap, MapActionType, QQMap } from "./instance"
+import { BaiduMap, GaodeMap, MapActionType, MapType, QQMap } from "./instance"
 
-export type MapType = "BAIDU" | "GAODE" | "QQ"
+type GaodeMapType = typeof GaodeMap
+// type GaodeMapType = typeof GaodeMap
+// type GaodeMapType = typeof GaodeMap
 
-const Map_map = new Map<
-    MapType,
-    typeof GaodeMap | typeof QQMap | typeof BaiduMap
->()
+const Map_map = new Map<MapType, GaodeMapType>()
 
 Map_map.set("GAODE", GaodeMap)
 Map_map.set("BAIDU", BaiduMap)
@@ -24,14 +23,12 @@ export class AppMap {
         this.script = useScript({ src: this.src })
     }
 
-    init(domNode: HTMLDivElement | null): MapActionType | null {
+    init(domNode: HTMLDivElement | null) {
         if (!domNode || this.instance) return null
         let _map = Map_map.get(this.getType())
         if (!_map) return null
         let mapAction = new _map(domNode)
-        console.log(mapAction)
-        this.instance = mapAction.getMapActionType()
-        return this.getInstance()
+        mapAction.initMap()
     }
 
     getScript() {

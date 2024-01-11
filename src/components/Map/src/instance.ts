@@ -1,80 +1,77 @@
+export type MapType = "BAIDU" | "GAODE" | "QQ"
+
+const MapHash = new Map<MapType, string>()
+
+MapHash.set("BAIDU", "BMapGL")
+MapHash.set("GAODE", "AMap")
+MapHash.set("QQ", "QMap")
+
+// 地图事件
 export interface MapActionType {
     // 初始化地图
     initMap: () => void
+
+    // 获取地区中心点
+    // getMapCenterInfo: () => any
 }
 
-class Map {
-    protected domNode: HTMLDivElement | null = null
-    constructor(domNode: HTMLDivElement | null) {
-        this.domNode = domNode
-    }
-    getDomNode() {
-        return this.domNode
-    }
-}
-
-export class GaodeMap extends Map {
+class _Map {
     private map: any
+    private mapDom: HTMLDivElement | null = null
+    private mapType: string = ""
+    constructor(mapDom: HTMLDivElement, mapType: MapType = "GAODE") {
+        if (!mapDom) return
+        this.mapDom = mapDom
+        this.mapType = MapHash.get(mapType) as string
+        this.map = (window as any)[this.mapType]
+        console.log(this.map, this)
+    }
 
-    constructor(domNode: HTMLDivElement | null) {
-        console.log("执行")
-        super(domNode)
-        this.map = (window as any).AMap
+    getMapDom() {
+        return this.mapDom
+    }
+
+    getMap() {
+        return this.map
+    }
+
+    init() {
+        return new this.map.Map(this.getMapDom())
+    }
+}
+
+export class GaodeMap extends _Map implements MapActionType {
+    constructor(mapDom: HTMLDivElement) {
+        super(mapDom)
     }
 
     // 初始化地图
-    private initMap() {
-        if (!this.getDomNode()) return
-        new this.map.Map(this.getDomNode())
-    }
-
-    getMapActionType(): MapActionType {
-        let action: MapActionType = {
-            initMap: this.initMap.bind(this),
-        }
-        return action
+    initMap() {
+        this.init()
     }
 }
 
-export class BaiduMap extends Map {
-    private map: any
-
-    constructor(domNode: HTMLDivElement | null) {
-        console.log("dome", domNode)
-        super(domNode)
-        this.map = (window as any).AMap
+export class BaiduMap extends _Map implements MapActionType {
+    constructor(mapDom: HTMLDivElement) {
+        super(mapDom, "BAIDU")
     }
 
     // 初始化地图
-    private initMap() {
-        if (!super.getDomNode()) return
-        new this.map.Map(super.getDomNode())
-    }
-
-    getMapActionType(): MapActionType {
-        return {
-            initMap: this.initMap,
-        }
+    initMap() {
+        const instance = this.init()
+        const baiduMap = this.getMap()
+        var point = new baiduMap.Point(116.404, 39.915)
+        instance.centerAndZoom(point, 15)
     }
 }
 
-export class QQMap extends Map {
-    private map: any
-
-    constructor(domNode: HTMLDivElement | null) {
-        super(domNode)
-        this.map = (window as any).AMap
+export class QQMap extends _Map implements MapActionType {
+    constructor(mapDom: HTMLDivElement) {
+        super(mapDom, "QQ")
     }
 
     // 初始化地图
-    private initMap() {
-        if (!super.getDomNode()) return
-        new this.map.Map(super.getDomNode())
-    }
-
-    getMapActionType(): MapActionType {
-        return {
-            initMap: this.initMap,
-        }
+    initMap() {
+        this.init()
     }
 }

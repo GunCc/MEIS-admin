@@ -32,9 +32,9 @@ export default defineComponent({
             await nextTick()
             const wrapEl = unref(wrapRef)
             if (!wrapEl) return
-
-            const { initMap } = map.init(wrapEl) || {}
-            initMap && initMap()
+            map.init(wrapEl)
+            // const { initMap } = map.init(wrapEl) || {}
+            // initMap && initMap()
             // const AMap = (window as any).AMap
             // new AMap.Map(wrapEl)
         }
