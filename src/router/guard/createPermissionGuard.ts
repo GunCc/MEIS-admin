@@ -18,7 +18,6 @@ export async function createPermissionGuard(router: Router) {
 
     router.beforeEach(async (to, from, next) => {
         const token = userStore.getToken
-        debugger
 
         // 设置白名单
         if (whitePathList.includes(to.path as PageEnum)) {

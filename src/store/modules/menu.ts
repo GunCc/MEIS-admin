@@ -130,7 +130,6 @@ export const menuStore = defineStore({
                 router.addRoute(route as unknown as RouteRecordRaw)
             })
             router.addRoute(PAGE_NOT_FOUND_ROUTE as unknown as RouteRecordRaw)
-
             return routes
         },
     },

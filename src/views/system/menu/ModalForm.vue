@@ -57,7 +57,6 @@ export default defineComponent({
                     ...(isObj && row),
                     ...form,
                 }
-                debugger
                 form.p_id =
                     typeof form.p_id == "number"
                         ? form.p_id

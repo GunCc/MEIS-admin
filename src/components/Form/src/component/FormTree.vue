@@ -65,7 +65,6 @@ export default defineComponent({
     },
     emits: ["change"],
     setup(props, { emit }) {
-        const checkValues = ref<Recordable[]>([])
 
         const treeRef = ref<InstanceType<typeof ElTree>>()
         const options = ref<Recordable[]>([])
@@ -91,6 +90,7 @@ export default defineComponent({
         }
 
         function setCheckedKeys(values: number[] | string[]) {
+            console.log("values",values)
             nextTick(() => {
                 treeRef.value!.setCheckedKeys(values, false)
             })

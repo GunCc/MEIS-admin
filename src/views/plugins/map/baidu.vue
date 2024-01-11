@@ -1,12 +1,12 @@
 <template>
     <PageWrapper>
-        <AppMap :map-url="A_MAP_URL" map-type="GAODE"></AppMap>
+        <AppMap :map-url="BD_MAP_URL" map-type="BAIDU"></AppMap>
     </PageWrapper>
 </template>
 <script lang="ts" setup>
 import { PageWrapper } from "@c/PageWrapper/index"
-const A_MAP_URL =
-    "https://webapi.amap.com/maps?v=2.0&key=2c542e01056bcb4a6bd8985b3e211197"
+const BD_MAP_URL =
+    "https://api.map.baidu.com/api?v=1.0&&type=webgl&ak=3RZkVCy5V459FGemo05NmQZ72b8WI8a8"
 import { AppMap } from "@c/Map/index"
 </script>
 <style lang="scss"></style>

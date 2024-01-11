@@ -39,6 +39,7 @@ export default defineComponent({
                             multiple: true,
                         },
                         TreeOptions: {
+                            checkStrictly: true,
                             nodeKey: "id",
                             showCheckbox: true,
                         },

@@ -17,9 +17,8 @@ export async function createStoreGuard(router: Router) {
             useMultipleStore.clearTab()
             useMenuStore.clearMenuStore()
             useUserStore.clearUser()
-
-            removeTabChangeListener();
-            next()
+            removeTabChangeListener()
         }
+        next()
     })
 }
