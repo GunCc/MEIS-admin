@@ -4,7 +4,7 @@ const MapHash = new Map<MapType, string>()
 
 MapHash.set("BAIDU", "BMapGL")
 MapHash.set("GAODE", "AMap")
-MapHash.set("QQ", "QMap")
+MapHash.set("QQ", "TMap")
 
 // 地图事件
 export interface MapActionType {
