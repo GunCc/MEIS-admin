@@ -1,5 +1,10 @@
 <template>
-    <el-tree ref="treeRef" v-bind="getTreeOptions" @check="handleCheckChange">
+    <el-tree
+        ref="treeRef"
+        v-bind="getTreeOptions"
+        @check="handleCheck"
+        @check-change="handleCheckChange"
+    >
     </el-tree>
 </template>
 <script lang="ts">
@@ -65,9 +70,10 @@ export default defineComponent({
     },
     emits: ["change"],
     setup(props, { emit }) {
-
         const treeRef = ref<InstanceType<typeof ElTree>>()
         const options = ref<Recordable[]>([])
+        const checkValues = ref<any[]>([])
+        const checkType = ref<boolean>(false)
 
         // 获取options数据
         const getOptions = computed(() => {
@@ -84,13 +90,44 @@ export default defineComponent({
             }
         })
 
-        function handleCheckChange(_, treeObj: TreeCheckObject) {
+        // 点击节点复选框之后触发
+        function handleCheck(current: Recordable, treeObj: TreeCheckObject) {
             const { checkedKeys } = treeObj
-            emit("change", checkedKeys)
+
+            let ids = getTreeNode(current)
+            let values = unref(checkType)
+                ? [...new Set([...checkedKeys, ...ids])]
+                : checkedKeys.filter(item => !ids.includes(item))
+            checkValues.value = values
+            emit("change", unref(checkValues))
+        }
+
+        // 当前选中节点变化时触发的事件
+        function handleCheckChange(_: Recordable, isCheck: boolean) {
+            checkType.value = isCheck
+        }
+
+        // 获取点击对象的所有子节点
+        function getTreeNode(
+            node: Recordable | Recordable[],
+            ids: number[] = []
+        ): number[] {
+            const { valueField, childField } = props
+            // 如果是数组
+            if (Array.isArray(node)) {
+                node.forEach(item => {
+                    getTreeNode(item, ids)
+                })
+            } else {
+                ids.push(node[valueField])
+                if (node[childField] && node[childField].length != 0)
+                    getTreeNode(node[childField], ids)
+            }
+
+            return ids
         }
 
         function setCheckedKeys(values: number[] | string[]) {
-            console.log("values",values)
             nextTick(() => {
                 treeRef.value!.setCheckedKeys(values, false)
             })
@@ -155,6 +192,7 @@ export default defineComponent({
             treeRef,
             getOptions,
             getTreeOptions,
+            handleCheck,
             handleCheckChange,
             setCheckedKeys,
             resetChecked,

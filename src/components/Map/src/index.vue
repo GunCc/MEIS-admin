@@ -1,6 +1,6 @@
 <template>
     <div ref="wrapRef" v-bind="getMapAttr">
-        {{ success ? "地图加载成功" : "地图加载失败" }}
+        {{ success ? "" : "地图加载失败" }}
     </div>
 </template>
 <script lang="ts">

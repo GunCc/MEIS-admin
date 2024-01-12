@@ -8,6 +8,7 @@ import { clone } from "lodash"
 import { PropType } from "vue"
 import { getList as getAllList } from "@/api/v1/system/menu"
 import { error } from "@/utils/log"
+import { userStore } from "@/store/modules/user"
 export default defineComponent({
     name: "RoleBindMenusModalForm",
     components: { BasicForm },
@@ -18,6 +19,8 @@ export default defineComponent({
         },
     },
     setup(props, { emit }) {
+        const useUserApp = userStore()
+
         const [registerForm, { setFieldsValue }] = useForm({
             validateOnSubmit: false,
             labelWidth: "50px",
@@ -54,6 +57,8 @@ export default defineComponent({
                 let form = clone(values)
                 form.role_id = row.role_id
                 await bindRoleMenus(form)
+                // 操作完要更新路由信息
+                await useUserApp.handleLoginAfter(false)
                 emit("success-submit")
             } catch (err) {
                 error(err as string)
