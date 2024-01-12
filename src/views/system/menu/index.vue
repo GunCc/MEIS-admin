@@ -57,7 +57,7 @@ import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
 import { getList, removeMenu } from "@/api/v1/system/menu"
 import { TableColumnAction } from "@c/TableAction"
-import { cloneDeep, isFunction, keys, pick } from "lodash"
+import { isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
 import ModalForm from "./ModalForm.vue"
 import { error } from "@/utils/log"
@@ -90,11 +90,21 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
     visible.value = !!values.visible
 }
 
+const handleGetSource = computed(() => {
+    let values = getTableDataSource()
+    return [
+        {
+            id: 0,
+            name: "一级菜单",
+        },
+        ...values,
+    ]
+})
+
 const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
     title: "菜单管理",
     api: getList,
     immediate: true,
-    defaultExpandAll: true,
     formSettings: {
         schemas: [
             {
@@ -149,7 +159,7 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
             prop: "path",
             label: "路径",
             canViald: true,
-            width: 120,
+            width: 140,
         },
         {
             prop: "component",
@@ -192,7 +202,6 @@ const [register, { getVialdColumn, reload, getTableDataSource }] = useTable({
             canViald: true,
             width: 150,
             noShowInTable: true,
-
         },
         {
             prop: "meta.keepAlive",
@@ -260,14 +269,14 @@ const actionRemoveSetting = computed(() => {
     }
 })
 
-function handleGetSource(): Recordable[] {
-    const values = cloneDeep(getTableDataSource())
-    values.unshift({
-        id: 0,
-        name: "一级菜单",
-    })
-    return values
-}
+// function handleGetSource(): Recordable[] {
+//     const values = cloneDeep(getTableDataSource())
+//     values.unshift({
+//         id: 0,
+//         name: "一级菜单",
+//     })
+//     return values
+// }
 
 async function handleActionDelete(row) {
     try {

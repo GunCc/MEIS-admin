@@ -14,4 +14,6 @@ export interface TableActions {
     getTableDataSource: () => Recordable[]
     // 返回获取表格数据对象
     getTableRawDataSource: () => Recordable
+    // 返回表格数据的Ref对象
+    // getDataSource: () => ComputedRef<Recordable[]> | 
 }

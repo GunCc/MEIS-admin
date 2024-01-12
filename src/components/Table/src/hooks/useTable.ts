@@ -43,6 +43,9 @@ export function useTable(props?: BasicTableProps): UseRegisterContext {
         getTableRawDataSource(): Recordable {
             return getTableEl()?.getTableRawDataSource() || {}
         },
+        // getDataSource(): ComputedRef<Recordable[]> | undefined {
+        //     return getTableEl()?.getDataSource()
+        // },
     }
 
     return [register, actions]

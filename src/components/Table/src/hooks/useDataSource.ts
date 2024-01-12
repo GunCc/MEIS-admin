@@ -33,7 +33,7 @@ export function useDataSource({
         if (!dataSource || dataSource.length === 0) {
             return unref(dataSourceRef)
         }
-        return unref(dataSourceRef)
+        return unref(dataSourceRef) as Recordable[]
     })
 
     // 获取表格内容

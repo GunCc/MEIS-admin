@@ -88,7 +88,6 @@ export default defineComponent({
             let hiddenValue = await getFormField("hidden")
             let keepAliveValue = await getFormField("meta%keepAlive")
             let affixValue = await getFormField("meta%affix")
-            console.log("affixValue", affixValue)
             hiddenSwitchValue.value = props.row != "create" ? hiddenValue : true
             affixSwitchValue.value =
                 props.row != "create" ? !!affixValue : false

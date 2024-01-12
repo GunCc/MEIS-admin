@@ -1,5 +1,10 @@
 <template>
-    <el-cascader v-bind="getCascaderOptions" v-model="state" @change="handleChange"> </el-cascader>
+    <el-cascader
+        v-bind="getCascaderOptions"
+        v-model="state"
+        @change="handleChange"
+    >
+    </el-cascader>
 </template>
 <script lang="ts">
 import { propTypes } from "@/utils/propTypes"
@@ -55,7 +60,7 @@ export default defineComponent({
         // 如果不是请求 -- 数据源
         dataSource: {
             type: [Array, Function] as PropType<
-                Recordable[] | (() => Recordable[])
+                Recordable[] | (() => Recordable[]) | Ref<Recordable[]>
             >,
             default: () => [],
         },
@@ -64,7 +69,7 @@ export default defineComponent({
         const options = ref<Recordable[]>([])
         const emitData = ref<any[]>([])
 
-        const [state] = useFormItem(props,"value","change",emitData)
+        const [state] = useFormItem(props, "value", "change", emitData)
 
         // 获取options数据
         const getOptions = computed(() => {
@@ -95,7 +100,7 @@ export default defineComponent({
         }
 
         // 联级选择器
-        function handleChange(value: CascaderValue){
+        function handleChange(value: CascaderValue) {
             console.log(value)
         }
 
@@ -115,8 +120,11 @@ export default defineComponent({
             () => {
                 const { dataSource, api } = props
                 if (isFunction(api)) return
+
                 options.value = isFunction(dataSource)
                     ? dataSource()
+                    : isRef(dataSource)
+                    ? unref(dataSource)
                     : dataSource
             },
             {
@@ -126,6 +134,7 @@ export default defineComponent({
         )
 
         onMounted(() => {
+            console.log("onMounted")
             useTimeoutFn(() => {
                 const { immediate, api } = props
                 immediate && isFunction(api) && fetch()
