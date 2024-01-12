@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^2.1.0",
+    "@tinymce/tinymce-vue": "^5.1.1",
     "@vitejs/plugin-vue-jsx": "^3.0.2",
     "@vue/cli-service": "^5.0.8",
     "axios": "^1.5.1",
@@ -16,6 +17,8 @@
     "element-plus": "^2.3.14",
     "nprogress": "^0.2.0",
     "pinia": "^2.1.4",
+    "tinymce": "^6.8.2",
+    "vditor": "^3.9.8",
     "vue": "^3.3.4",
     "vue-router": "^4.0.3",
     "vue-types": "^5.1.1"

@@ -1,10 +1,10 @@
 <template>
-    <div>
+    <el-scrollbar ref="scrollbarRef" class="layout-menu">
         <BasicMenu
-            class="layout-menu border-right border-gray-100 dark:border-gray-500 border-solid"
+            class="border-right border-gray-100 dark:border-gray-500 border-solid"
             v-bind="getProps"
         />
-    </div>
+    </el-scrollbar>
 </template>
 <script lang="ts">
 import { menuStore } from "@/store/modules/menu"
@@ -32,6 +32,7 @@ export default defineComponent({
 .layout-menu {
     width: 220px;
     height: calc(100vh - 3rem);
+    overflow: hidden;
     .el-menu {
         border: none !important;
     }
