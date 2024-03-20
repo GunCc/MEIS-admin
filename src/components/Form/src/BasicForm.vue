@@ -50,7 +50,7 @@ import { basicProps } from "./props"
 import { NEXT_DEFAULT_BYTE, NEXT_FORMAT_DEFAULT_BYTE } from "../const"
 export default defineComponent({
     name: "BasicForm",
-    emits: ["register", "reset", "submit","enter-press"],
+    emits: ["register", "reset", "submit", "enter-press"],
     components: {
         FormItem,
         FormActionItem,
@@ -63,9 +63,11 @@ export default defineComponent({
         const innerFormProps = ref<Partial<BasicFormProps>>({})
         // 默认时候的表单
         const defaultValueRef = ref<Recordable>({})
+        // form表单绑定的数据
+        const formModel = reactive<Recordable>({})
 
+        
         // 获取配置
-
         const getProps = computed(() => {
             return {
                 ...attrs,
@@ -73,8 +75,6 @@ export default defineComponent({
                 ...unref(innerFormProps),
             } as BasicFormProps
         })
-        // form表单绑定的数据
-        const formModel = reactive<Recordable>({})
 
         const getSchema = computed(() => {
             let { schemas = [] } = unref(getProps)

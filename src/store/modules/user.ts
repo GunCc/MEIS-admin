@@ -40,6 +40,8 @@ export const userStore = defineStore({
         },
         async handleLogin(params: Login) {
             try {
+
+                
                 const res = await login(params)
                 const { token } = res
                 this.setToken(token)
