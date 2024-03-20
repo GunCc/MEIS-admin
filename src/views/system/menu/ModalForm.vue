@@ -61,8 +61,8 @@ export default defineComponent({
                     typeof form.p_id == "number"
                         ? form.p_id
                         : form.p_id[form.p_id.length - 1]
-                form.hidden = unref(hiddenSwitchValue)
-                form.meta.keepAlive = unref(keepAliveSwitchValue)
+                form.hidden = !!unref(hiddenSwitchValue) 
+                form.meta.keepAlive = !!unref(keepAliveSwitchValue)
                 form.meta.affix = unref(affixSwitchValue)
                 await api(form)
                 // 操作完要更新路由信息

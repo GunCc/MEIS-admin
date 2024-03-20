@@ -27,20 +27,22 @@ function formatRouter(menus: Menu[]): AppRouteRecordRaw[] {
     let arr: AppRouteRecordRaw[] = []
     menus &&
         menus.forEach(item => {
-            let route: AppRouteRecordRaw = {
-                name: item.name,
-                path: item.path,
-                redirect: item.redirect,
-                meta: {
-                    ...(item.meta || {}),
-                    sort: 50,
-                    title: item.meta.title,
-                },
-                component: item.component,
+            if (item.hidden) {
+                let route: AppRouteRecordRaw = {
+                    name: item.name,
+                    path: item.path,
+                    redirect: item.redirect,
+                    meta: {
+                        ...(item.meta || {}),
+                        sort: 50,
+                        title: item.meta.title,
+                    },
+                    component: item.component,
+                }
+                if (item.children && item.children.length != 0)
+                    route.children = formatRouter(item.children)
+                arr.push(route)
             }
-            if (item.children && item.children.length != 0)
-                route.children = formatRouter(item.children)
-            arr.push(route)
         })
     return arr
 }
@@ -109,6 +111,7 @@ export const menuStore = defineStore({
         },
         // 生成菜单
         async genMenu() {
+            console.log("this.defaultRouter", this.defaultRouter)
             let menus = genLayoutMenus(this.defaultRouter)
             this.setMenus(menus)
         },
