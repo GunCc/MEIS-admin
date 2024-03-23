@@ -8,6 +8,15 @@ export function getList(params: BaseListRequest) {
         params,
     })
 }
+export function getAllList() {
+    return MEIS_http.post({
+        url: getUrl("/getList"),
+        params: {
+            page: 1,
+            pageSize: 999,
+        },
+    })
+}
 
 export function removePersonnel(params: GetById) {
     return MEIS_http.post({
@@ -24,14 +33,6 @@ export function createPersonnel(params: GetById) {
 }
 
 export function updatePersonnel(params: GetById) {
-    return MEIS_http.post({
-        url: getUrl("/update"),
-        params,
-    })
-}
-
-
-export function getInfo(params: GetById) {
     return MEIS_http.post({
         url: getUrl("/update"),
         params,

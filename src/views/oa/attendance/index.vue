@@ -6,14 +6,8 @@
                     添加
                 </el-button>
             </template>
-            <template #role_ids="{ row }">
-                {{ row.roles.map(item => item.comment).join(",") }}
-            </template>
-            <template #enable="{ row }">
-                <el-switch
-                    :model-value="row.enable ? true : false"
-                    @change="bool => handleTableSwitch(bool, row)"
-                ></el-switch>
+            <template #personnel_id="{ row }">
+                {{row.personnel.name}}
             </template>
             <template #action="{ row }">
                 <TableColumnAction
@@ -28,13 +22,6 @@
                             @click="handleEditAttendance(value)"
                         >
                             编辑
-                        </el-button>
-                        <el-button
-                            type="warning"
-                            size="small"
-                            @click="handleResetPasswordUser(value)"
-                        >
-                            重置密码
                         </el-button>
                     </template>
                 </TableColumnAction>
@@ -59,13 +46,13 @@ import { PageWrapper } from "@c/PageWrapper/index"
 import {
     getList,
     removeAttendance,
-    updateAttendance,
 } from "@/api/v1/oa/attendance"
+import { getAllList } from "@/api/v1/oa/personnel"
 import { TableColumnAction } from "@c/TableAction"
 import { isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
+
 import ModalForm from "./ModalForm.vue"
-import { clone } from "lodash"
 import { error } from "@/utils/log"
 interface ModalProps {
     title: string
@@ -114,29 +101,30 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "uuid",
-            label: "uuid",
-            width: 300,
-        },
-        {
-            prop: "email",
-            label: "邮箱",
-            canViald: true,
-            width: 220,
-        },
-        {
-            prop: "nickname",
-            label: "昵称",
-            canViald: true,
-            width: 100,
-        },
-        {
-            prop: "enable",
-            label: "是否冻结",
+            prop: "personnel_id",
+            label: "员工",
             canViald: true,
             columnToForm: {
-                slot: "enable",
+                component: "Select",
+                componentProps: {
+                    api: getAllList,
+                    immediate: true,
+                    labelField: "name",
+                    valueField: "id",
+                },
             },
+        },
+        {
+            prop: "work",
+            label: "应出勤天数",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "working",
+            label: "实际出勤",
+            width: 260,
+            canViald: true,
         },
         {
             prop: "created_at",
@@ -160,7 +148,7 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.nickname}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.personnel.name}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
@@ -172,12 +160,6 @@ async function handleActionDelete(row) {
     } catch (err) {
         error(err as string)
     }
-}
-
-function passwordVaild(_: any, __: any, callback: any) {
-    setTimeout(() => {
-        callback(new Error("Please input digits"))
-    }, 100)
 }
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
@@ -195,34 +177,6 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
                 : "",
         }
     }) as FormItemSchemas[]
-    schemas.push(
-        ...([
-            {
-                label: `${row ? "修改" : ""}密码`,
-                field: "password",
-                defaultValue: "",
-                rules: [{ validator: passwordVaild, message: "密码不一致" }],
-                componentProps: {
-                    type: "password",
-                    placeholder: `如果要${row ? "修改" : ""}密码请输入你的密码`,
-                    showPassword: true,
-                    validateEvent: false,
-                },
-            },
-            {
-                label: "确认密码",
-                field: "passwords",
-                defaultValue: "",
-                rules: [{ validator: passwordVaild, message: "密码不一致" }],
-                componentProps: {
-                    type: "password",
-                    placeholder: "请再次输入你的密码",
-                    showPassword: true,
-                    validateEvent: false,
-                },
-            },
-        ] as FormItemSchemas[])
-    )
 
     return schemas
 }
@@ -245,23 +199,6 @@ function handleCreateAttendance() {
     })
     nextTick(() => {})
 }
-
-// 表格switch变化
-async function handleTableSwitch(bool, row) {
-    try {
-        let enable = bool ? 1 : 0
-        if (enable == row.enable) return
-        let form = {
-            ...clone(row),
-            enable,
-        }
-        await updateAttendance(form)
-        reload()
-    } catch (err) {
-        error(err as string)
-    }
-}
-
 
 function handleSuccessSubmit() {
     setModalValue({

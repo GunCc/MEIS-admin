@@ -88,6 +88,30 @@ export class CustomAxios {
         return this.request({ ...config, method: "POST" }, options)
     }
 
+    // 封装的post
+    get<T = any>(
+        config: AxiosRequestConfig,
+        options?: AxiosOtherConfig
+    ): Promise<T> {
+        return this.request({ ...config, method: "GET" }, options)
+    }
+
+    // 封装的post
+    put<T = any>(
+        config: AxiosRequestConfig,
+        options?: AxiosOtherConfig
+    ): Promise<T> {
+        return this.request({ ...config, method: "PUT" }, options)
+    }
+
+    // 封装的post
+    delete<T = any>(
+        config: AxiosRequestConfig,
+        options?: AxiosOtherConfig
+    ): Promise<T> {
+        return this.request({ ...config, method: "Delete" }, options)
+    }
+
     // 上传文件
     async uploadFile(res: AxiosResponse<Result>, options?: AxiosOtherConfig) {
         const { afterResponse } = this.getTransform() || {}

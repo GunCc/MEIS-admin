@@ -30,14 +30,6 @@ export function updateAttendance(params: GetById) {
     })
 }
 
-
-export function getInfo(params: GetById) {
-    return MEIS_http.post({
-        url: getUrl("/update"),
-        params,
-    })
-}
-
 function getUrl(url: string) {
     return "/oa/attendance" + url
 }

@@ -6,7 +6,7 @@
     </basic-form>
 </template>
 <script lang="ts">
-import { updateUser, registerUser } from "@/api/v1/system/user"
+import { updatePersonnel, createPersonnel } from "@/api/v1/oa/personnel"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
@@ -53,7 +53,7 @@ export default defineComponent({
             try {
                 let form = clone(values)
                 const isObj = isObject(row)
-                const api = isObj ? updateUser : registerUser
+                const api = isObj ? updatePersonnel : createPersonnel
                 form = {
                     ...(isObj && row),
                     ...form,
@@ -71,7 +71,6 @@ export default defineComponent({
             } catch (err) {
                 error(err as string)
             }
-
         }
 
         function clearForm() {

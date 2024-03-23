@@ -2,18 +2,18 @@
     <PageWrapper>
         <basic-table @register="register">
             <template #action-before>
-                <el-button type="success" @click="handleCreateUser">
+                <el-button type="success" @click="handleCreateTrain">
                     添加
                 </el-button>
             </template>
-            <template #role_ids="{ row }">
-                {{ row.roles.map(item => item.comment).join(",") }}
-            </template>
-            <template #enable="{ row }">
+            <template #is_apart="{ row }">
                 <el-switch
-                    :model-value="row.enable ? true : false"
+                    :model-value="row.is_apart ? true : false"
                     @change="bool => handleTableSwitch(bool, row)"
                 ></el-switch>
+            </template>
+            <template #personnel_id="{ row }">
+                {{ row.personnel.name }}
             </template>
             <template #action="{ row }">
                 <TableColumnAction
@@ -25,16 +25,9 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="handleEditUser(value)"
+                            @click="handleEditTrain(value)"
                         >
                             编辑
-                        </el-button>
-                        <el-button
-                            type="warning"
-                            size="small"
-                            @click="handleResetPasswordUser(value)"
-                        >
-                            重置密码
                         </el-button>
                     </template>
                 </TableColumnAction>
@@ -56,20 +49,13 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import {
-    getList,
-    removeUser,
-    updateUser,
-    resetUserPassword,
-} from "@/api/v1/system/user"
-import { getAllList } from "@/api/v1/system/role"
+import { getList, removeTrain, updateTrain } from "@/api/v1/oa/train"
+import { getAllList } from "@/api/v1/oa/personnel"
 import { TableColumnAction } from "@c/TableAction"
-import { isFunction, keys, pick } from "lodash"
+import { clone, isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
-import { clone } from "lodash"
-import { useWarnMessage } from "@/components/Modal"
 import { error } from "@/utils/log"
 interface ModalProps {
     title: string
@@ -101,7 +87,7 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
 }
 
 const [register, { getVialdColumn, reload }] = useTable({
-    title: "用户管理",
+    title: "培训管理",
     api: getList,
     immediate: true,
     formSettings: {
@@ -118,52 +104,45 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "uuid",
-            label: "uuid",
-            width: 300,
-        },
-        {
-            prop: "email",
-            label: "邮箱",
+            prop: "personnel_id",
+            label: "培训人员",
             canViald: true,
-            width: 220,
-        },
-        {
-            prop: "nickname",
-            label: "昵称",
-            canViald: true,
-            width: 100,
-        },
-        {
-            prop: "role_ids",
-            label: "角色",
-            canViald: true,
-            width: 150,
             columnToForm: {
                 component: "Select",
-
-                formatDefault: row => {
-                    if (!row) return []
-                    return row.roles.map(item => item.role_id)
-                },
                 componentProps: {
                     api: getAllList,
                     immediate: true,
                     labelField: "name",
-                    valueField: "role_id",
-                    selectOptions: {
-                        multiple: true,
-                    },
+                    valueField: "id",
                 },
             },
         },
         {
-            prop: "enable",
-            label: "是否冻结",
+            prop: "train_name",
+            label: "培训名称",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "train_desc",
+            label: "培训说明",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "is_apart",
+            label: "是否参加",
+            width: 100,
             canViald: true,
             columnToForm: {
-                slot: "enable",
+                slot: "is_apart",
             },
+        },
+        {
+            prop: "reason",
+            label: "原因",
+            width: 260,
+            canViald: true,
         },
         {
             prop: "created_at",
@@ -187,24 +166,18 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.nickname}用户吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.personnel.name}培训吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
 
 async function handleActionDelete(row) {
     try {
-        await removeUser(row)
+        await removeTrain(row)
         reload()
     } catch (err) {
         error(err as string)
     }
-}
-
-function passwordVaild(_: any, __: any, callback: any) {
-    setTimeout(() => {
-        callback(new Error("Please input digits"))
-    }, 100)
 }
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
@@ -222,94 +195,43 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
                 : "",
         }
     }) as FormItemSchemas[]
-    schemas.push(
-        ...([
-            {
-                label: `${row ? "修改" : ""}密码`,
-                field: "password",
-                defaultValue: "",
-                rules: [{ validator: passwordVaild, message: "密码不一致" }],
-                componentProps: {
-                    type: "password",
-                    placeholder: `如果要${row ? "修改" : ""}密码请输入你的密码`,
-                    showPassword: true,
-                    validateEvent: false,
-                },
-            },
-            {
-                label: "确认密码",
-                field: "passwords",
-                defaultValue: "",
-                rules: [{ validator: passwordVaild, message: "密码不一致" }],
-                componentProps: {
-                    type: "password",
-                    placeholder: "请再次输入你的密码",
-                    showPassword: true,
-                    validateEvent: false,
-                },
-            },
-        ] as FormItemSchemas[])
-    )
 
     return schemas
-}
-
-function handleEditUser(row) {
-    setModalValue({
-        visible: true,
-        title: "编辑用户",
-        row,
-        schema: getSchema(row),
-    })
-    nextTick(() => {
-        // unref(ModalFormElRef).setFieldsValue({
-        //     role_ids: row.roles.map(item => item.id),
-        // })
-    })
-}
-
-function handleCreateUser() {
-    setModalValue({
-        visible: true,
-        title: "创建用户",
-        row: "create",
-        schema: getSchema(),
-    })
-    nextTick(() => {})
 }
 
 // 表格switch变化
 async function handleTableSwitch(bool, row) {
     try {
-        let enable = bool ? 1 : 0
-        if (enable == row.enable) return
+        let is_apart = bool ? 1 : 0
+        if (is_apart == row.is_apart) return
         let form = {
             ...clone(row),
-            enable,
+            is_apart,
         }
-        await updateUser(form)
+        await updateTrain(form)
         reload()
     } catch (err) {
         error(err as string)
     }
 }
 
-// 重置密码
-function handleResetPasswordUser(row) {
-    useWarnMessage({
-        context: `您确定重置该用户(${row.nickname})密码嘛？`,
-        successFn: async () => {
-            try {
-                let form = {
-                    ...clone(row),
-                }
-                await resetUserPassword(form)
-                reload()
-            } catch (err) {
-                error(err as string)
-            }
-        },
+function handleEditTrain(row) {
+    setModalValue({
+        visible: true,
+        title: "编辑培训",
+        row,
+        schema: getSchema(row),
     })
+}
+
+function handleCreateTrain() {
+    setModalValue({
+        visible: true,
+        title: "创建培训",
+        row: "create",
+        schema: getSchema(),
+    })
+    nextTick(() => {})
 }
 
 function handleSuccessSubmit() {

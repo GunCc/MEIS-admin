@@ -261,11 +261,6 @@ function handleEditUser(row) {
         row,
         schema: getSchema(row),
     })
-    nextTick(() => {
-        // unref(ModalFormElRef).setFieldsValue({
-        //     role_ids: row.roles.map(item => item.id),
-        // })
-    })
 }
 
 function handleCreateUser() {
@@ -275,7 +270,6 @@ function handleCreateUser() {
         row: "create",
         schema: getSchema(),
     })
-    nextTick(() => {})
 }
 
 // 表格switch变化

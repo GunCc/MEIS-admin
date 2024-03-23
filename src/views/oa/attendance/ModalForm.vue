@@ -1,22 +1,15 @@
 <template>
-    <basic-form @register="registerForm" @submit="handleSubmit">
-        <template #enable>
-            <el-switch v-model="enableValue"></el-switch>
-        </template>
-    </basic-form>
+    <basic-form @register="registerForm" @submit="handleSubmit"> </basic-form>
 </template>
 <script lang="ts">
-import {
-    createAttendance,
-    updateAttendance,
-} from "@/api/v1/oa/attendance"
+import { createAttendance, updateAttendance } from "@/api/v1/oa/attendance"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
 import { PropType } from "vue"
 import { error } from "@/utils/log"
 export default defineComponent({
-    name: "ModelAttendanceForm",
+    name: "ModelUserForm",
     components: { BasicForm },
     props: {
         row: {
@@ -41,13 +34,12 @@ export default defineComponent({
                 resetFields,
                 setFormSchemas,
                 getFormField,
-                validateField,
                 clearValidate,
                 setFieldsValue,
             },
         ] = useForm({
             validateOnSubmit: false,
-            labelWidth: "80px",
+            labelWidth: "130px",
             submitOnReset: false,
         })
 
@@ -61,20 +53,12 @@ export default defineComponent({
                     ...(isObj && row),
                     ...form,
                 }
-                form.enable = unref(enableValue) ? 1 : 0
-                if (
-                    (form.password || form.passwords) &&
-                    form.password != form.passwords
-                ) {
-                    await validateField(["password", "passwords"])
-                }
                 await api(form)
                 clearForm()
                 emit("success-submit")
             } catch (err) {
                 error(err as string)
             }
-
         }
 
         function clearForm() {
