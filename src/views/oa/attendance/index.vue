@@ -84,7 +84,7 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
 }
 
 const [register, { getVialdColumn, reload }] = useTable({
-    title: "员工管理",
+    title: "考勤管理",
     api: getList,
     immediate: true,
     formSettings: {
@@ -102,7 +102,7 @@ const [register, { getVialdColumn, reload }] = useTable({
     column: [
         {
             prop: "personnel_id",
-            label: "员工",
+            label: "考勤",
             canViald: true,
             columnToForm: {
                 component: "Select",
@@ -148,7 +148,7 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.personnel.name}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.personnel.name}考勤吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
@@ -184,7 +184,7 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
 function handleEditAttendance(row) {
     setModalValue({
         visible: true,
-        title: "编辑员工",
+        title: "编辑考勤",
         row,
         schema: getSchema(row),
     })
@@ -193,7 +193,7 @@ function handleEditAttendance(row) {
 function handleCreateAttendance() {
     setModalValue({
         visible: true,
-        title: "创建员工",
+        title: "创建考勤",
         row: "create",
         schema: getSchema(),
     })

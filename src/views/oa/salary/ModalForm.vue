@@ -1,12 +1,8 @@
 <template>
-    <basic-form @register="registerForm" @submit="handleSubmit">
-        <template #enable>
-            <el-switch v-model="enableValue"></el-switch>
-        </template>
-    </basic-form>
+    <basic-form @register="registerForm" @submit="handleSubmit"> </basic-form>
 </template>
 <script lang="ts">
-import { updatePersonnel, createPersonnel } from "@/api/v1/oa/personnel"
+import { createSalary, updateSalary } from "@/api/v1/oa/salary"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
@@ -38,13 +34,12 @@ export default defineComponent({
                 resetFields,
                 setFormSchemas,
                 getFormField,
-                validateField,
                 clearValidate,
                 setFieldsValue,
             },
         ] = useForm({
             validateOnSubmit: false,
-            labelWidth: "80px",
+            labelWidth: "130px",
             submitOnReset: false,
         })
 
@@ -53,17 +48,10 @@ export default defineComponent({
             try {
                 let form = clone(values)
                 const isObj = isObject(row)
-                const api = isObj ? updatePersonnel : createPersonnel
+                const api = isObj ? updateSalary : createSalary
                 form = {
                     ...(isObj && row),
                     ...form,
-                }
-                form.enable = unref(enableValue) ? 1 : 0
-                if (
-                    (form.password || form.passwords) &&
-                    form.password != form.passwords
-                ) {
-                    await validateField(["password", "passwords"])
                 }
                 await api(form)
                 clearForm()

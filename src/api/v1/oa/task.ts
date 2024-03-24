@@ -33,7 +33,7 @@ export function updateTask(params: GetById) {
 
 export function getInfo(params: GetById) {
     return MEIS_http.post({
-        url: getUrl("/update"),
+        url: getUrl("/getInfo"),
         params,
     })
 }

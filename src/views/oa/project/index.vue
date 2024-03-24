@@ -46,11 +46,7 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import {
-    getList,
-    removePersonnel,
-    updatePersonnel,
-} from "@/api/v1/oa/personnel"
+import { getList, removeProject, updateProject } from "@/api/v1/oa/project"
 import { TableColumnAction } from "@c/TableAction"
 import { isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
@@ -88,7 +84,7 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
 }
 
 const [register, { getVialdColumn, reload }] = useTable({
-    title: "员工管理",
+    title: "项目管理",
     api: getList,
     immediate: true,
     formSettings: {
@@ -105,30 +101,27 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "name",
-            label: "姓名",
+            prop: "project_name",
+            label: "项目名",
             width: 260,
             canViald: true,
         },
         {
-            prop: "phone",
-            label: "手机号",
+            prop: "project_desc",
+            label: "项目描述",
             width: 260,
             canViald: true,
         },
         {
-            prop: "email",
-            label: "邮箱",
+            prop: "end_time",
+            label: "结束时间",
             canViald: true,
-            width: 220,
-        },
-
-        {
-            prop: "status",
-            label: "是否在职",
-            canViald: true,
+            width: 260,
             columnToForm: {
-                slot: "status",
+                component: "DatePicker",
+                componentProps: {
+                    type: "datetime",
+                },
             },
         },
         {
@@ -153,20 +146,19 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.nickname}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.project_name}项目吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
 
 async function handleActionDelete(row) {
     try {
-        await removePersonnel(row)
+        await removeProject(row)
         reload()
     } catch (err) {
         error(err as string)
     }
 }
-
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {
@@ -190,7 +182,7 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
 function handleEditUser(row) {
     setModalValue({
         visible: true,
-        title: "编辑员工",
+        title: "编辑项目",
         row,
         schema: getSchema(row),
     })
@@ -199,7 +191,7 @@ function handleEditUser(row) {
 function handleCreateUser() {
     setModalValue({
         visible: true,
-        title: "创建员工",
+        title: "创建项目",
         row: "create",
         schema: getSchema(),
     })
@@ -215,7 +207,7 @@ async function handleTableSwitch(bool, row) {
             ...clone(row),
             status,
         }
-        await updatePersonnel(form)
+        await updateProject(form)
         reload()
     } catch (err) {
         error(err as string)

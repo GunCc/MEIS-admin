@@ -9,6 +9,16 @@ export function getList(params: BaseListRequest) {
     })
 }
 
+export function getAllList() {
+    return MEIS_http.post({
+        url: getUrl("/getList"),
+        params: {
+            page: 1,
+            pageSize: 999,
+        },
+    })
+}
+
 export function removeProject(params: GetById) {
     return MEIS_http.post({
         url: getUrl("/remove"),
@@ -29,7 +39,6 @@ export function updateProject(params: GetById) {
         params,
     })
 }
-
 
 export function getInfo(params: GetById) {
     return MEIS_http.post({

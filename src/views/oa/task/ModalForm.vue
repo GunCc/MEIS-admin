@@ -1,12 +1,12 @@
 <template>
     <basic-form @register="registerForm" @submit="handleSubmit">
-        <template #enable>
+        <template #status>
             <el-switch v-model="enableValue"></el-switch>
         </template>
     </basic-form>
 </template>
 <script lang="ts">
-import { updatePersonnel, createPersonnel } from "@/api/v1/oa/personnel"
+import { createTask, updateTask } from "@/api/v1/oa/task"
 import { FormItemSchemas } from "@/components/Form/src/types/form"
 import { BasicForm, useForm } from "@c/Form"
 import { clone, isObject } from "lodash"
@@ -38,13 +38,12 @@ export default defineComponent({
                 resetFields,
                 setFormSchemas,
                 getFormField,
-                validateField,
                 clearValidate,
                 setFieldsValue,
             },
         ] = useForm({
             validateOnSubmit: false,
-            labelWidth: "80px",
+            labelWidth: "160px",
             submitOnReset: false,
         })
 
@@ -53,18 +52,12 @@ export default defineComponent({
             try {
                 let form = clone(values)
                 const isObj = isObject(row)
-                const api = isObj ? updatePersonnel : createPersonnel
+                const api = isObj ? updateTask : createTask
                 form = {
                     ...(isObj && row),
                     ...form,
                 }
-                form.enable = unref(enableValue) ? 1 : 0
-                if (
-                    (form.password || form.passwords) &&
-                    form.password != form.passwords
-                ) {
-                    await validateField(["password", "passwords"])
-                }
+                form.status = unref(enableValue) ? 1 : 0
                 await api(form)
                 clearForm()
                 emit("success-submit")
@@ -81,7 +74,8 @@ export default defineComponent({
         async function init() {
             clearValidate()
             setFormSchemas(props.schemaSetting)
-            enableValue.value = !!(await getFormField("enable"))
+            let row = props.row as Recordable
+            enableValue.value = !!row?.status
         }
 
         watch(

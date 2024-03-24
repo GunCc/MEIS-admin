@@ -2,15 +2,16 @@
     <PageWrapper>
         <basic-table @register="register">
             <template #action-before>
-                <el-button type="success" @click="handleCreateUser">
+                <el-button type="success" @click="handleCreateAttendance">
                     添加
                 </el-button>
             </template>
-            <template #status="{ row }">
-                <el-switch
-                    :model-value="row.status ? true : false"
-                    @change="bool => handleTableSwitch(bool, row)"
-                ></el-switch>
+            <template #payslip_send="{ row }">
+                {{ row.payslip_send ? "是" : "否" }}
+            </template>
+
+            <template #personnel_id="{ row }">
+                {{ row.personnel.name }}
             </template>
             <template #action="{ row }">
                 <TableColumnAction
@@ -22,7 +23,7 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="handleEditUser(value)"
+                            @click="handleEditAttendance(value)"
                         >
                             编辑
                         </el-button>
@@ -46,17 +47,13 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import {
-    getList,
-    removePersonnel,
-    updatePersonnel,
-} from "@/api/v1/oa/personnel"
+import { getList, removeSalary } from "@/api/v1/oa/salary"
+import { getAllList } from "@/api/v1/oa/personnel"
 import { TableColumnAction } from "@c/TableAction"
 import { isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
-import { clone } from "lodash"
 import { error } from "@/utils/log"
 interface ModalProps {
     title: string
@@ -88,7 +85,7 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
 }
 
 const [register, { getVialdColumn, reload }] = useTable({
-    title: "员工管理",
+    title: "薪资管理",
     api: getList,
     immediate: true,
     formSettings: {
@@ -105,31 +102,41 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "name",
-            label: "姓名",
-            width: 260,
-            canViald: true,
-        },
-        {
-            prop: "phone",
-            label: "手机号",
-            width: 260,
-            canViald: true,
-        },
-        {
-            prop: "email",
-            label: "邮箱",
-            canViald: true,
-            width: 220,
-        },
-
-        {
-            prop: "status",
-            label: "是否在职",
+            prop: "personnel_id",
+            label: "薪资",
             canViald: true,
             columnToForm: {
-                slot: "status",
+                component: "Select",
+                componentProps: {
+                    api: getAllList,
+                    immediate: true,
+                    labelField: "name",
+                    valueField: "id",
+                },
             },
+        },
+        {
+            prop: "base_salary",
+            label: "基本薪资",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "wage_salary",
+            label: "绩效薪资",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "social_security",
+            label: "社保",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "payslip_send",
+            label: "是否发放工资",
+            width: 260,
         },
         {
             prop: "created_at",
@@ -153,20 +160,19 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.nickname}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.personnel.name}薪资吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
 
 async function handleActionDelete(row) {
     try {
-        await removePersonnel(row)
+        await removeSalary(row)
         reload()
     } catch (err) {
         error(err as string)
     }
 }
-
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {
@@ -187,39 +193,23 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
     return schemas
 }
 
-function handleEditUser(row) {
+function handleEditAttendance(row) {
     setModalValue({
         visible: true,
-        title: "编辑员工",
+        title: "编辑薪资",
         row,
         schema: getSchema(row),
     })
 }
 
-function handleCreateUser() {
+function handleCreateAttendance() {
     setModalValue({
         visible: true,
-        title: "创建员工",
+        title: "创建薪资",
         row: "create",
         schema: getSchema(),
     })
     nextTick(() => {})
-}
-
-// 表格switch变化
-async function handleTableSwitch(bool, row) {
-    try {
-        let status = bool ? 1 : 0
-        if (status == row.status) return
-        let form = {
-            ...clone(row),
-            status,
-        }
-        await updatePersonnel(form)
-        reload()
-    } catch (err) {
-        error(err as string)
-    }
 }
 
 function handleSuccessSubmit() {

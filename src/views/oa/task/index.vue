@@ -2,9 +2,15 @@
     <PageWrapper>
         <basic-table @register="register">
             <template #action-before>
-                <el-button type="success" @click="handleCreateUser">
+                <el-button type="success" @click="handleCreateAttendance">
                     添加
                 </el-button>
+            </template>
+            <template #personnel_id="{ row }">
+                {{ row.personnel.name }}
+            </template>
+            <template #project_id="{ row }">
+                {{ row.project.project_name }}
             </template>
             <template #status="{ row }">
                 <el-switch
@@ -22,7 +28,7 @@
                         <el-button
                             type="primary"
                             size="small"
-                            @click="handleEditUser(value)"
+                            @click="handleEditAttendance(value)"
                         >
                             编辑
                         </el-button>
@@ -46,17 +52,14 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import {
-    getList,
-    removePersonnel,
-    updatePersonnel,
-} from "@/api/v1/oa/personnel"
+import { getList, removeTask, updateTask } from "@/api/v1/oa/task"
+import { getAllList } from "@/api/v1/oa/personnel"
+import { getAllList as getProjectAllList } from "@/api/v1/oa/project"
 import { TableColumnAction } from "@c/TableAction"
-import { isFunction, keys, pick } from "lodash"
+import { clone, isFunction, keys, pick } from "lodash"
 import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
-import { clone } from "lodash"
 import { error } from "@/utils/log"
 interface ModalProps {
     title: string
@@ -88,7 +91,7 @@ function setModalValue(values: Partial<ModalProps & { visible: boolean }>) {
 }
 
 const [register, { getVialdColumn, reload }] = useTable({
-    title: "员工管理",
+    title: "任务管理",
     api: getList,
     immediate: true,
     formSettings: {
@@ -105,30 +108,66 @@ const [register, { getVialdColumn, reload }] = useTable({
     },
     column: [
         {
-            prop: "name",
-            label: "姓名",
+            prop: "task_name",
+            label: "任务名称",
             width: 260,
             canViald: true,
         },
         {
-            prop: "phone",
-            label: "手机号",
+            prop: "task_desc",
+            label: "任务说明",
             width: 260,
             canViald: true,
         },
-        {
-            prop: "email",
-            label: "邮箱",
-            canViald: true,
-            width: 220,
-        },
-
         {
             prop: "status",
-            label: "是否在职",
+            label: "是否完成",
             canViald: true,
             columnToForm: {
                 slot: "status",
+            },
+        },
+        {
+            prop: "end_time",
+            label: "预计完成时间",
+            width: 260,
+            canViald: true,
+            columnToForm: {
+                component: "DatePicker",
+                componentProps: {
+                    type: "datetime",
+                },
+            },
+        },
+        {
+            prop: "personnel_id",
+            label: "任务关联的用户",
+            canViald: true,
+            width: 260,
+            columnToForm: {
+                component: "Select",
+                componentProps: {
+                    api: getAllList,
+                    immediate: true,
+                    labelField: "name",
+                    valueField: "id",
+                },
+            },
+        },
+
+        {
+            prop: "project_id",
+            label: "任务关联的项目",
+            canViald: true,
+            width: 260,
+            columnToForm: {
+                component: "Select",
+                componentProps: {
+                    api: getProjectAllList,
+                    immediate: true,
+                    labelField: "project_name",
+                    valueField: "id",
+                },
             },
         },
         {
@@ -153,20 +192,19 @@ const [register, { getVialdColumn, reload }] = useTable({
 const actionRemoveSetting = computed(() => {
     return {
         context: row => {
-            return `确定删除${row.nickname}员工吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
+            return `确定删除${row.personnel.name}任务吗？删除后将无法恢复，如果以后还需再次使用建议执行冻结操作。`
         },
     }
 })
 
 async function handleActionDelete(row) {
     try {
-        await removePersonnel(row)
+        await removeTask(row)
         reload()
     } catch (err) {
         error(err as string)
     }
 }
-
 
 function getSchema(row?: Recordable): FormItemSchemas[] {
     let schemas = getVialdColumn().map(item => {
@@ -186,26 +224,6 @@ function getSchema(row?: Recordable): FormItemSchemas[] {
 
     return schemas
 }
-
-function handleEditUser(row) {
-    setModalValue({
-        visible: true,
-        title: "编辑员工",
-        row,
-        schema: getSchema(row),
-    })
-}
-
-function handleCreateUser() {
-    setModalValue({
-        visible: true,
-        title: "创建员工",
-        row: "create",
-        schema: getSchema(),
-    })
-    nextTick(() => {})
-}
-
 // 表格switch变化
 async function handleTableSwitch(bool, row) {
     try {
@@ -215,11 +233,29 @@ async function handleTableSwitch(bool, row) {
             ...clone(row),
             status,
         }
-        await updatePersonnel(form)
+        await updateTask(form)
         reload()
     } catch (err) {
         error(err as string)
     }
+}
+function handleEditAttendance(row) {
+    setModalValue({
+        visible: true,
+        title: "编辑任务",
+        row,
+        schema: getSchema(row),
+    })
+}
+
+function handleCreateAttendance() {
+    setModalValue({
+        visible: true,
+        title: "创建任务",
+        row: "create",
+        schema: getSchema(),
+    })
+    nextTick(() => {})
 }
 
 function handleSuccessSubmit() {
