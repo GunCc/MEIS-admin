@@ -27,6 +27,14 @@
                         >
                             编辑
                         </el-button>
+                        <el-button
+                            type="warning"
+                            size="small"
+                            @click="handleSendSalary(value)"
+                            v-if="!value.payslip_send"
+                            >
+                            发放工资
+                        </el-button>
                     </template>
                 </TableColumnAction>
             </template>
@@ -47,7 +55,7 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import { getList, removeSalary } from "@/api/v1/oa/salary"
+import { getList, removeSalary, sendSalary } from "@/api/v1/oa/salary"
 import { getAllList } from "@/api/v1/oa/personnel"
 import { TableColumnAction } from "@c/TableAction"
 import { isFunction, keys, pick } from "lodash"
@@ -55,6 +63,7 @@ import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
 import { error } from "@/utils/log"
+import { useMessage } from "@/hooks/web/useMessage"
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
@@ -64,6 +73,8 @@ interface ModalProps {
 const visible = ref<boolean>(false)
 
 const ModalFormElRef = ref()
+
+const { createConfirm } = useMessage()
 
 const modalProps = ref<ModalProps>({
     title: "",
@@ -217,6 +228,23 @@ function handleSuccessSubmit() {
         visible: false,
     })
     reload()
+}
+
+// 发放工资操作
+function handleSendSalary(value: Recordable) {
+    try {
+        createConfirm({
+            title: "提示",
+            type: "warning",
+            message: `确定要给${value.personnel.name}发放工资吗？`,
+            success: async () => {
+                await sendSalary(value)
+                reload()
+            },
+        })
+    } catch (error) {
+        console.error(error)
+    }
 }
 </script>
 <style lang="scss"></style>

@@ -38,6 +38,13 @@ export function getInfo(params: GetById) {
     })
 }
 
+export function sendSalary(params: Recordable) {
+    return MEIS_http.post({
+        url: getUrl("/sendSalary"),
+        params,
+    })
+}
+
 function getUrl(url: string) {
     return "/oa/salary" + url
 }
