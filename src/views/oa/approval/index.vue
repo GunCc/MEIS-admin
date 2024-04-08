@@ -7,7 +7,7 @@
             <template #is_past="{ row }">
                 {{
                     row.is_past == 1
-                        ? "已发放"
+                        ? "已通过"
                         : row.is_past == 2
                         ? "已拒绝"
                         : "待审核"
@@ -15,6 +15,7 @@
             </template>
             <template #action="{ row }">
                 <el-button
+                    v-if="!row.is_past"
                     type="primary"
                     size="small"
                     @click="handleEditApproval(row, 1)"
@@ -23,6 +24,7 @@
                 </el-button>
 
                 <el-button
+                    v-if="!row.is_past"
                     type="danger"
                     size="small"
                     @click="handleEditApproval(row, 2)"
@@ -46,7 +48,7 @@ import { useMessage } from "@/hooks/web/useMessage"
 
 const { createConfirm } = useMessage()
 
-const [register, {reload}] = useTable({
+const [register, { reload }] = useTable({
     title: "审批中心",
     api: getList,
     immediate: true,
@@ -91,7 +93,7 @@ const [register, {reload}] = useTable({
             prop: "action",
             label: "操作",
             fixed: "right",
-            width: 220,
+            width: 120,
         },
     ],
 })
