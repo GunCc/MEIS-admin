@@ -1,26 +1,34 @@
 <template>
     <PageWrapper>
         <basic-table @register="register">
+            <template #type="{ row }">
+                {{ row.approval_type == 5 ? "薪资审核" : "" }}
+            </template>
+            <template #is_past="{ row }">
+                {{
+                    row.is_past == 1
+                        ? "已发放"
+                        : row.is_past == 2
+                        ? "已拒绝"
+                        : "待审核"
+                }}
+            </template>
             <template #action="{ row }">
-                <TableColumnAction :row="row">
-                    <template #before-action="{ value }">
-                        <el-button
-                            type="primary"
-                            size="small"
-                            @click="handleEditApproval(value)"
-                        >
-                            通过
-                        </el-button>
+                <el-button
+                    type="primary"
+                    size="small"
+                    @click="handleEditApproval(row, 1)"
+                >
+                    通过
+                </el-button>
 
-                        <el-button
-                            type="primary"
-                            size="small"
-                            @click="handleEditApproval(value)"
-                        >
-                            拒绝
-                        </el-button>
-                    </template>
-                </TableColumnAction>
+                <el-button
+                    type="danger"
+                    size="small"
+                    @click="handleEditApproval(row, 2)"
+                >
+                    拒绝
+                </el-button>
             </template>
         </basic-table>
     </PageWrapper>
@@ -34,8 +42,11 @@ import { TableColumnAction } from "@c/TableAction"
 import { clone } from "lodash"
 
 import { error } from "@/utils/log"
+import { useMessage } from "@/hooks/web/useMessage"
 
-const [register, {}] = useTable({
+const { createConfirm } = useMessage()
+
+const [register, {reload}] = useTable({
     title: "审批中心",
     api: getList,
     immediate: true,
@@ -58,7 +69,7 @@ const [register, {}] = useTable({
             width: 50,
         },
         {
-            prop: "task_desc",
+            prop: "type",
             label: "审核类型",
             width: 260,
         },
@@ -85,6 +96,23 @@ const [register, {}] = useTable({
     ],
 })
 
-function handleEditApproval() {}
+async function handleEditApproval(row, type) {
+    createConfirm({
+        title: "提示",
+        type: "warning",
+        message: `确定要给${type == 1 ? "通过" : "驳回"}该审核吗？`,
+        success: async () => {
+            try {
+                await updateApproval({
+                    ...row,
+                    is_past: type,
+                })
+                reload()
+            } catch (error) {
+                console.error(error)
+            }
+        },
+    })
+}
 </script>
 <style lang="scss"></style>

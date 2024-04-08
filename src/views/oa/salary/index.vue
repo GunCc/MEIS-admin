@@ -9,7 +9,15 @@
             <template #payslip_send="{ row }">
                 {{ row.payslip_send ? "是" : "否" }}
             </template>
-
+            <template #is_send="{ row }">
+                {{
+                    row.is_send == 1
+                        ? "已发放"
+                        : row.is_send == 2
+                        ? "已拒绝"
+                        : "待审核"
+                }}
+            </template>
             <template #personnel_id="{ row }">
                 {{ row.personnel.name }}
             </template>
@@ -32,7 +40,7 @@
                             size="small"
                             @click="handleSendSalary(value)"
                             v-if="!value.payslip_send"
-                            >
+                        >
                             发放工资
                         </el-button>
                     </template>
@@ -146,7 +154,12 @@ const [register, { getVialdColumn, reload }] = useTable({
         },
         {
             prop: "payslip_send",
-            label: "是否发放工资",
+            label: "是否发放工资条",
+            width: 260,
+        },
+        {
+            prop: "is_send",
+            label: "工资状态",
             width: 260,
         },
         {
