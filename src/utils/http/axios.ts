@@ -115,7 +115,9 @@ export class CustomAxios {
     // 上传文件
     async uploadFile(res: AxiosResponse<Result>, options?: AxiosOtherConfig) {
         const { afterResponse } = this.getTransform() || {}
-        isFunction(afterResponse) && afterResponse(res, options || {})
+        isFunction(afterResponse) && afterResponse(res, options || {
+            messageModal:"message"
+        })
     }
 
     // 请求

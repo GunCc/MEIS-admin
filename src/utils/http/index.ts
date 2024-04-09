@@ -94,6 +94,7 @@ const transform: AxiosTranstion = {
         if (message) {
             errorMsg = message
         }
+        console.log("到这里了吗",message)
         createMessage.error(errorMsg)
         throw new Error(errorMsg || "api请求报错")
     },

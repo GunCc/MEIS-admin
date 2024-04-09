@@ -5,9 +5,23 @@
                 <el-button type="success" @click="handleCreateAttendance">
                     添加
                 </el-button>
+
+                <el-upload
+                    style="display: inline-block"
+                    class="mx-3"
+                    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+                    :action="`${VITE_HTTP_URL}/oa/attendance/upload`"
+                    :show-file-list="false"
+                    :headers="{
+                        'x-token': getTokenValue,
+                    }"
+                    :on-success="handleSuccess"
+                >
+                    <el-button type="primary"> 上传考勤 </el-button>
+                </el-upload>
             </template>
             <template #personnel_id="{ row }">
-                {{row.personnel.name}}
+                {{ row.personnel.name }}
             </template>
             <template #action="{ row }">
                 <TableColumnAction
@@ -43,10 +57,7 @@
 <script lang="ts" setup>
 import { BasicTable, useTable } from "@c/Table/index"
 import { PageWrapper } from "@c/PageWrapper/index"
-import {
-    getList,
-    removeAttendance,
-} from "@/api/v1/oa/attendance"
+import { getList, removeAttendance } from "@/api/v1/oa/attendance"
 import { getAllList } from "@/api/v1/oa/personnel"
 import { TableColumnAction } from "@c/TableAction"
 import { isFunction, keys, pick } from "lodash"
@@ -54,11 +65,18 @@ import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
 import { error } from "@/utils/log"
+import { MEIS_http } from "@/utils/http"
+import { getToken } from "@/utils/auth"
+import { useMessage } from "@/hooks/web/useMessage"
+const { VITE_HTTP_URL } = import.meta.env
+
 interface ModalProps {
     title: string
     schema: FormItemSchemas[]
     row: Recordable | "create"
 }
+
+const { createMessage } = useMessage()
 
 const visible = ref<boolean>(false)
 
@@ -68,6 +86,11 @@ const modalProps = ref<ModalProps>({
     title: "",
     schema: [],
     row: "create",
+})
+
+const getTokenValue = computed(() => {
+    const token = getToken()
+    return token
 })
 
 const getModalProps = computed(() => {
@@ -198,6 +221,18 @@ function handleCreateAttendance() {
         schema: getSchema(),
     })
     nextTick(() => {})
+}
+
+
+async function handleSuccess(response: any) {
+    const { code,message } = response
+
+    if (code == 200) {
+        createMessage.success("上传成功")
+        reload()
+    }else{
+        createMessage.error(message)
+    }
 }
 
 function handleSuccessSubmit() {
