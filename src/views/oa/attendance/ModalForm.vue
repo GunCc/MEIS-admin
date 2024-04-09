@@ -1,5 +1,15 @@
 <template>
-    <basic-form @register="registerForm" @submit="handleSubmit"> </basic-form>
+    <basic-form @register="registerForm" @submit="handleSubmit">
+        <template #grand_time="{ model, field }">
+            <el-date-picker
+                class="w-full"
+                v-model="model[field]"
+                type="month"
+                placeholder="选择时间"
+                value-format="YYYY-MM"
+            />
+        </template>
+    </basic-form>
 </template>
 <script lang="ts">
 import { createAttendance, updateAttendance } from "@/api/v1/oa/attendance"

@@ -65,7 +65,6 @@ import { FormItemSchemas } from "@/components/Form"
 
 import ModalForm from "./ModalForm.vue"
 import { error } from "@/utils/log"
-import { MEIS_http } from "@/utils/http"
 import { getToken } from "@/utils/auth"
 import { useMessage } from "@/hooks/web/useMessage"
 const { VITE_HTTP_URL } = import.meta.env
@@ -146,6 +145,21 @@ const [register, { getVialdColumn, reload }] = useTable({
         {
             prop: "working",
             label: "实际出勤",
+            width: 260,
+            canViald: true,
+        },
+        {
+            prop: "grand_time",
+            label: "考勤时间",
+            width: 260,
+            canViald: true,
+            columnToForm: {
+                slot: "grand_time",
+            },
+        },
+        {
+            prop: "comment",
+            label: "备注信息",
             width: 260,
             canViald: true,
         },
